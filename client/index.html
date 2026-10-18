@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#F8FAFC" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <title>Conceptual OBGYN — NEET UG &amp; PG Revision Workspace</title>
+    <meta
+      name="description"
+      content="A calm revision workspace for Obstetrics & Gynecology — NEET UG foundations, NEET PG clinical concepts, and offline-ready recall."
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Conceptual OBGYN" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Conceptual OBGYN — NEET UG & PG Revision Workspace" />
+    <meta
+      property="og:description"
+      content="Structured clinical concepts and recall modules for Obstetrics & Gynecology. Offline-ready."
+    />
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Display:wght@400;500;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      />
+    </noscript>
+
+    <script>
+      // Paint the correct surface before first frame: daylight by default,
+      // deep slate only when the student has explicitly chosen night mode.
+      (function bootstrapTheme() {
+        var theme = 'light';
+        try {
+          var raw = localStorage.getItem('conceptual-obgyn:theme-v1');
+          if (raw) {
+            var parsed = JSON.parse(raw);
+            if (parsed && parsed.state && parsed.state.theme === 'dark') theme = 'dark';
+          }
+        } catch (_) {
+          /* light is the safe default */
+        }
+        var root = document.documentElement;
+        root.classList.toggle('dark', theme === 'dark');
+        root.style.colorScheme = theme;
+        root.style.backgroundColor = theme === 'dark' ? '#0B0F17' : '#F8FAFC';
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <div style="font-family: Inter, sans-serif; color: #0f172a; padding: 2rem">
+        Conceptual OBGYN needs JavaScript to run. Please enable it and reload.
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

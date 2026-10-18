@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: conceptual-obgyn-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: conceptual_obgyn
+    volumes:
+      - obgyn-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  obgyn-mongo-data:

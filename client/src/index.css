@@ -1,0 +1,313 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   Conceptual OBGYN — Google Material You + Glass Design System
+   --------------------------------------------------------------------------
+   Google-quality glass morphism: translucent surfaces, Google brand accents
+   (Blue #4285F4, Teal #00897B, Green #34A853), Material You motion, and
+   Google Sans typography. Daylight alabaster default; deep slate optional.
+   ========================================================================== */
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --g-blue:   #4285F4;
+    --g-teal:   #00897B;
+    --g-green:  #34A853;
+    --g-red:    #EA4335;
+    --g-yellow: #FBBC04;
+    --accent-rgb: 66 133 244;
+    --accent-hover: #1A73E8;
+    --accent-alt-rgb: 0 137 123;
+    --glass-blur: 24px;
+    --glass-sat:  190%;
+    --glass-bg-light: rgba(255,255,255,0.72);
+    --glass-border-light: rgba(255,255,255,0.82);
+    --glass-shadow: 0 4px 24px rgba(60,64,67,0.10),0 1px 6px rgba(60,64,67,0.06);
+    --glass-shadow-lg: 0 12px 48px rgba(60,64,67,0.13),0 4px 16px rgba(60,64,67,0.07);
+    --glass-shadow-xl: 0 24px 64px rgba(60,64,67,0.17),0 8px 24px rgba(60,64,67,0.08);
+    --search-shadow: 0 2px 8px rgba(60,64,67,0.15),0 1px 3px rgba(60,64,67,0.10);
+    --search-shadow-focus: 0 4px 20px rgba(66,133,244,0.22),0 0 0 2px rgba(66,133,244,0.22);
+    --ease-google: cubic-bezier(0.4,0,0.2,1);
+    --ease-spring: cubic-bezier(0.16,1,0.3,1);
+  }
+
+  html.dark {
+    color-scheme: dark;
+    --glass-bg-light: rgba(15,20,35,0.72);
+    --glass-border-light: rgba(255,255,255,0.09);
+    --glass-shadow: 0 4px 24px rgba(0,0,0,0.40),0 1px 6px rgba(0,0,0,0.25);
+    --glass-shadow-lg: 0 12px 48px rgba(0,0,0,0.45),0 4px 16px rgba(0,0,0,0.30);
+    --glass-shadow-xl: 0 24px 64px rgba(0,0,0,0.55),0 8px 24px rgba(0,0,0,0.35);
+    --search-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    --search-shadow-focus: 0 4px 20px rgba(138,180,248,0.22),0 0 0 2px rgba(138,180,248,0.25);
+    --accent-rgb: 138 180 248;
+    --accent-hover: #A8C8FB;
+    --accent-alt-rgb: 129 199 190;
+  }
+
+  body {
+    @apply bg-[#F8FAFC] font-sans text-slate-900 antialiased dark:bg-[#0B0F17] dark:text-slate-100;
+    font-optical-sizing: auto;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: rgba(66,133,244,0.20);
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgba(var(--accent-rgb),0.70);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+}
+
+@layer components {
+  /* ---- Primary glass surface: Google-quality frost ----------------------- */
+  .glass-card {
+    background-color: var(--glass-bg-light);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    border: 1px solid var(--glass-border-light);
+    box-shadow: var(--glass-shadow),inset 0 1px 1px rgba(255,255,255,0.60);
+    transition: box-shadow 200ms var(--ease-google),transform 200ms var(--ease-google);
+  }
+
+  .glass-card:hover {
+    box-shadow: var(--glass-shadow-lg),inset 0 1px 1px rgba(255,255,255,0.60);
+    transform: translateY(-1px);
+  }
+
+  .glass-card-rigid:hover {
+    transform: none !important;
+  }
+
+  .dark .glass-card {
+    border-color: rgba(255,255,255,0.09);
+    box-shadow: var(--glass-shadow),inset 0 1px 1px rgba(255,255,255,0.05);
+  }
+
+  /* ---- Navbar / floating capsule ----------------------------------------- */
+  .glass-capsule {
+    background-color: rgba(255,255,255,0.82);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    border: 1px solid rgba(255,255,255,0.90);
+    box-shadow: var(--search-shadow),inset 0 1px 1px rgba(255,255,255,0.90);
+    transition: box-shadow 150ms var(--ease-google);
+  }
+
+  .glass-capsule:hover,
+  .glass-capsule:focus-within {
+    box-shadow: var(--search-shadow-focus),inset 0 1px 1px rgba(255,255,255,0.90);
+  }
+
+  .dark .glass-capsule {
+    background-color: rgba(15,20,35,0.80);
+    border-color: rgba(255,255,255,0.10);
+    box-shadow: var(--search-shadow),inset 0 1px 1px rgba(255,255,255,0.05);
+  }
+
+  /* ---- Chip / tag on glass ----------------------------------------------- */
+  .chip-glass {
+    background-color: rgba(255,255,255,0.75);
+    -webkit-backdrop-filter: blur(10px) saturate(1.6);
+    backdrop-filter: blur(10px) saturate(1.6);
+    border: 1px solid rgba(255,255,255,0.80);
+    box-shadow: 0 1px 3px rgba(60,64,67,0.08);
+    transition: background 150ms var(--ease-google);
+  }
+
+  .dark .chip-glass {
+    background-color: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.10);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+
+  /* ---- Google accent chips ---------------------------------------------- */
+  .chip-accent {
+    background-color: rgba(66,133,244,0.10);
+    border: 1px solid rgba(66,133,244,0.20);
+    color: var(--g-blue);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+  }
+
+  .chip-teal {
+    background-color: rgba(0,137,123,0.10);
+    border: 1px solid rgba(0,137,123,0.20);
+    color: var(--g-teal);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+  }
+
+  /* ---- Specular sheen sweep --------------------------------------------- */
+  .sheen-sweep {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    overflow: hidden;
+  }
+
+  .sheen-sweep::after {
+    content: '';
+    position: absolute;
+    top: -40%;
+    bottom: -40%;
+    left: -30%;
+    width: 34%;
+    background: linear-gradient(105deg,transparent 20%,rgba(255,255,255,0.45) 50%,transparent 80%);
+    transform: translateX(-260%) skewX(-14deg);
+    transition: transform 0.60s var(--ease-spring);
+    will-change: transform;
+  }
+
+  .dark .sheen-sweep::after {
+    background: linear-gradient(105deg,transparent 20%,rgba(255,255,255,0.12) 50%,transparent 80%);
+  }
+
+  .group:hover .sheen-sweep::after,
+  .group:focus-visible .sheen-sweep::after {
+    transform: translateX(420%) skewX(-14deg);
+  }
+
+  /* ---- Google gradient text wordmark ------------------------------------ */
+  .text-gradient {
+    background: linear-gradient(135deg,var(--g-blue) 0%,var(--g-teal) 55%,var(--g-green) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .text-gradient-blue {
+    background: linear-gradient(135deg,#4285F4 0%,#1A73E8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* ---- Google action buttons -------------------------------------------- */
+  .action-primary {
+    @apply inline-flex h-9 items-center gap-2 rounded-full px-5 text-sm font-semibold text-white transition-all duration-150;
+    background: var(--g-blue);
+    box-shadow: 0 2px 8px rgba(66,133,244,0.32);
+  }
+
+  .action-primary:hover {
+    background: var(--accent-hover);
+    box-shadow: 0 4px 16px rgba(66,133,244,0.40);
+    transform: translateY(-1px);
+  }
+
+  .dark .action-primary {
+    background: rgba(138,180,248,0.16);
+    color: #8AB4F8;
+    box-shadow: none;
+  }
+
+  .dark .action-primary:hover {
+    background: rgba(138,180,248,0.24);
+    box-shadow: none;
+    transform: translateY(-1px);
+  }
+
+  .action-quiet {
+    @apply inline-flex h-9 items-center rounded-full px-3 text-sm font-medium text-slate-500 transition-all duration-150 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white;
+  }
+
+  .action-quiet:hover { background: rgba(66,133,244,0.08); }
+
+  /* ---- Studio scrubbers -------------------------------------------------- */
+  input[type='range'] {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 14px;
+    width: 14px;
+    border-radius: 9999px;
+    background: currentColor;
+    border: 2px solid #ffffff;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.28);
+    cursor: pointer;
+    transition: transform 150ms var(--ease-google);
+  }
+
+  input[type='range']::-moz-range-thumb {
+    height: 14px;
+    width: 14px;
+    border-radius: 9999px;
+    background: currentColor;
+    border: 2px solid #ffffff;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.28);
+    cursor: pointer;
+  }
+
+  input[type='range']:active::-webkit-slider-thumb { transform: scale(1.12); }
+  input[type='range']:focus-visible { outline: 2px solid rgba(148, 163, 184, 0.55); outline-offset: 3px; }
+
+  /* ---- Type helpers ------------------------------------------------------ */
+  .eyebrow {
+    @apply font-mono text-xs uppercase tracking-[0.15em] text-slate-400 dark:text-slate-500;
+  }
+
+  /* ---- kbd tag ------------------------------------------------------------ */
+  .kbd {
+    @apply inline-flex h-5 min-w-5 items-center justify-center rounded-md border border-slate-900/[0.08] bg-white/70 px-1.5 font-mono text-[10px] text-slate-500 dark:border-white/10 dark:bg-white/5 dark:text-slate-400;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  }
+
+  /* ---- Scrollbar ---------------------------------------------------------- */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.40); border-radius: 9999px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(100,116,139,0.55); }
+}
+
+@layer utilities {
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+
+  /* Travelling highlight for the trace lines in the mini widgets. */
+  .trace-run {
+    stroke-dasharray: 26 260;
+    animation: trace-run 3.2s linear infinite;
+  }
+}
+
+@keyframes trace-run {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -286;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trace-run {
+    animation: none;
+  }
+
+  .sheen-sweep::after {
+    display: none;
+  }
+}

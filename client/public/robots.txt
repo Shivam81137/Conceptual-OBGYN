@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Conceptual OBGYN — spatial revision engine
+Sitemap: /sitemap.xml
