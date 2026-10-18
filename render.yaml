@@ -3,9 +3,8 @@ services:
     name: conceptual-obgyn-api
     runtime: node
     plan: free
-    rootDir: server
-    buildCommand: npm install && npm run build
-    startCommand: npm run start
+    buildCommand: npm install && npm run build --workspace @conceptual-obgyn/server
+    startCommand: npm run start --workspace @conceptual-obgyn/server
     healthCheckPath: /health
     autoDeploy: true
     envVars:
@@ -21,3 +20,4 @@ services:
         sync: false
       - key: GEMINI_API_KEY
         sync: false
+
