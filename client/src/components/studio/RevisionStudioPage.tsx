@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import {
   Activity,
   BookOpen,
-  Clock3,
   Flame,
   GraduationCap,
   Layers3,
@@ -15,6 +14,7 @@ import { ModuleNavigator } from '@/components/studio/ModuleNavigator';
 import { ConceptNotes } from '@/components/studio/ConceptNotes';
 import { MenstrualCycleSimulator } from '@/components/studio/MenstrualCycleSimulator';
 import { PartographSimulator } from '@/components/studio/PartographSimulator';
+import { TorchSimulator } from '@/components/studio/TorchSimulator';
 import { FlashcardDeck } from '@/components/studio/FlashcardDeck';
 import { McqRail } from '@/components/studio/McqRail';
 import { ProgressRing } from '@/components/studio/StudioBits';
@@ -116,8 +116,15 @@ export function RevisionStudioPage({ trackId }: RevisionStudioPageProps): JSX.El
           transition={withFilterTween({ type: 'spring', stiffness: 260, damping: 26 })}
           className="px-1"
         >
-          <div className="flex flex-wrap items-center gap-2">
-            <span className={cn('inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[9.5px] font-semibold uppercase tracking-[0.16em]', theme.border, theme.tint, theme.text)}>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span
+              className={cn(
+                'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em]',
+                theme.border,
+                theme.tint,
+                theme.text,
+              )}
+            >
               {trackId === 'NEET_UG' ? (
                 <GraduationCap className="h-3 w-3" strokeWidth={2} aria-hidden="true" />
               ) : (
@@ -125,50 +132,58 @@ export function RevisionStudioPage({ trackId }: RevisionStudioPageProps): JSX.El
               )}
               {theme.eyebrow}
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-900/[0.06] bg-white/60 px-2.5 py-1 text-[9.5px] font-medium text-slate-500 dark:border-white/[0.08] dark:bg-white/[0.05] dark:text-slate-400">
-              <span className={cn('h-1.5 w-1.5 rounded-full', source === 'live' ? 'bg-emerald-500' : 'bg-amber-500')} aria-hidden="true" />
-              {source === 'live' ? 'Module index synced' : 'Curated · offline ready'}
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-medium text-slate-400 dark:text-slate-500">
+              <span
+                className={cn('h-1.5 w-1.5 rounded-full', source === 'live' ? 'bg-emerald-500' : 'bg-amber-500')}
+                aria-hidden="true"
+              />
+              {source === 'live' ? 'Synced' : 'Offline ready'}
             </span>
           </div>
 
           <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 className="text-[28px] font-semibold leading-[1.08] tracking-[-0.035em] sm:text-[36px]">
+              <h1 className="text-[26px] font-semibold leading-tight tracking-[-0.03em] sm:text-[32px]">
                 <span className={cn('bg-gradient-to-r bg-clip-text text-transparent', theme.gradientText)}>
                   {theme.title}
                 </span>
               </h1>
-              <p className="mt-1.5 max-w-2xl text-[12px] leading-relaxed text-slate-500 dark:text-slate-400 sm:text-[13px]">
+              <p className="mt-1.5 max-w-xl text-[12.5px] leading-relaxed text-slate-500 dark:text-slate-400">
                 {theme.subtitle}
               </p>
             </div>
-            <div className="flex shrink-0 items-center gap-2.5 rounded-2xl border border-slate-900/[0.06] bg-white/55 px-3 py-2 dark:border-white/[0.07] dark:bg-white/[0.04]">
+            <div className="flex shrink-0 items-center gap-2.5">
               <ProgressRing value={overallProgress} size={40} strokeWidth={3.25} colorClassName={theme.ring}>
                 <span className="text-[9px] font-bold tabular-nums">{Math.round(overallProgress * 100)}%</span>
               </ProgressRing>
               <div>
                 <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-400">Track completion</p>
                 <p className="text-[11px] font-semibold text-slate-700 dark:text-slate-200">
-                  {modules.length} modules · {totalCards} cards
+                  {modules.length} {modules.length === 1 ? 'module' : 'modules'} · {totalCards} cards
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="mt-3 flex flex-wrap items-center gap-1.5">
-            <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/20 bg-amber-500/[0.08] px-2 py-0.5 text-[9.5px] font-medium text-amber-700 dark:border-amber-400/20 dark:text-amber-300">
-              <Flame className="h-2.5 w-2.5" strokeWidth={2} aria-hidden="true" />
-              High-yield weighted
+          <p className="mt-3 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[11px] font-medium text-slate-400 dark:text-slate-500">
+            {selected?.highYield ? (
+              <>
+                <span className="text-amber-600 dark:text-amber-400">High-yield</span>
+                <span aria-hidden="true" className="text-slate-300 dark:text-slate-600">
+                  ·
+                </span>
+              </>
+            ) : null}
+            <span>{selected?.durationMinutes ?? 0} min</span>
+            <span aria-hidden="true" className="text-slate-300 dark:text-slate-600">
+              ·
             </span>
-            <span className="inline-flex items-center gap-1 rounded-full border border-slate-900/[0.06] bg-white/60 px-2 py-0.5 text-[9.5px] font-medium text-slate-500 dark:border-white/[0.08] dark:bg-white/[0.05] dark:text-slate-400">
-              <Clock3 className="h-2.5 w-2.5" strokeWidth={1.9} aria-hidden="true" />
-              {selected?.durationMinutes ?? 0} min module
+            <span>{totalMcqs} MCQs</span>
+            <span aria-hidden="true" className="text-slate-300 dark:text-slate-600">
+              ·
             </span>
-            <span className="inline-flex items-center gap-1 rounded-full border border-slate-900/[0.06] bg-white/60 px-2 py-0.5 text-[9.5px] font-medium text-slate-500 dark:border-white/[0.08] dark:bg-white/[0.05] dark:text-slate-400">
-              <Layers3 className="h-2.5 w-2.5" strokeWidth={1.9} aria-hidden="true" />
-              {totalMcqs} rapid MCQs · local progress
-            </span>
-          </div>
+            <span>Progress saved on this device</span>
+          </p>
         </motion.header>
 
         <div className="mt-5 grid grid-cols-1 items-start gap-3.5 xl:grid-cols-12">
@@ -286,6 +301,8 @@ export function RevisionStudioPage({ trackId }: RevisionStudioPageProps): JSX.El
                   {tab === 'simulator' ? (
                     selected.track === 'NEET_UG' ? (
                       <MenstrualCycleSimulator module={selected} theme={theme} />
+                    ) : selected.id === 'pg-torch-infections' ? (
+                      <TorchSimulator module={selected} theme={theme} />
                     ) : (
                       <PartographSimulator module={selected} theme={theme} />
                     )

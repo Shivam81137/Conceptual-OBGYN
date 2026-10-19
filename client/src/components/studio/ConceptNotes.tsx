@@ -1,7 +1,14 @@
-import { Bookmark, BookmarkCheck, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { Bookmark, BookmarkCheck, Check, Copy, Sparkles, Terminal } from 'lucide-react';
 import { useRecallStore } from '@/store/useRecallStore';
 import { cn } from '@/lib/utils';
-import type { StudioModule, StudioNoteSection, StudioNoteTable, StudioTrackTheme } from '@/data/revisionStudio';
+import type {
+  StudioModule,
+  StudioNoteCode,
+  StudioNoteSection,
+  StudioNoteTable,
+  StudioTrackTheme,
+} from '@/data/revisionStudio';
 
 interface ConceptNotesProps {
   module: StudioModule;
@@ -80,6 +87,47 @@ function ComparisonTable({ table }: { table: StudioNoteTable }): JSX.Element {
         </tbody>
       </table>
     </div>
+  );
+}
+
+/** Extracted source algorithm (Mermaid commands) in a calm monospace panel. */
+function CodePanel({ code }: { code: StudioNoteCode }): JSX.Element {
+  const [copied, setCopied] = useState(false);
+
+  const copy = (): void => {
+    if (typeof navigator === 'undefined' || !navigator.clipboard) return;
+    void navigator.clipboard.writeText(code.source).then(() => {
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    });
+  };
+
+  return (
+    <figure className="mt-3 overflow-hidden rounded-2xl border border-indigo-500/20 bg-slate-950/[0.96] shadow-[0_18px_40px_-28px_rgba(79,70,229,0.55)] dark:border-indigo-400/25">
+      <figcaption className="flex items-center justify-between gap-2 border-b border-white/[0.08] bg-gradient-to-r from-indigo-500/20 to-rose-500/15 px-3 py-1.5">
+        <span className="inline-flex items-center gap-1.5 text-[9.5px] font-semibold uppercase tracking-[0.12em] text-indigo-100">
+          <Terminal className="h-3 w-3" strokeWidth={2} aria-hidden="true" />
+          {code.label}
+        </span>
+        <button
+          type="button"
+          onClick={copy}
+          aria-label={`Copy ${code.label} commands`}
+          className={cn(
+            'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-semibold transition-colors',
+            copied
+              ? 'border-emerald-400/40 bg-emerald-400/15 text-emerald-200'
+              : 'border-white/15 bg-white/10 text-slate-200 hover:bg-white/20',
+          )}
+        >
+          {copied ? <Check className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" /> : <Copy className="h-2.5 w-2.5" strokeWidth={2.2} aria-hidden="true" />}
+          {copied ? 'Copied' : 'Copy'}
+        </button>
+      </figcaption>
+      <pre className="overflow-x-auto px-3 py-2.5 text-[10.5px] leading-relaxed text-indigo-100/95">
+        <code>{code.source}</code>
+      </pre>
+    </figure>
   );
 }
 
@@ -167,6 +215,8 @@ function NoteSection({
       ) : null}
 
       {section.table ? <ComparisonTable table={section.table} /> : null}
+
+      {section.code ? <CodePanel code={section.code} /> : null}
 
       {section.trap ? (
         <div className="mt-3 rounded-2xl border border-rose-500/20 bg-gradient-to-br from-rose-50/80 via-white/50 to-amber-50/50 px-3 py-2.5 dark:border-rose-400/20 dark:from-rose-400/[0.08] dark:via-white/[0.02] dark:to-amber-400/[0.05]">
