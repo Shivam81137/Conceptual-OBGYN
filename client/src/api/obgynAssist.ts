@@ -20,6 +20,8 @@ export const obgynAssistPayloadSchema = z.object({
   highYieldPearl: z.string().min(1),
   followUpQuestions: z.array(z.string().min(1)).min(1),
   sourceTag: z.string().min(1),
+  /** Guideline/textbook citations; absent on legacy or curated responses. */
+  references: z.array(z.string().min(1)).default([]),
   meta: z.object({
     engine: obgynAssistEngineSchema,
     model: z.string().nullable(),

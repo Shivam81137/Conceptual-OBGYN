@@ -41,17 +41,27 @@ import {
    System instruction — the exam persona served to Gemini on every request
    ========================================================================== */
 
-export const OBGYN_AI_SYSTEM_INSTRUCTION = `You are 'Conceptual OBGYN AI', an elite Obstetrics & Gynecology academic mentor engineered specifically for NEET UG, NEET PG, and INI-CET medical aspirants.
-Rules:
-1. Tailor depth strictly to the requested track:
-   - If track === 'UG': Focus on NCERT Class 12 Reproductive Health, Human Reproduction, Gametogenesis, Menstrual Cycle physiology, and core embryology bridges.
-   - If track === 'PG': Reference gold-standard textbooks (Williams Obstetrics, Shaw's Gynecology, Dutta) and latest FOGSI/RCOG/ACOG/FIGO guidelines.
-2. Structure every response into 3 crisp, scannable sections:
-   - 🎯 **High-Yield Exam Pearl:** A 1-2 sentence golden takeaway frequently tested in MCQs.
-   - 🧠 **Core Clinical Concept / Summary:** Bullet-pointed mechanism, staging, diagnostic criteria, or differential table.
-   - ⚡ **Rapid Recall Mnemonic or Exam Trap:** Highlight the classic examiner trap (e.g., 'Most common cause vs. Most specific investigation').
-3. If a PDF document is uploaded, extract and condense its entire text into: Executive Topic Summary, Top 5 High-Yield One-Liners, and 3 Rapid-Fire Practice MCQs with explanations.
-4. Keep formatting ultra-clean using Markdown tables and bold clinical keywords. Never write bloated introductory filler.`;
+export const OBGYN_AI_SYSTEM_INSTRUCTION = `You are 'Conceptual OBGYN AI', a senior Obstetrics & Gynecology academic mentor for NEET UG, NEET PG and INI-CET aspirants.
+
+Accuracy rules (non-negotiable):
+1. Anchor every fact to mainstream, current guidance — Williams Obstetrics / Shaw's Gynaecology / Dutta for mechanism and FOGSI / RCOG / ACOG / FIGO / WHO for management. Prefer published guideline cut-offs and doses over memory.
+2. Never invent citations, page numbers, trial names, doses, thresholds or "recent studies". Only list a source in "references" if you are confident it exists — if unsure of the year or edition, name the guideline/source without a year rather than guessing. If a value varies between guidelines, give the accepted range and name the guideline it comes from.
+3. If the evidence is uncertain, contested, or the question is outside exam scope, say so in one plain line instead of guessing.
+4. Use precise standard clinical nomenclature and units (e.g. MCA-PSV > 1.5 MoM, MgSO4 4 g IV loading dose). Expand any abbreviation the first time it appears.
+5. This is exam revision material for clinicians-in-training, not individual patient advice — keep every management statement guideline-referenced.
+
+Tailor depth strictly to the requested track:
+- track === 'UG': NCERT Class 12 Human Reproduction and Reproductive Health, with core physiology and embryology bridges.
+- track === 'PG': examinable clinical depth — definitions, diagnostic criteria, staging, investigations, management and complications as tested in NEET PG / INI-CET.
+
+Structure every response into three crisp, scannable sections:
+- 🎯 **High-Yield Exam Pearl:** a 1-2 sentence golden takeaway frequently tested in MCQs.
+- 🧠 **Core Clinical Concept:** bullet points, numbered steps, or a compact Markdown table (comparisons, staging, cut-offs).
+- ⚡ **Rapid Recall & Exam Trap:** the classic discriminator or trap (e.g. 'most sensitive vs most specific', 'best initial vs definitive test').
+
+If a PDF document is uploaded, extract and condense its entire text into: Executive Topic Summary, Top 5 High-Yield One-Liners, and 3 Rapid-Fire Practice MCQs with explanations — while still filling every response field.
+
+Markdown must be clean and well-formed: no stray asterisks, no filler introductions, bold only genuine clinical keywords.`;
 
 /* ============================================================================
    Request / response contract
@@ -94,6 +104,8 @@ export interface ObgynAssistAnswer {
   highYieldPearl: string;
   followUpQuestions: string[];
   sourceTag: string;
+  /** Short guideline / textbook citations backing the answer (may be empty). */
+  references: string[];
   meta: {
     engine: 'omniroute' | 'gemini' | 'openrouter' | 'groq' | 'pollinations' | 'curated';
     model: string | null;
@@ -155,9 +167,17 @@ const OBGYN_ASSIST_LLM_SCHEMA = {
       type: 'string',
       description: 'A single badge line, e.g. "Synthesized for NEET PG • Williams 26e & FIGO Aligned".',
     },
+    references: {
+      type: 'array',
+      minItems: 1,
+      maxItems: 5,
+      items: { type: 'string' },
+      description:
+        '2-5 short citations that genuinely support the answer — guideline or textbook name, optionally with the year/edition only if you are certain (no page numbers, never invented), e.g. "ACOG Practice Bulletin on fetal anemia".',
+    },
   },
-  required: ['answer', 'highYieldPearl', 'followUpQuestions', 'sourceTag'],
-  propertyOrdering: ['answer', 'highYieldPearl', 'followUpQuestions', 'sourceTag'],
+  required: ['answer', 'highYieldPearl', 'followUpQuestions', 'sourceTag', 'references'],
+  propertyOrdering: ['answer', 'highYieldPearl', 'followUpQuestions', 'sourceTag', 'references'],
 } as const;
 
 const llmAnswerSchema = z.object({
@@ -165,6 +185,7 @@ const llmAnswerSchema = z.object({
   highYieldPearl: z.string().trim().min(10, 'Pearl too short.'),
   followUpQuestions: z.array(z.string().trim().min(3)).min(1),
   sourceTag: z.string().trim().min(3),
+  references: z.array(z.string().trim().min(3)).max(8).optional().default([]),
 });
 
 /** OpenAI-compatible providers share one transport: JSON-mode chat completions. */
@@ -184,7 +205,8 @@ Return ONLY a single valid JSON object (no markdown fences, no commentary) with 
 - "answer": string — the full markdown answer following the section rules above.
 - "highYieldPearl": string — the 1-2 sentence golden MCQ takeaway.
 - "followUpQuestions": array of exactly 3 short strings — clickable next questions.
-- "sourceTag": string — one badge line, e.g. "Synthesized for NEET PG • Williams 26e & FIGO Aligned".`;
+- "sourceTag": string — one badge line, e.g. "Synthesized for NEET PG • Williams 26e & FIGO Aligned".
+- "references": array of 2-5 short strings — real guideline/textbook citations supporting the answer (name, plus year/edition only if certain; never invented page numbers or editions).`;
 
 /** Structured-output contract for engines that honour `response_format: json_schema`. */
 const OPENAI_STRUCTURED_OUTPUT = {
@@ -203,8 +225,15 @@ const OPENAI_STRUCTURED_OUTPUT = {
         description: OBGYN_ASSIST_LLM_SCHEMA.properties.followUpQuestions.description,
       },
       sourceTag: { type: 'string', description: OBGYN_ASSIST_LLM_SCHEMA.properties.sourceTag.description },
+      references: {
+        type: 'array',
+        items: { type: 'string' },
+        minItems: 1,
+        maxItems: 5,
+        description: OBGYN_ASSIST_LLM_SCHEMA.properties.references.description,
+      },
     },
-    required: ['answer', 'highYieldPearl', 'followUpQuestions', 'sourceTag'],
+    required: ['answer', 'highYieldPearl', 'followUpQuestions', 'sourceTag', 'references'],
     additionalProperties: false,
   },
 } as const;
@@ -219,6 +248,7 @@ interface CuratedAnswer {
   highYieldPearl: string;
   followUpQuestions: readonly string[];
   sourceTag: string;
+  references?: readonly string[];
 }
 
 /** Balanced-brace scan — tolerant of prose before/after the JSON object. */
@@ -577,6 +607,7 @@ export class ObgynAiService {
       highYieldPearl: assembled.highYieldPearl,
       followUpQuestions: this.ensureFollowUps(assembled.followUpQuestions, request.track),
       sourceTag: assembled.sourceTag,
+      references: [...(assembled.references ?? [])],
       meta: {
         engine,
         model,
@@ -727,6 +758,7 @@ export class ObgynAiService {
         highYieldPearl: payload.highYieldPearl,
         followUpQuestions: payload.followUpQuestions,
         sourceTag: payload.sourceTag,
+        references: payload.references,
       };
     } catch (error) {
       /* Network-stuck providers (e.g. an unreachable generation backend) park longer. */
@@ -759,12 +791,16 @@ export class ObgynAiService {
     try {
       const startedAt = performance.now();
 
-      /* Pollinations honours strict structured outputs; the others use JSON mode. */
+      /* Pollinations + Groq honour strict structured outputs; the rest use JSON mode.
+         Groq's gpt-oss models reject `response_format`, so they run prompt-driven
+         JSON extraction (parseLlmPayload tolerates prose/fences around the object). */
       const responseFormat =
         engine === 'pollinations'
           ? ({ type: 'json_schema', json_schema: OPENAI_STRUCTURED_OUTPUT } as const)
-          : ({ type: 'json_object' } as const);
-      const maxTokens = engine === 'pollinations' ? 6000 : 2600;
+          : engine === 'groq'
+            ? undefined
+            : ({ type: 'json_object' } as const);
+      const maxTokens = engine === 'groq' ? 3600 : engine === 'pollinations' ? 6000 : 2600;
 
       const response = await fetch(url, {
         method: 'POST',
@@ -776,7 +812,8 @@ export class ObgynAiService {
           model,
           temperature: 0.4,
           max_tokens: maxTokens,
-          response_format: responseFormat,
+          ...(responseFormat ? { response_format: responseFormat } : {}),
+          ...(engine === 'groq' && /gpt-oss/i.test(model) ? { reasoning_effort: 'low' } : {}),
           messages: [
             { role: 'system', content: `${OBGYN_AI_SYSTEM_INSTRUCTION}${JSON_CONTRACT}` },
             { role: 'user', content: this.buildPromptContents(request, attachment, document) },
@@ -825,6 +862,7 @@ export class ObgynAiService {
         highYieldPearl: payload.highYieldPearl,
         followUpQuestions: payload.followUpQuestions,
         sourceTag: payload.sourceTag,
+        references: payload.references,
       };
     } catch (error) {
       const errorName = (error as { name?: string } | null)?.name;

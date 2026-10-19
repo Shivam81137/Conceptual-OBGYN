@@ -59,7 +59,7 @@ const envSchema = z.object({
     (value) => (typeof value === 'string' && value.trim().length === 0 ? undefined : value),
     z.string().min(1).optional(),
   ),
-  GROQ_MODEL: z.string().default('llama-3.3-70b-versatile'),
+  GROQ_MODEL: z.string().default('openai/gpt-oss-120b'),
   GROQ_TIMEOUT_MS: z.coerce.number().int().min(1000).max(120_000).default(30_000),
 
   /* Pollinations — keyless open-source text API; the always-available live engine. */
