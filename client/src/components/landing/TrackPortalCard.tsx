@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import type { PointerEvent as ReactPointerEvent } from 'react';
-import { AnimatePresence, motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { SheenSweep } from '@/components/ui/GlassCard';
 import { HormonalPulseWidget, PartographWidget } from '@/components/landing/TrackWidgets';
@@ -24,16 +24,12 @@ export interface TrackCardData {
   topics: readonly string[];
   studioButtonText: string;
   studioButtonGradient: string;
-  shadowActive: string;
   borderGradient: string;
   auroraGradient: string;
 }
 
 export interface TrackPortalCardProps {
   data: TrackCardData;
-  spotlightState: 'selected' | 'background' | 'default';
-  onSelect: () => void;
-  onHoverChange?: (hovered: boolean) => void;
 }
 
 /**
@@ -41,24 +37,18 @@ export interface TrackPortalCardProps {
  * ---------------------------------------------------------------------------
  * A rich but quiet software module: mono eyebrow + stacked glass mini-widget
  * on top, title and one-line scope in the middle, and a glass footer bar with
- * the module count and an "Open Track" pill whose arrow slides on hover.
- * Interaction stays physical: sibling dimming (0.55 / 0.99), a hairline ring
- * that lights up near the pointer, and the diagonal specular sweep.
+ * the module count and the track entry actions.
+ *
+ * The portal is permanently fixed in its rest state — no spotlight scaling,
+ * blurring, reordering or layout animation. Only the pointer-following hairline
+ * ring and the diagonal specular sweep respond to the cursor.
  */
-export function TrackPortalCard({
-  data,
-  spotlightState,
-  onSelect,
-  onHoverChange,
-}: TrackPortalCardProps): JSX.Element {
+export function TrackPortalCard({ data }: TrackPortalCardProps): JSX.Element {
   const cardRef = useRef<HTMLDivElement | null>(null);
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
   const ringOpacity = useSpring(0, { stiffness: 300, damping: 30 });
   const ringBackground = useMotionTemplate`radial-gradient(280px circle at ${pointerX}px ${pointerY}px, ${data.ringColor}, transparent 72%)`;
-
-  const isSelected = spotlightState === 'selected';
-  const isBackground = spotlightState === 'background';
 
   const trackPointer = (event: ReactPointerEvent<HTMLDivElement>): void => {
     const rect = cardRef.current?.getBoundingClientRect();
@@ -67,56 +57,18 @@ export function TrackPortalCard({
     pointerY.set(event.clientY - rect.top);
   };
 
-  const handleCardClick = (event: React.MouseEvent): void => {
-    /* A click anywhere on the card commits it as the spotlight track — hover
-       only previews. The landing page then steers the AI studio along
-       (clicking the NEET PG portal defaults the studio to NEET PG mode). */
-    if (isBackground) {
-      /* Dimmed cards stay inert as links — the click merely re-spotlights. */
-      event.preventDefault();
-      event.stopPropagation();
-    }
-    onSelect();
-  };
-
   return (
-    <motion.div
-      layout
+    <div
       ref={cardRef}
-      onClick={handleCardClick}
       onPointerMove={trackPointer}
-      onPointerEnter={() => {
-        ringOpacity.set(1);
-        onHoverChange?.(true);
-      }}
-      onPointerLeave={() => {
-        ringOpacity.set(0);
-        onHoverChange?.(false);
-      }}
-      onFocus={() => onHoverChange?.(true)}
-      onBlur={() => onHoverChange?.(false)}
-      tabIndex={0}
+      onPointerEnter={() => ringOpacity.set(1)}
+      onPointerLeave={() => ringOpacity.set(0)}
       role="region"
       aria-label={`${data.title} track portal`}
-      animate={
-        isSelected
-          ? { scale: 1.05, y: -12, opacity: 1, filter: 'blur(0px)', zIndex: 30 }
-          : isBackground
-            ? { scale: 0.90, y: 10, opacity: 0.40, filter: 'blur(4px)', zIndex: 10 }
-            : { scale: 1, y: 0, opacity: 1, filter: 'blur(0px)', zIndex: 15 }
-      }
-      transition={{
-        type: 'spring',
-        stiffness: 260,
-        damping: 26,
-        filter: { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
-      }}
       className={cn(
-        'group relative flex flex-col justify-between overflow-hidden rounded-[32px] text-left transition-all',
+        'group relative flex h-full flex-col justify-between overflow-hidden rounded-[32px] text-left',
         'min-h-[360px] p-8 sm:p-9 md:p-11',
-        'glass-card focus-visible:outline-none',
-        isSelected && data.shadowActive,
-        isBackground && 'cursor-pointer select-none',
+        'glass-card glass-card-rigid',
       )}
     >
       <SheenSweep />
@@ -127,18 +79,14 @@ export function TrackPortalCard({
         className={cn(
           'pointer-events-none absolute -right-12 -top-12 h-64 w-64 rounded-full opacity-60 blur-2xl transition-all duration-700',
           'group-hover:scale-125 group-hover:opacity-90',
-          isSelected && 'scale-125 opacity-100',
           data.auroraGradient,
         )}
       />
 
-      {/* ─── 2. Chromatic Animated Gradient Border ─────────────────────────── */}
+      {/* ─── 2. Chromatic Gradient Border ──────────────────────────────────── */}
       <div
         aria-hidden="true"
-        className={cn(
-          'pointer-events-none absolute inset-0 rounded-[32px] p-[1.5px] transition-opacity duration-300',
-          isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-75',
-        )}
+        className="pointer-events-none absolute inset-0 rounded-[32px] p-[1.5px] opacity-80 transition-opacity duration-300 group-hover:opacity-100"
         style={{
           WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
           WebkitMaskComposite: 'xor',
@@ -231,26 +179,17 @@ export function TrackPortalCard({
         </span>
 
         <div className="flex items-center gap-2">
-          <AnimatePresence>
-            {isSelected && (
-              <motion.a
-                key="primary-studio-cta"
-                initial={{ opacity: 0, x: -10, scale: 0.95 }}
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={{ opacity: 0, x: -10, scale: 0.95 }}
-                transition={{ type: 'spring', stiffness: 350, damping: 28 }}
-                href={data.href}
-                onClick={(event) => interceptNavigation(event, data.href)}
-                className={cn(
-                  'inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold text-white shadow-lg transition-transform duration-150 hover:scale-105 active:scale-95',
-                  data.studioButtonGradient,
-                )}
-              >
-                <Sparkles className="h-4 w-4" />
-                {data.studioButtonText}
-              </motion.a>
+          <a
+            href={data.href}
+            onClick={(event) => interceptNavigation(event, data.href)}
+            className={cn(
+              'inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold text-white shadow-lg transition-transform duration-150 hover:scale-105 active:scale-95',
+              data.studioButtonGradient,
             )}
-          </AnimatePresence>
+          >
+            <Sparkles className="h-4 w-4" />
+            {data.studioButtonText}
+          </a>
 
           <a
             href={data.href}
@@ -270,7 +209,7 @@ export function TrackPortalCard({
           </a>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 

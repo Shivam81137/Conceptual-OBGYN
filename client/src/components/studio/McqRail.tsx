@@ -10,14 +10,17 @@ import type { StudioMcq, StudioModule, StudioTrackTheme } from '@/data/revisionS
 interface McqRailProps {
   module: StudioModule;
   theme: StudioTrackTheme;
+  /** `rail` is the sticky pane-C layout; `inline` sits inside an accordion. */
+  variant?: 'rail' | 'inline';
 }
 
 /**
- * Pane C — three-question rapid drill tied to the selected module.
+ * Pane C — rapid drill tied to the selected module.
  * Answers lock after the first tap, reveal a high-yield explanation, and hand
  * any miss to the landing AI studio through the session prefill channel.
  */
-export function McqRail({ module, theme }: McqRailProps): JSX.Element {
+export function McqRail({ module, theme, variant = 'rail' }: McqRailProps): JSX.Element {
+  const inline = variant === 'inline';
   const mcqAnswers = useStudioStore((state) => state.mcqAnswers);
   const answerMcq = useStudioStore((state) => state.answerMcq);
   const resetMcqs = useStudioStore((state) => state.resetMcqs);
@@ -40,13 +43,20 @@ export function McqRail({ module, theme }: McqRailProps): JSX.Element {
   };
 
   return (
-    <aside className="glass-card flex flex-col overflow-hidden rounded-[26px] xl:sticky xl:top-24 xl:max-h-[calc(100dvh-7.5rem)]">
-      <div className="border-b border-slate-900/[0.06] px-4 pb-3 pt-4 dark:border-white/[0.06]">
+    <aside
+      className={cn(
+        'flex flex-col overflow-hidden',
+        inline
+          ? 'rounded-2xl border border-slate-900/[0.06] bg-white/40 dark:border-white/[0.07] dark:bg-white/[0.03]'
+          : 'glass-card rounded-[26px] xl:sticky xl:top-24 xl:max-h-[calc(100dvh-7.5rem)]',
+      )}
+    >
+      <div className={cn('border-b border-slate-900/[0.06] dark:border-white/[0.06]', inline ? 'px-3 pb-2.5 pt-3' : 'px-4 pb-3 pt-4')}>
         <div className="flex items-start justify-between gap-2">
           <div>
-            <p className="eyebrow text-[9.5px] tracking-[0.2em]">Rapid Drill</p>
+            <p className="eyebrow text-[9.5px] tracking-[0.2em]">{inline ? 'Clinical vignettes' : 'Rapid Drill'}</p>
             <h2 className="mt-1 text-[15px] font-semibold tracking-tight text-slate-900 dark:text-white">
-              3-Question Check
+              {inline ? `${module.mcqs.length}-Question High-Yield Drill` : '3-Question Check'}
             </h2>
           </div>
           <span className={cn('rounded-full border px-2 py-0.5 text-[9px] font-semibold', theme.border, theme.tint, theme.text)}>
@@ -63,7 +73,7 @@ export function McqRail({ module, theme }: McqRailProps): JSX.Element {
         </div>
       </div>
 
-      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-3 py-3">
+      <div className={cn('min-h-0 flex-1 space-y-3 px-3 py-3', inline ? '' : 'overflow-y-auto')}>
         {module.mcqs.map((mcq, questionIndex) => {
           const key = keys[questionIndex];
           const selected = mcqAnswers[key];
@@ -176,7 +186,9 @@ export function McqRail({ module, theme }: McqRailProps): JSX.Element {
           >
             <p className="flex items-center gap-1.5 text-[10.5px] font-semibold text-slate-800 dark:text-slate-100">
               <Target className={cn('h-3 w-3', theme.text)} strokeWidth={2.2} aria-hidden="true" />
-              {missed.length === 0 ? 'Clean sweep — 3/3.' : `${missed.length} miss${missed.length > 1 ? 'es' : ''} worth unpacking.`}
+              {missed.length === 0
+                ? `Clean sweep — ${module.mcqs.length}/${module.mcqs.length}.`
+                : `${missed.length} miss${missed.length > 1 ? 'es' : ''} worth unpacking.`}
             </p>
             <p className="mt-0.5 text-[9.5px] leading-relaxed text-slate-500 dark:text-slate-400">
               {missed.length === 0

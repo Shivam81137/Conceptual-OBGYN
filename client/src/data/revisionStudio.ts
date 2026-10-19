@@ -1,12 +1,13 @@
 import type { TrackId } from '@/types/tracks';
 import { TORCH_INFECTIONS_MODULE } from '@/data/torchInfections';
+import { FGR_GUIDELINE_442_MODULE } from '@/data/fgrGuideline442';
 
 /**
  * Revision Studio curated corpus.
  * ---------------------------------------------------------------------------
  * High-yield modules powering the workspace panes — four NEET UG foundations
- * and the NEET PG & INI-CET clinical vault (currently Module 01: TORCH
- * Infections, sourced from Chapter 20). The content is intentionally
+ * and the NEET PG & INI-CET clinical vault (Module 01: TORCH Infections;
+ * Module 02: Fetal Growth Restriction, SOGC No. 442). The content is intentionally
  * offline-first: notes, comparison tables, examiner traps, simulators,
  * flashcards and MCQ drills ship in the bundle, and the API only reconciles
  * the module index (`/tracks/:track/modules`).
@@ -110,7 +111,7 @@ export const STUDIO_TRACK_THEME: Record<TrackId, StudioTrackTheme> = {
     label: 'NEET PG & INI-CET',
     title: 'Clinical Vault',
     eyebrow: 'NEET PG & INI-CET',
-    subtitle: 'Congenital infections — serology, imaging and treatment algorithms.',
+    subtitle: 'Congenital infections and placental insufficiency — serology, Doppler staging and delivery timing.',
     gradient: 'from-indigo-600 to-rose-500',
     gradientText: 'from-indigo-600 to-rose-500 dark:from-indigo-300 dark:to-rose-300',
     tint: 'bg-indigo-500/[0.08]',
@@ -664,6 +665,12 @@ export const STUDIO_MODULES: readonly StudioModule[] = [
   /* Source: Chapter 20 · Pavika Lal, Renu Gupta, Prativa Verma             */
   /* ====================================================================== */
   TORCH_INFECTIONS_MODULE,
+
+  /* ====================================================================== */
+  /* NEET PG & INI-CET — 2. Fetal Growth Restriction (SOGC No. 442)         */
+  /* Source: SOGC CPG No. 442 · J Obstet Gynaecol Can 2023;45(10):102154    */
+  /* ====================================================================== */
+  FGR_GUIDELINE_442_MODULE,
 ] as const;
 
 export const modulesForTrack = (track: TrackId): readonly StudioModule[] =>

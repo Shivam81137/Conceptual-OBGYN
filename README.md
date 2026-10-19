@@ -56,9 +56,10 @@ conceptual-obgyn/
 │       │   │   ├── VisualAtlasCard.tsx   # fan-out glass thumbnails
 │       │   │   └── RevisionEngineCard.tsx # 7-day rhythm bar + offline pulse
 │       │   ├── studio/
-│       │   │   ├── RevisionStudioPage.tsx      # three-pane workspace + track themes
-│       │   │   ├── ModuleNavigator.tsx         # searchable modules, rings, high-yield badges
-│       │   │   ├── ConceptNotes.tsx            # flows, tables, traps, Save Pearl to ⌘K
+│       │   │   ├── TrackModuleDirectoryPage.tsx # module directory → dedicated full-screen study page (UG + PG)
+│       │   │   ├── TorchSimulator.tsx           # PG TORCH serology windows + transmission timing
+│       │   │   ├── FgrSimulator.tsx             # PG SOGC No. 442 Doppler staging + delivery timing
+│       │   │   ├── ConceptNotes.tsx            # flows, tables, traps, jump bar, topic filter, Save ⌘K
 │       │   │   ├── MenstrualCycleSimulator.tsx # UG 28-day FSH/LH/E2/P4 + endometrium
 │       │   │   ├── PartographSimulator.tsx     # PG alert/action lines + Bishop score
 │       │   │   ├── FlashcardDeck.tsx           # 3D flip cards + Again/Good/Easy

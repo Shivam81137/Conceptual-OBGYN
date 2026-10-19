@@ -13,6 +13,58 @@ import type {
 interface ConceptNotesProps {
   module: StudioModule;
   theme: StudioTrackTheme;
+  /** Layer-A topic pill filter — only concept blocks mentioning it stay visible. */
+  topicFilter?: string | null;
+  /** Clears the topic filter from the empty state. */
+  onClearTopic?: () => void;
+}
+
+const TOPIC_STOP_WORDS = new Set(['the', 'and', 'for', 'with', 'vs', 'from', 'high', 'yield']);
+
+function sectionSearchText(section: StudioNoteSection): string {
+  return [
+    section.heading,
+    section.intro ?? '',
+    ...(section.bullets ?? []),
+    ...(section.flow ?? []),
+    ...(section.pearls ?? []),
+    section.trap?.title ?? '',
+    section.trap?.body ?? '',
+    ...(section.table?.head ?? []),
+    ...(section.table?.rows.flat() ?? []),
+    section.code?.label ?? '',
+    section.code?.source ?? '',
+  ]
+    .join(' ')
+    .toLowerCase();
+}
+
+function sectionMatchesTopic(section: StudioNoteSection, topic: string): boolean {
+  const haystack = sectionSearchText(section);
+  const tokens = topic
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter((token) => token.length > 2 && !TOPIC_STOP_WORDS.has(token));
+  if (tokens.length === 0) return true;
+  return tokens.some((token) => haystack.includes(token));
+}
+
+/** Compact pill label for the notes jump bar, e.g. "SGA vs. Pathological FGR". */
+function sectionJumpLabel(section: StudioNoteSection): string {
+  if (/pearl|trap/i.test(section.heading)) return 'Golden rules';
+  const base = section.heading.split(' — ')[0] ?? section.heading;
+  const cleaned = base
+    .replace(/\([^)]*\)/g, ' ')
+    .replace(/\s+/g, ' ')
+    .replace(/[\s&,·-]+$/, '')
+    .trim();
+  const words = cleaned.split(' ').slice(0, 4).join(' ');
+  const label = words.length > 0 ? words : section.heading;
+  return label.length > 30 ? `${label.slice(0, 28)}…` : label;
+}
+
+function noteSectionId(moduleId: string, sectionId: string): string {
+  return `note-${moduleId}-${sectionId}`;
 }
 
 function FlowSteps({ steps, theme }: { steps: readonly string[]; theme: StudioTrackTheme }): JSX.Element {
@@ -167,23 +219,85 @@ function GoldenRule({
   );
 }
 
+function TrapCard({
+  trap,
+  module,
+}: {
+  trap: { title: string; body: string };
+  module: StudioModule;
+}): JSX.Element {
+  const pearls = useRecallStore((state) => state.pearls);
+  const savePearl = useRecallStore((state) => state.savePearl);
+  const removePearl = useRecallStore((state) => state.removePearl);
+  const trapText = `${trap.title}: ${trap.body}`;
+  const saved = pearls.find((entry) => entry.text === trapText) ?? null;
+
+  return (
+    <div className="mt-3 rounded-2xl border border-rose-500/20 bg-gradient-to-br from-rose-50/80 via-white/50 to-amber-50/50 px-3 py-2.5 dark:border-rose-400/20 dark:from-rose-400/[0.08] dark:via-white/[0.02] dark:to-amber-400/[0.05]">
+      <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-rose-600 dark:text-rose-300">
+        <span aria-hidden="true">🎯</span> {trap.title}
+      </p>
+      <p className="mt-1 text-[11.5px] leading-relaxed text-rose-950/90 dark:text-rose-100/90">{trap.body}</p>
+      <button
+        type="button"
+        onClick={() => {
+          if (saved) {
+            removePearl(saved.id);
+            return;
+          }
+          savePearl({
+            text: trapText,
+            query: `${module.title} — examiner trap`,
+            track: module.track,
+            sourceTag: `${module.sourceTag} · Revision Studio`,
+          });
+        }}
+        aria-pressed={saved !== null}
+        aria-label={
+          saved
+            ? `Remove examiner trap from Quick Recall: ${module.title} — ${trap.title}`
+            : `Save examiner trap to Quick Recall: ${module.title} — ${trap.title}`
+        }
+        className={cn(
+          'mt-1.5 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-semibold transition-colors',
+          saved
+            ? 'border-emerald-500/25 bg-emerald-500/10 text-emerald-700 dark:border-emerald-400/25 dark:text-emerald-300'
+            : 'border-rose-500/20 bg-white/65 text-rose-700 hover:bg-white dark:border-rose-400/20 dark:bg-white/[0.06] dark:text-rose-200 dark:hover:bg-white/[0.10]',
+        )}
+      >
+        {saved ? (
+          <BookmarkCheck className="h-2.5 w-2.5" strokeWidth={2} aria-hidden="true" />
+        ) : (
+          <Bookmark className="h-2.5 w-2.5" strokeWidth={2} aria-hidden="true" />
+        )}
+        {saved ? 'Saved to ⌘K' : 'Save trap to ⌘K'}
+      </button>
+    </div>
+  );
+}
+
 function NoteSection({
   section,
   index,
   theme,
   module,
+  domId,
 }: {
   section: StudioNoteSection;
   index: number;
   theme: StudioTrackTheme;
   module: StudioModule;
+  domId: string;
 }): JSX.Element {
   const pearls = useRecallStore((state) => state.pearls);
   const savePearl = useRecallStore((state) => state.savePearl);
   const removePearl = useRecallStore((state) => state.removePearl);
 
   return (
-    <section className="border-t border-slate-900/[0.06] pt-4 first:border-t-0 first:pt-0 dark:border-white/[0.06]">
+    <section
+      id={domId}
+      className="scroll-mt-36 border-t border-slate-900/[0.06] pt-4 first:border-t-0 first:pt-0 dark:border-white/[0.06]"
+    >
       <div className="flex items-center gap-2">
         <span
           className={cn(
@@ -218,14 +332,7 @@ function NoteSection({
 
       {section.code ? <CodePanel code={section.code} /> : null}
 
-      {section.trap ? (
-        <div className="mt-3 rounded-2xl border border-rose-500/20 bg-gradient-to-br from-rose-50/80 via-white/50 to-amber-50/50 px-3 py-2.5 dark:border-rose-400/20 dark:from-rose-400/[0.08] dark:via-white/[0.02] dark:to-amber-400/[0.05]">
-          <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-rose-600 dark:text-rose-300">
-            <span aria-hidden="true">🎯</span> {section.trap.title}
-          </p>
-          <p className="mt-1 text-[11.5px] leading-relaxed text-rose-950/90 dark:text-rose-100/90">{section.trap.body}</p>
-        </div>
-      ) : null}
+      {section.trap ? <TrapCard trap={section.trap} module={module} /> : null}
 
       {section.pearls ? (
         <div className="mt-2.5 space-y-1.5">
@@ -260,10 +367,26 @@ function NoteSection({
 
 /**
  * Pane B, tab 1 — Visual Concept Notes.
- * Causal flows, comparison tables, examiner traps, and golden rules that can
- * be filed straight into the ⌘K vault without leaving the module.
+ * A numbered jump bar anchors every concept block, while Layer-A topic pills
+ * filter the list down to the blocks that mention a given topic. Causal flows,
+ * comparison tables, examiner traps and golden rules can be filed straight
+ * into the ⌘K vault without leaving the module.
  */
-export function ConceptNotes({ module, theme }: ConceptNotesProps): JSX.Element {
+export function ConceptNotes({ module, theme, topicFilter = null, onClearTopic }: ConceptNotesProps): JSX.Element {
+  const filter = topicFilter?.trim() ?? '';
+  const indexed = module.notes.map((section, index) => ({ section, index }));
+  const visible = filter ? indexed.filter(({ section }) => sectionMatchesTopic(section, filter)) : indexed;
+
+  const jumpTo = (sectionId: string): void => {
+    const target = document.getElementById(noteSectionId(module.id, sectionId));
+    if (!target) return;
+    const reduced =
+      typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+        ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        : false;
+    target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -272,13 +395,70 @@ export function ConceptNotes({ module, theme }: ConceptNotesProps): JSX.Element 
           Mechanism-first notes · every golden rule saves to ⌘K
         </p>
         <span className="rounded-full border border-slate-900/[0.06] bg-white/60 px-2 py-0.5 text-[9.5px] font-medium text-slate-500 dark:border-white/[0.08] dark:bg-white/[0.05] dark:text-slate-400">
-          {module.notes.length} concept blocks
+          {filter
+            ? `${visible.length} of ${module.notes.length} blocks · “${filter}”`
+            : `${module.notes.length} concept blocks`}
         </span>
       </div>
 
-      {module.notes.map((section, index) => (
-        <NoteSection key={section.id} section={section} index={index} theme={theme} module={module} />
-      ))}
+      {visible.length > 0 && indexed.length > 1 ? (
+        <div className="flex items-start gap-2">
+          <span className="mt-1 shrink-0 text-[8.5px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+            Jump
+          </span>
+          <div className="flex min-w-0 flex-1 gap-1 overflow-x-auto pb-1">
+            {visible.map(({ section, index }) => (
+              <button
+                key={section.id}
+                type="button"
+                onClick={() => jumpTo(section.id)}
+                aria-label={`Jump to section ${index + 1}: ${section.heading}`}
+                className={cn(
+                  'inline-flex shrink-0 items-center gap-1 rounded-full border border-slate-900/[0.06] bg-white/60 px-2 py-0.5 text-[9.5px] font-medium text-slate-500 transition-colors hover:text-slate-900 dark:border-white/[0.08] dark:bg-white/[0.05] dark:text-slate-400 dark:hover:text-white',
+                )}
+              >
+                <span className={cn('grid h-3.5 w-3.5 place-items-center rounded-full bg-gradient-to-br text-[8px] font-bold text-white', theme.gradient)}>
+                  {index + 1}
+                </span>
+                {sectionJumpLabel(section)}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
+
+      {visible.length === 0 ? (
+        <div className="rounded-2xl border border-slate-900/[0.06] bg-white/50 px-4 py-6 text-center dark:border-white/[0.08] dark:bg-white/[0.03]">
+          <p className="text-[11.5px] font-medium text-slate-600 dark:text-slate-300">
+            No concept block mentions “{filter}”.
+          </p>
+          {onClearTopic ? (
+            <button
+              type="button"
+              onClick={onClearTopic}
+              className={cn(
+                'mt-2 inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-semibold transition-colors',
+                theme.border,
+                theme.tint,
+                theme.text,
+              )}
+            >
+              Show all {module.notes.length} blocks
+            </button>
+          ) : null}
+        </div>
+      ) : (
+        visible.map(({ section, index }) => (
+          <NoteSection
+            key={section.id}
+            domId={noteSectionId(module.id, section.id)}
+            section={section}
+            index={index}
+            theme={theme}
+            module={module}
+          />
+        ))
+      )}
     </div>
   );
 }

@@ -17,7 +17,6 @@ import { ObgynAiStudioCard } from '@/components/landing/ObgynAiStudioCard';
 import { useAppStore } from '@/store/useAppStore';
 import { usePrefersReducedMotion } from '@/hooks/useEnvironment';
 import { withFilterTween } from '@/lib/motion';
-import { cn } from '@/lib/utils';
 
 const TRACK_CARDS: readonly TrackCardData[] = [
   {
@@ -36,7 +35,6 @@ const TRACK_CARDS: readonly TrackCardData[] = [
     topics: ['Menstrual Axis', 'Gametogenesis', 'Placenta'],
     studioButtonText: 'Enter NEET UG Studio →',
     studioButtonGradient: 'bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 shadow-[0_10px_25px_-5px_rgba(16,185,129,0.4)]',
-    shadowActive: 'shadow-[0_30px_80px_-15px_rgba(16,185,129,0.28)]',
     borderGradient: 'from-emerald-400 via-teal-500 to-cyan-500',
     auroraGradient: 'bg-gradient-to-br from-emerald-400/25 via-teal-300/20 to-cyan-400/25',
   },
@@ -56,7 +54,6 @@ const TRACK_CARDS: readonly TrackCardData[] = [
     topics: ['Partograph', 'High-Risk OB', 'Oncology'],
     studioButtonText: 'Enter NEET PG Studio →',
     studioButtonGradient: 'bg-gradient-to-r from-indigo-500 via-purple-500 to-rose-500 hover:from-indigo-600 hover:to-rose-600 shadow-[0_10px_25px_-5px_rgba(79,70,229,0.4)]',
-    shadowActive: 'shadow-[0_30px_80px_-15px_rgba(79,70,229,0.28)]',
     borderGradient: 'from-blue-500 via-indigo-500 to-rose-500',
     auroraGradient: 'bg-gradient-to-br from-blue-500/25 via-indigo-400/20 to-rose-400/25',
   },
@@ -94,7 +91,6 @@ function CascadeDiv({ order, reduceMotion, className, children }: CascadeDivProp
  */
 export function LandingPage(): JSX.Element {
   const [activePhrase, setActivePhrase] = useState<TypewriterPhrase>(OBGYN_PHRASES[0]);
-  const spotlightTrack = useAppStore((state) => state.spotlightTrack);
   const setSpotlightTrack = useAppStore((state) => state.setSpotlightTrack);
   const setCommandOpen = useAppStore((state) => state.setCommandOpen);
   const reduceMotion = usePrefersReducedMotion();
@@ -182,42 +178,11 @@ export function LandingPage(): JSX.Element {
 
           {/* ─── Track portal cards ──────────────────────────────────────── */}
           <div className="mt-9 grid grid-cols-1 gap-6 md:grid-cols-2 md:items-stretch">
-            {TRACK_CARDS.map((card, index) => {
-              const isSelected = spotlightTrack === card.id;
-              const isBackground = spotlightTrack !== null && !isSelected;
-              const spotlightState = isSelected
-                ? ('selected' as const)
-                : isBackground
-                  ? ('background' as const)
-                  : ('default' as const);
-
-              // On mobile, if a track is actively spotlighted, elevate it to the top of the stack (order-first)
-              // so clicking "PG" moves the PG card upward to fill the top space.
-              const mobileOrderClass =
-                spotlightTrack === card.id
-                  ? 'order-first'
-                  : spotlightTrack !== null
-                    ? 'order-last'
-                    : '';
-
-              return (
-                <CascadeDiv
-                  key={card.id}
-                  order={index + 1}
-                  reduceMotion={reduceMotion}
-                  className={cn(
-                    'w-full min-w-0 md:order-none',
-                    mobileOrderClass,
-                  )}
-                >
-                  <TrackPortalCard
-                    data={card}
-                    spotlightState={spotlightState}
-                    onSelect={() => setSpotlightTrack(card.id)}
-                  />
-                </CascadeDiv>
-              );
-            })}
+            {TRACK_CARDS.map((card) => (
+              <div key={card.id} className="w-full min-w-0">
+                <TrackPortalCard data={card} />
+              </div>
+            ))}
           </div>
 
           {/* ─── Flagship OBGYN AI Studio Composer ──────────────────────── */}

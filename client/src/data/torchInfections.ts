@@ -20,7 +20,7 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
   summary:
     'The complete congenital-infection vault: serological timing, amniotic-fluid PCR windows, and toxoplasmosis, syphilis, rubella, CMV, HSV, parvovirus B19 and VZV — with the ten source algorithms and every treatment regimen.',
   highYield: true,
-  weightage: 'Very High Yield',
+  weightage: 'High Yield',
   durationMinutes: 42,
   tags: ['TORCH', 'Congenital infection', 'Serology', 'Antenatal', 'High Yield'],
   sourceTag: 'Pavika Lal, Renu Gupta, Prativa Verma • Chapter 20: TORCH Infections',

@@ -10,8 +10,12 @@ export const TRACK_IDS = ['NEET_UG', 'NEET_PG'] as const;
 export const trackIdSchema = z.enum(TRACK_IDS);
 export type TrackId = z.infer<typeof trackIdSchema>;
 
-/** Express params for `/:track*` routes — validated as an object, not a bare enum. */
-export const trackParamSchema = z.object({ track: trackIdSchema });
+/** Accepts both canonical ids (`NEET_PG`) and the public `/track/pg` aliases. */
+export const trackParamSchema = z.object({
+  track: z
+    .union([trackIdSchema, z.literal('pg'), z.literal('ug')])
+    .transform((value): TrackId => (value === 'pg' ? 'NEET_PG' : value === 'ug' ? 'NEET_UG' : value)),
+});
 export type TrackParam = z.infer<typeof trackParamSchema>;
 
 export const DIFFICULTIES = ['foundation', 'moderate', 'clinical', 'exam-trap'] as const;

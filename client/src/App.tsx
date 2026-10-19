@@ -4,7 +4,7 @@ import { AuroraGlassCanvas } from '@/components/canvas/AuroraGlassCanvas';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { QuickRecallModal } from '@/components/ui/QuickRecallModal';
 import { LandingPage } from '@/components/landing/LandingPage';
-import { RevisionStudioPage } from '@/components/studio/RevisionStudioPage';
+import { TrackModuleDirectoryPage } from '@/components/studio/TrackModuleDirectoryPage';
 import { createQueryClient } from '@/lib/queryClient';
 import { replaceNavigate, usePathname } from '@/lib/router';
 import { useTheme } from '@/hooks/useTheme';
@@ -48,7 +48,7 @@ export default function App(): JSX.Element {
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
           {route ? (
-            <RevisionStudioPage key={route.trackId} trackId={route.trackId} />
+            <TrackModuleDirectoryPage key={route.trackId} trackId={route.trackId} />
           ) : (
             <LandingPage />
           )}
