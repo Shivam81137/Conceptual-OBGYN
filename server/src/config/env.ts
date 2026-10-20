@@ -70,7 +70,7 @@ const envSchema = z.object({
     .default('1')
     .transform((value) => value === '1' || value === 'true'),
   POLLINATIONS_MODEL: z.string().default('openai-fast'),
-  POLLINATIONS_TIMEOUT_MS: z.coerce.number().int().min(1000).max(120_000).default(45_000),
+  POLLINATIONS_TIMEOUT_MS: z.coerce.number().int().min(1000).max(120_000).default(55_000),
 });
 
 const parsed = envSchema.safeParse(process.env);

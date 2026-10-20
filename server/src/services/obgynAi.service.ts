@@ -208,35 +208,18 @@ Return ONLY a single valid JSON object (no markdown fences, no commentary) with 
 - "sourceTag": string — one badge line, e.g. "Synthesized for NEET PG • Williams 26e & FIGO Aligned".
 - "references": array of 2-5 short strings — real guideline/textbook citations supporting the answer (name, plus year/edition only if certain; never invented page numbers or editions).`;
 
-/** Structured-output contract for engines that honour `response_format: json_schema`. */
-const OPENAI_STRUCTURED_OUTPUT = {
-  name: 'obgyn_assist_answer',
-  strict: true,
-  schema: {
-    type: 'object',
-    properties: {
-      answer: { type: 'string', description: OBGYN_ASSIST_LLM_SCHEMA.properties.answer.description },
-      highYieldPearl: { type: 'string', description: OBGYN_ASSIST_LLM_SCHEMA.properties.highYieldPearl.description },
-      followUpQuestions: {
-        type: 'array',
-        items: { type: 'string' },
-        minItems: 3,
-        maxItems: 3,
-        description: OBGYN_ASSIST_LLM_SCHEMA.properties.followUpQuestions.description,
-      },
-      sourceTag: { type: 'string', description: OBGYN_ASSIST_LLM_SCHEMA.properties.sourceTag.description },
-      references: {
-        type: 'array',
-        items: { type: 'string' },
-        minItems: 1,
-        maxItems: 5,
-        description: OBGYN_ASSIST_LLM_SCHEMA.properties.references.description,
-      },
-    },
-    required: ['answer', 'highYieldPearl', 'followUpQuestions', 'sourceTag', 'references'],
-    additionalProperties: false,
-  },
-} as const;
+/**
+ * Pollinations' anonymous tier caps a single completion at 1500 tokens, and its
+ * `openai-fast` model is a reasoning model whose hidden reasoning also counts
+ * toward that cap. A compact answer plus `reasoning_effort: 'low'` keeps the
+ * JSON object inside the budget instead of truncating it mid-string.
+ */
+const POLLINATIONS_COMPACT_CONTRACT = `
+Conciseness override (mandatory for this engine):
+- Keep "answer" under 160 words using exactly the three bold headers above.
+- One or two bullets per section; no introduction and no repetition.
+- Keep every follow-up question under 12 words.
+- The whole JSON object must stay well under 1200 tokens.`;
 
 /** A failed provider is parked for a cooldown so one dead endpoint can't stall every request. */
 const PROVIDER_COOLDOWN_MS = 3 * 60_000;
@@ -791,16 +774,13 @@ export class ObgynAiService {
     try {
       const startedAt = performance.now();
 
-      /* Pollinations + Groq honour strict structured outputs; the rest use JSON mode.
-         Groq's gpt-oss models reject `response_format`, so they run prompt-driven
-         JSON extraction (parseLlmPayload tolerates prose/fences around the object). */
-      const responseFormat =
-        engine === 'pollinations'
-          ? ({ type: 'json_schema', json_schema: OPENAI_STRUCTURED_OUTPUT } as const)
-          : engine === 'groq'
-            ? undefined
-            : ({ type: 'json_object' } as const);
-      const maxTokens = engine === 'groq' ? 3600 : engine === 'pollinations' ? 6000 : 2600;
+      /* Groq's gpt-oss models reject `response_format`, so they run prompt-driven
+         JSON extraction (parseLlmPayload tolerates prose/fences around the object).
+         Pollinations' json_schema mode returns empty content, but json_object works. */
+      const responseFormat = engine === 'groq' ? undefined : ({ type: 'json_object' } as const);
+      const maxTokens = engine === 'groq' ? 3600 : engine === 'pollinations' ? 1500 : 2600;
+      const reasoningEffort =
+        engine === 'pollinations' || (engine === 'groq' && /gpt-oss/i.test(model)) ? 'low' : undefined;
 
       const response = await fetch(url, {
         method: 'POST',
@@ -813,9 +793,14 @@ export class ObgynAiService {
           temperature: 0.4,
           max_tokens: maxTokens,
           ...(responseFormat ? { response_format: responseFormat } : {}),
-          ...(engine === 'groq' && /gpt-oss/i.test(model) ? { reasoning_effort: 'low' } : {}),
+          ...(reasoningEffort ? { reasoning_effort: reasoningEffort } : {}),
           messages: [
-            { role: 'system', content: `${OBGYN_AI_SYSTEM_INSTRUCTION}${JSON_CONTRACT}` },
+            {
+              role: 'system',
+              content: `${OBGYN_AI_SYSTEM_INSTRUCTION}${JSON_CONTRACT}${
+                engine === 'pollinations' ? POLLINATIONS_COMPACT_CONTRACT : ''
+              }`,
+            },
             { role: 'user', content: this.buildPromptContents(request, attachment, document) },
           ],
         }),

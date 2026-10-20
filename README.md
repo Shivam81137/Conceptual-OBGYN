@@ -247,7 +247,7 @@ npm start          # run the compiled API on :5000
 | `OMNIROUTE_API_KEY` / `OMNIROUTE_BASE_URL` / `OMNIROUTE_MODEL` / `OMNIROUTE_TIMEOUT_MS` | — / `http://localhost:20128/v1` / `auto/best-chat` / `60000` | Self-hosted OmniRoute gateway — primary hop, auto-routes across 350+ providers; pin `agy/gemini-3.8-flash-tiered` for ~14 s answers |
 | `OPENROUTER_API_KEY` / `OPENROUTER_MODEL` / `OPENROUTER_TIMEOUT_MS` | — / `google/gemma-4-31b-it:free` / `30000` | Open-source aggregator hop (`:free` tier models) |
 | `GROQ_API_KEY` / `GROQ_MODEL` / `GROQ_TIMEOUT_MS` | — / `openai/gpt-oss-120b` / `30000` | Groq GPT-OSS hop (fast LPU inference, prompt-driven JSON with citations) |
-| `POLLINATIONS_ENABLED` / `POLLINATIONS_MODEL` / `POLLINATIONS_TIMEOUT_MS` | `1` / `openai-fast` / `45000` | Keyless open-source text hop — the chain still answers live with no keys |
+| `POLLINATIONS_ENABLED` / `POLLINATIONS_MODEL` / `POLLINATIONS_TIMEOUT_MS` | `1` / `openai-fast` / `55000` | Keyless open-source text hop — the chain still answers live with no keys |
 | `AI_UPLOAD_MAX_BYTES` | `10485760` | Upload ceiling for `.pdf`/`.txt` attachments |
 
 Every hop is optional: a missing or failing provider is parked by a circuit breaker and the next one answers, ending at the curated clinical vault — `POST /ai/obgyn-assist` always responds.
