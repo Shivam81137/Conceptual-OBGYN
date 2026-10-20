@@ -454,7 +454,7 @@ function PearlBanner({ text, label = 'High-Yield Exam Pearl' }: { text: string; 
   return (
     <div
       role="note"
-      className="relative mt-3.5 overflow-hidden rounded-2xl border border-emerald-400/35 bg-gradient-to-br from-emerald-400/[0.14] via-teal-400/[0.08] to-indigo-500/[0.12] px-4 py-3 dark:border-emerald-300/20"
+      className="relative mt-3.5 overflow-hidden rounded-2xl border border-emerald-400/35 bg-gradient-to-br from-emerald-400/[0.14] via-teal-400/[0.08] to-indigo-500/[0.12] px-3.5 py-3 sm:px-4 dark:border-emerald-300/20"
     >
       <div
         aria-hidden="true"
@@ -468,7 +468,7 @@ function PearlBanner({ text, label = 'High-Yield Exam Pearl' }: { text: string; 
           <p className="font-mono text-[9.5px] font-semibold uppercase tracking-[0.16em] text-emerald-700 dark:text-emerald-300">
             {label}
           </p>
-          <p className="mt-1 text-[13px] font-medium leading-relaxed text-slate-800 dark:text-slate-100">{text}</p>
+          <p className="mt-1 text-[13.5px] font-medium leading-relaxed text-slate-800 sm:text-[13px] dark:text-slate-100">{text}</p>
         </div>
       </div>
     </div>
@@ -484,18 +484,18 @@ function FollowUpChips({ questions, onPick }: { questions: readonly string[]; on
         <Sparkles className="h-3 w-3" aria-hidden="true" />
         Keep exploring
       </span>
-      <div className="mt-2 flex flex-wrap gap-2">
+      <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
         {questions.map((question) => (
           <motion.button
             key={question}
             type="button"
             whileTap={{ scale: 0.97 }}
             onClick={() => onPick(question)}
-            className="chip-glass group inline-flex max-w-full items-center gap-1.5 rounded-full px-3 py-1.5 text-left text-[11px] font-medium text-slate-600 transition-colors duration-150 hover:text-[#1A73E8] dark:text-slate-300 dark:hover:text-[#8AB4F8]"
+            className="chip-glass group flex min-h-[44px] w-full touch-manipulation items-start gap-2 rounded-xl px-3 py-2.5 text-left text-[12px] font-medium text-slate-600 transition-colors duration-150 hover:text-[#1A73E8] sm:inline-flex sm:min-h-0 sm:w-auto sm:items-center sm:gap-1.5 sm:rounded-full sm:py-1.5 sm:text-[11px] dark:text-slate-300 dark:hover:text-[#8AB4F8]"
           >
-            <span className="truncate">{question}</span>
+            <span className="line-clamp-2 min-w-0 flex-1 sm:line-clamp-1 sm:flex-none">{question}</span>
             <ArrowUpRight
-              className="h-3 w-3 shrink-0 text-slate-400 transition-transform duration-150 group-hover:-translate-y-px group-hover:translate-x-px group-hover:text-[#1A73E8] dark:group-hover:text-[#8AB4F8]"
+              className="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-400 transition-transform duration-150 group-hover:-translate-y-px group-hover:translate-x-px group-hover:text-[#1A73E8] sm:mt-0 sm:h-3 sm:w-3 dark:group-hover:text-[#8AB4F8]"
               strokeWidth={2}
               aria-hidden="true"
             />
@@ -526,7 +526,7 @@ function EngineChip({ engine, model }: { engine: ObgynAssistEngine; model?: stri
 function ReferencesRow({ references }: { references: readonly string[] }): JSX.Element | null {
   if (references.length === 0) return null;
   return (
-    <div className="mt-4 rounded-xl border border-slate-200/70 bg-white/50 px-3.5 py-3 dark:border-white/10 dark:bg-white/[0.03]">
+    <div className="mt-4 rounded-xl border border-slate-200/70 bg-white/50 px-3 py-3 sm:px-3.5 dark:border-white/10 dark:bg-white/[0.03]">
       <span className="inline-flex items-center gap-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
         <Library className="h-3 w-3" aria-hidden="true" />
         Evidence &amp; references
@@ -535,13 +535,13 @@ function ReferencesRow({ references }: { references: readonly string[] }): JSX.E
         {references.map((reference) => (
           <li
             key={reference}
-            className="flex items-start gap-2 text-[11.5px] leading-relaxed text-slate-600 dark:text-slate-300"
+            className="flex items-start gap-2 text-[12px] leading-relaxed text-slate-600 sm:text-[11.5px] dark:text-slate-300"
           >
             <span
               aria-hidden="true"
               className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-gradient-to-r from-blue-500 to-teal-400"
             />
-            <span>{reference}</span>
+            <span className="min-w-0 break-words">{reference}</span>
           </li>
         ))}
       </ul>
@@ -552,7 +552,7 @@ function ReferencesRow({ references }: { references: readonly string[] }): JSX.E
 /** Professional revision caveat shown under every answer. */
 function ClinicalDisclaimer(): JSX.Element {
   return (
-    <p className="mt-3 flex items-start gap-1.5 text-[10.5px] leading-relaxed text-slate-400 dark:text-slate-500">
+    <p className="mt-3 flex items-start gap-1.5 text-[11px] leading-relaxed text-slate-400 sm:text-[10.5px] dark:text-slate-500">
       <ShieldCheck className="mt-px h-3 w-3 shrink-0 text-teal-500 dark:text-teal-400" strokeWidth={2} aria-hidden="true" />
       AI-generated for NEET UG / PG &amp; INI-CET revision. Verify every dose, cut-off and guideline against the current primary source before clinical use.
     </p>
@@ -569,44 +569,47 @@ interface ActionBarProps {
 
 function ActionBar({ copied, saved, onCopy, onClear, onToggleSave }: ActionBarProps): JSX.Element {
   return (
-    <div className="flex shrink-0 flex-wrap items-center gap-2">
+    <div className="grid w-full grid-cols-3 gap-2 sm:flex sm:w-auto sm:shrink-0 sm:flex-wrap sm:items-center">
       <button
         type="button"
         aria-pressed={saved}
         onClick={onToggleSave}
         className={cn(
-          'chip-glass inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold transition-all duration-150',
+          'chip-glass inline-flex min-h-[42px] touch-manipulation items-center justify-center gap-1.5 rounded-full px-2 py-2 text-[11px] font-semibold transition-all duration-150 sm:min-h-0 sm:px-3 sm:py-1.5',
           saved
             ? 'text-emerald-600 dark:text-emerald-400'
             : 'text-slate-600 hover:text-[#1A73E8] dark:text-slate-300 dark:hover:text-[#8AB4F8]',
         )}
       >
         {saved ? (
-          <BookmarkCheck className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+          <BookmarkCheck className="h-3.5 w-3.5 shrink-0" strokeWidth={2} aria-hidden="true" />
         ) : (
-          <Bookmark className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden="true" />
+          <Bookmark className="h-3.5 w-3.5 shrink-0" strokeWidth={1.8} aria-hidden="true" />
         )}
-        {saved ? 'Saved to Quick Recall ✓' : 'Save to Quick Recall (⌘K)'}
+        <span className="sm:hidden">{saved ? 'Saved' : 'Save'}</span>
+        <span className="hidden sm:inline">{saved ? 'Saved to Quick Recall ✓' : 'Save to Quick Recall (⌘K)'}</span>
       </button>
       <button
         type="button"
         onClick={onCopy}
-        className="chip-glass inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold text-slate-600 transition-all duration-150 hover:text-[#1A73E8] dark:text-slate-300 dark:hover:text-[#8AB4F8]"
+        className="chip-glass inline-flex min-h-[42px] touch-manipulation items-center justify-center gap-1.5 rounded-full px-2 py-2 text-[11px] font-semibold text-slate-600 transition-all duration-150 hover:text-[#1A73E8] sm:min-h-0 sm:px-3 sm:py-1.5 dark:text-slate-300 dark:hover:text-[#8AB4F8]"
       >
         {copied ? (
-          <Check className="h-3.5 w-3.5 text-emerald-500" strokeWidth={2.2} aria-hidden="true" />
+          <Check className="h-3.5 w-3.5 shrink-0 text-emerald-500" strokeWidth={2.2} aria-hidden="true" />
         ) : (
-          <Copy className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden="true" />
+          <Copy className="h-3.5 w-3.5 shrink-0" strokeWidth={1.8} aria-hidden="true" />
         )}
-        {copied ? 'Copied to Notes' : 'Copy to Revision Notes'}
+        <span className="sm:hidden">{copied ? 'Copied' : 'Copy'}</span>
+        <span className="hidden sm:inline">{copied ? 'Copied to Notes' : 'Copy to Revision Notes'}</span>
       </button>
       <button
         type="button"
         onClick={onClear}
-        className="chip-glass inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold text-slate-600 transition-all duration-150 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+        className="chip-glass inline-flex min-h-[42px] touch-manipulation items-center justify-center gap-1.5 rounded-full px-2 py-2 text-[11px] font-semibold text-slate-600 transition-all duration-150 hover:text-slate-900 sm:min-h-0 sm:px-3 sm:py-1.5 dark:text-slate-300 dark:hover:text-white"
       >
-        <RotateCcw className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden="true" />
-        Clear / Ask Another
+        <RotateCcw className="h-3.5 w-3.5 shrink-0" strokeWidth={1.8} aria-hidden="true" />
+        <span className="sm:hidden">Clear</span>
+        <span className="hidden sm:inline">Clear / Ask Another</span>
       </button>
     </div>
   );
@@ -632,7 +635,7 @@ function ResultPanel({ request, result, copied, saved, onCopy, onClear, onFollow
 
   return (
     <div aria-live="polite">
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
         <span className="inline-flex items-center gap-1.5 rounded-full border border-[#1A73E8]/20 bg-[#1A73E8]/[0.07] px-2.5 py-1 font-mono text-[9.5px] font-semibold uppercase tracking-[0.1em] text-[#1A73E8] dark:border-[#8AB4F8]/25 dark:bg-[#8AB4F8]/10 dark:text-[#8AB4F8]">
           <TrackIcon className="h-3 w-3" strokeWidth={2} aria-hidden="true" />
           {trackLabelFor(request.track)}
@@ -640,13 +643,15 @@ function ResultPanel({ request, result, copied, saved, onCopy, onClear, onFollow
         <span className="rounded-full border border-slate-200/80 bg-white/60 px-2.5 py-1 font-mono text-[9.5px] font-semibold uppercase tracking-[0.1em] text-slate-500 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-400">
           {result.source === 'recall' ? 'Quick Recall' : modeLabelFor(request.mode)}
         </span>
-        <span className="min-w-0 flex-1 truncate text-xs text-slate-500 dark:text-slate-400">“{heading}”</span>
+        <span className="w-full min-w-0 text-[11.5px] leading-snug text-slate-500 sm:w-auto sm:flex-1 sm:truncate sm:text-xs dark:text-slate-400">
+          “{heading}”
+        </span>
       </div>
 
       {result.source === 'api' ? (
         <>
           <PearlBanner text={result.payload.highYieldPearl} />
-          <div className="mt-4 max-h-[440px] overflow-y-auto overscroll-contain pr-1">
+          <div className="mt-4 max-h-[56dvh] overflow-y-auto overscroll-contain pr-1 sm:max-h-[440px]">
             <StudioMarkdown markdown={result.payload.answer} />
           </div>
           <ReferencesRow references={result.payload.references} />
@@ -658,7 +663,7 @@ function ResultPanel({ request, result, copied, saved, onCopy, onClear, onFollow
                 <BookOpen className="h-3 w-3" aria-hidden="true" />
                 Sources
               </span>
-              <span className="rounded-full border border-slate-200/70 bg-white/60 px-2 py-0.5 text-[10px] text-slate-500 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-400">
+              <span className="max-w-full rounded-full border border-slate-200/70 bg-white/60 px-2 py-0.5 text-[10px] leading-snug text-slate-500 break-words dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-400">
                 {result.payload.sourceTag}
               </span>
               <EngineChip engine={result.payload.meta.engine} model={result.payload.meta.model} />
@@ -666,7 +671,7 @@ function ResultPanel({ request, result, copied, saved, onCopy, onClear, onFollow
                 {(result.payload.meta.durationMs / 1000).toFixed(1)}s · {formatGeneratedAt(result.payload.meta.generatedAtISO)}
               </span>
               {result.payload.meta.document ? (
-                <span className="rounded-full border border-slate-200/70 bg-white/60 px-2 py-0.5 text-[10px] text-slate-500 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-400">
+                <span className="max-w-full rounded-full border border-slate-200/70 bg-white/60 px-2 py-0.5 text-[10px] leading-snug text-slate-500 break-words dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-400">
                   {result.payload.meta.document.name} · {result.payload.meta.document.characters.toLocaleString()} chars parsed
                 </span>
               ) : null}
@@ -677,7 +682,7 @@ function ResultPanel({ request, result, copied, saved, onCopy, onClear, onFollow
       ) : result.source === 'local' ? (
         <>
           <PearlBanner text={result.answer.pearl} label="High-Yield NEET Pearl" />
-          <div className="mt-4 max-h-[440px] space-y-5 overflow-y-auto overscroll-contain pr-1">
+          <div className="mt-4 max-h-[56dvh] space-y-5 overflow-y-auto overscroll-contain pr-1 sm:max-h-[440px]">
             {result.answer.blocks.map((block, index) => (
               <AnswerBlockView key={index} block={block} />
             ))}
@@ -692,7 +697,7 @@ function ResultPanel({ request, result, copied, saved, onCopy, onClear, onFollow
               {result.answer.sources.map((source) => (
                 <span
                   key={source}
-                  className="rounded-full border border-slate-200/70 bg-white/60 px-2 py-0.5 text-[10px] text-slate-500 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-400"
+                  className="max-w-full rounded-full border border-slate-200/70 bg-white/60 px-2 py-0.5 text-[10px] leading-snug text-slate-500 break-words dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-400"
                 >
                   {source}
                 </span>
@@ -1076,24 +1081,24 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
       />
 
       {/* ─── Animated gradient hairline that wraps the glass card ─────────────── */}
-      <div className="relative rounded-[34px] bg-gradient-to-r from-blue-500/20 via-teal-400/20 to-indigo-500/20 p-[1.5px]">
-        <div className="relative rounded-[32px] border border-white/80 bg-white/65 p-5 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.07),inset_0_1px_1px_rgba(255,255,255,0.95)] backdrop-blur-2xl backdrop-saturate-[190%] transition-all duration-500 md:p-6 dark:border-white/10 dark:bg-[#0F1423]/70 dark:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.45),inset_0_1px_1px_rgba(255,255,255,0.06)]">
+      <div className="relative rounded-[26px] bg-gradient-to-r from-blue-500/20 via-teal-400/20 to-indigo-500/20 p-[1.5px] sm:rounded-[34px]">
+        <div className="relative rounded-[24px] border border-white/80 bg-white/65 p-4 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.07),inset_0_1px_1px_rgba(255,255,255,0.95)] backdrop-blur-2xl backdrop-saturate-[190%] transition-all duration-500 sm:rounded-[32px] sm:p-5 md:p-6 dark:border-white/10 dark:bg-[#0F1423]/70 dark:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.45),inset_0_1px_1px_rgba(255,255,255,0.06)]">
           {/* ─── Header row ─────────────────────────────────────────────────────── */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <h2 className="text-lg font-semibold tracking-tight text-slate-900 truncate dark:text-white">
-                Clinical AI & PDF Recall
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex min-w-0 items-center gap-2">
+              <h2 className="truncate text-base font-semibold tracking-tight text-slate-900 sm:text-lg dark:text-white">
+                Clinical AI &amp; PDF Recall
               </h2>
-              <span className="shrink-0 text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-teal-500/10 text-teal-700 dark:bg-teal-500/20 dark:text-teal-300">
+              <span className="shrink-0 rounded-full bg-teal-500/10 px-2 py-0.5 text-[10px] font-medium text-teal-700 sm:px-2.5 sm:text-[11px] dark:bg-teal-500/20 dark:text-teal-300">
                 AI Studio
               </span>
             </div>
 
-            {/* ─── Track context switcher ──────────────────────────────────────── */}
+            {/* ─── Track context switcher · full-width segmented on mobile ──────── */}
             <div
               role="tablist"
               aria-label="Clinical depth"
-              className="inline-flex h-8 shrink-0 items-center gap-0.5 rounded-full bg-slate-900/5 p-0.5 border border-slate-200/60 backdrop-blur-md dark:border-white/10 dark:bg-white/[0.06]"
+              className="grid w-full shrink-0 grid-cols-2 gap-1 rounded-xl border border-slate-200/60 bg-slate-900/5 p-1 backdrop-blur-md sm:inline-flex sm:h-8 sm:w-auto sm:items-center sm:gap-0.5 sm:rounded-full sm:p-0.5 dark:border-white/10 dark:bg-white/[0.06]"
             >
               {TRACK_OPTIONS.map((option) => {
                 const isActive = track === option.id;
@@ -1105,7 +1110,7 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
                     aria-selected={isActive}
                     onClick={() => setTrack(option.id)}
                     className={cn(
-                      'relative rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150',
+                      'relative flex h-9 touch-manipulation items-center justify-center rounded-lg px-3 text-xs font-medium transition-colors duration-150 sm:h-auto sm:rounded-full sm:py-1',
                       isActive
                         ? 'text-slate-900 dark:text-white'
                         : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200',
@@ -1114,7 +1119,7 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
                     {isActive ? (
                       <motion.span
                         layoutId="aiTrackPill"
-                        className="absolute inset-0 rounded-full bg-white shadow-sm dark:bg-white/[0.15]"
+                        className="absolute inset-0 rounded-lg bg-white shadow-sm sm:rounded-full dark:bg-white/[0.15]"
                         transition={{ type: 'spring', stiffness: 440, damping: 36 }}
                       />
                     ) : null}
@@ -1137,7 +1142,7 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
             onFocus={() => setComposerFocused(true)}
             onBlur={handleComposerBlur}
             className={cn(
-              'relative rounded-2xl bg-white/90 backdrop-blur-xl border border-slate-200/80 shadow-[0_4px_24px_-4px_rgba(15,23,42,0.05),inset_0_1px_0_rgba(255,255,255,1)] focus-within:border-teal-500/50 focus-within:shadow-[0_8px_30px_-4px_rgba(13,148,136,0.12)] transition-all duration-300 px-4 py-3',
+              'relative rounded-2xl bg-white/90 backdrop-blur-xl border border-slate-200/80 shadow-[0_4px_24px_-4px_rgba(15,23,42,0.05),inset_0_1px_0_rgba(255,255,255,1)] focus-within:border-teal-500/50 focus-within:shadow-[0_8px_30px_-4px_rgba(13,148,136,0.12)] transition-all duration-300 px-3.5 py-3 sm:px-4',
               'dark:border-white/10 dark:bg-[#0F1423]/90',
               summarizeHint && !attachment && 'border-teal-500 shadow-[0_8px_30px_-4px_rgba(13,148,136,0.12)]',
             )}
@@ -1176,7 +1181,7 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
                       setAttachmentText(null);
                       attachmentFileRef.current = null;
                     }}
-                    className="grid h-5 w-5 shrink-0 place-items-center rounded-full text-slate-400 transition-colors duration-150 hover:bg-slate-900/5 hover:text-slate-700 dark:hover:bg-white/10 dark:hover:text-white"
+                    className="grid h-7 w-7 shrink-0 touch-manipulation place-items-center rounded-full text-slate-400 transition-colors duration-150 hover:bg-slate-900/5 hover:text-slate-700 sm:h-5 sm:w-5 dark:hover:bg-white/10 dark:hover:text-white"
                   >
                     <X className="h-3 w-3" strokeWidth={2} aria-hidden="true" />
                   </button>
@@ -1193,27 +1198,27 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
               onKeyDown={handleComposerKeyDown}
               placeholder={activeMode.placeholder}
               aria-label={activeMode.label}
-              className="mt-2.5 max-h-[152px] w-full resize-none bg-transparent px-1 text-sm leading-relaxed text-slate-800 outline-none placeholder:text-slate-400 dark:text-slate-100 dark:placeholder:text-slate-500"
+              className="mt-2.5 max-h-[152px] w-full resize-none bg-transparent px-1 text-base leading-relaxed text-slate-800 outline-none placeholder:text-slate-400 sm:text-sm dark:text-slate-100 dark:placeholder:text-slate-500"
             />
 
-            {/* Bottom action bar: attach + mode pills + submit */}
-            <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-2.5 dark:border-white/5">
-              <div className="flex min-w-0 items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-slate-100/80 px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-200/70 hover:text-slate-900 dark:bg-white/10 dark:text-slate-300 dark:hover:bg-white/15 dark:hover:text-white"
-                >
-                  <Paperclip className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden="true" />
-                  <span>Attach</span>
-                </button>
+            {/* Action rail · mobile: [Attach][Submit] over a full-width mode switch */}
+            <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3 dark:border-white/5 sm:flex-nowrap sm:justify-between">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="order-1 inline-flex h-10 shrink-0 touch-manipulation items-center justify-center gap-1.5 rounded-full bg-slate-100/80 px-3 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-200/70 hover:text-slate-900 sm:h-9 dark:bg-white/10 dark:text-slate-300 dark:hover:bg-white/15 dark:hover:text-white"
+              >
+                <Paperclip className="h-4 w-4 sm:h-3.5 sm:w-3.5" strokeWidth={1.8} aria-hidden="true" />
+                <span>Attach</span>
+              </button>
 
-                <div className="h-4 w-[1px] bg-slate-200 mx-1 dark:bg-white/10" aria-hidden="true" />
+              <div className="order-3 w-full sm:order-2 sm:flex sm:w-auto sm:items-center sm:gap-1.5">
+                <div className="hidden h-4 w-px bg-slate-200 sm:block dark:bg-white/10" aria-hidden="true" />
 
                 <div
                   role="tablist"
                   aria-label="Assistant mode"
-                  className="flex items-center gap-1"
+                  className="grid grid-cols-3 gap-1 rounded-xl bg-slate-100/80 p-1 sm:flex sm:items-center sm:gap-1 sm:rounded-none sm:bg-transparent sm:p-0 dark:bg-white/[0.07] sm:dark:bg-transparent"
                 >
                   {STUDIO_MODES.map((entry) => {
                     const isActive = mode === entry.id;
@@ -1225,13 +1230,24 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
                         aria-selected={isActive}
                         onClick={() => selectMode(entry.id)}
                         className={cn(
-                          'rounded-full px-3 py-1 text-xs font-medium transition-all duration-150',
+                          'flex h-9 touch-manipulation items-center justify-center rounded-lg px-2 text-[11.5px] font-medium transition-all duration-150 sm:h-auto sm:rounded-full sm:px-3 sm:py-1 sm:text-xs',
                           isActive
                             ? 'bg-slate-900 text-white shadow-sm dark:bg-white dark:text-slate-900'
                             : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white',
                         )}
                       >
-                        <span>{entry.id === 'ask' ? 'Ask' : entry.id === 'summarize' ? 'Summarize PDF' : 'Flashcards'}</span>
+                        <span className="truncate whitespace-nowrap">
+                          {entry.id === 'ask' ? (
+                            'Ask'
+                          ) : entry.id === 'summarize' ? (
+                            <>
+                              <span className="sm:hidden">Summarize</span>
+                              <span className="hidden sm:inline">Summarize PDF</span>
+                            </>
+                          ) : (
+                            'Flashcards'
+                          )}
+                        </span>
                       </button>
                     );
                   })}
@@ -1241,7 +1257,7 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
               <button
                 type="submit"
                 disabled={!canSubmit}
-                className="inline-flex h-9 items-center gap-1.5 rounded-full bg-slate-900 px-4 text-xs font-medium text-white shadow-sm transition-all duration-200 hover:bg-teal-600 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-white dark:text-slate-900 dark:hover:bg-teal-500 dark:hover:text-white"
+                className="order-2 ml-auto inline-flex h-10 flex-1 touch-manipulation items-center justify-center gap-1.5 rounded-full bg-slate-900 px-4 text-xs font-medium text-white shadow-sm transition-all duration-200 hover:bg-teal-600 disabled:cursor-not-allowed disabled:opacity-40 sm:order-3 sm:ml-0 sm:h-9 sm:flex-none dark:bg-white dark:text-slate-900 dark:hover:bg-teal-500 dark:hover:text-white"
               >
                 {isThinking ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" strokeWidth={2} aria-hidden="true" />
@@ -1267,14 +1283,14 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
             onChange={handleFileInput}
           />
 
-          {/* ─── Single-row minimalist suggestion chips ──────────────────────────── */}
-          <div className="mt-3 flex items-center gap-2 overflow-x-auto no-scrollbar">
+          {/* ─── Single-row minimalist suggestion chips · swipeable rail ──────────── */}
+          <div className="-mx-1 mt-3 flex snap-x snap-mandatory items-center gap-2 overflow-x-auto px-1 pb-1 no-scrollbar">
             {STUDIO_STARTER_PROMPTS.map((prompt) => (
               <button
                 key={prompt.id}
                 type="button"
                 onClick={() => runStudio(prompt.query, { track: prompt.track, useAttachment: false })}
-                className="inline-flex items-center gap-1.5 rounded-full border border-slate-200/70 bg-white/50 px-3 py-1 text-xs font-medium text-slate-500 transition-all hover:bg-white/90 hover:text-slate-900 whitespace-nowrap dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
+                className="inline-flex h-9 shrink-0 touch-manipulation snap-start items-center gap-1.5 whitespace-nowrap rounded-full border border-slate-200/70 bg-white/50 px-3 text-[11.5px] font-medium text-slate-500 transition-all hover:bg-white/90 hover:text-slate-900 sm:text-xs dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
               >
                 <span>{prompt.label}</span>
                 <ArrowUpRight className="h-3 w-3 opacity-60" strokeWidth={2} aria-hidden="true" />
@@ -1298,8 +1314,8 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
                 }
                 className="overflow-hidden"
               >
-                <div ref={drawerRef} className="pt-5">
-                  <div className="rounded-2xl border border-white/70 bg-white/55 p-4 shadow-inner backdrop-blur-xl md:p-5 dark:border-white/10 dark:bg-white/[0.04]">
+                <div ref={drawerRef} className="pt-4 sm:pt-5">
+                  <div className="rounded-2xl border border-white/70 bg-white/55 p-3.5 shadow-inner backdrop-blur-xl sm:p-4 md:p-5 dark:border-white/10 dark:bg-white/[0.04]">
                     {isThinking ? (
                       <ThinkingPanel step={thinkingStep} />
                     ) : result && pending ? (
@@ -1329,7 +1345,7 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.15, ease: 'easeOut' }}
-                className="pointer-events-none absolute inset-0 z-30 grid place-items-center rounded-[32px] border-2 border-dashed border-blue-400/60 bg-blue-500/[0.08] backdrop-blur-sm"
+                className="pointer-events-none absolute inset-0 z-30 grid place-items-center rounded-[24px] border-2 border-dashed border-blue-400/60 bg-blue-500/[0.08] backdrop-blur-sm sm:rounded-[32px]"
               >
                 <div className="chip-glass flex flex-col items-center gap-1.5 rounded-2xl px-6 py-4">
                   <FileUp className="h-5 w-5 text-[#1A73E8] dark:text-[#8AB4F8]" strokeWidth={1.8} aria-hidden="true" />

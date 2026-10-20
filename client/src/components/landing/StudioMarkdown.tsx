@@ -21,25 +21,25 @@ const MARKDOWN_COMPONENTS: Components = {
   h5: ({ children }) => <Heading level={4}>{children}</Heading>,
   h6: ({ children }) => <Heading level={4}>{children}</Heading>,
   p: ({ children }) => (
-    <p className="my-2 text-[13px] leading-relaxed text-slate-600 first:mt-0 last:mb-0 [li_&]:my-0 dark:text-slate-300">
+    <p className="my-2 text-[13.5px] leading-relaxed text-slate-600 first:mt-0 last:mb-0 sm:text-[13px] [li_&]:my-0 dark:text-slate-300">
       {children}
     </p>
   ),
   strong: ({ children }) => <strong className="font-semibold text-slate-900 dark:text-white">{children}</strong>,
   em: ({ children }) => <em className="italic">{children}</em>,
-  ul: ({ children }) => <ul className="my-2 list-disc space-y-1.5 pl-5 marker:text-blue-500 dark:marker:text-[#8AB4F8]">{children}</ul>,
+  ul: ({ children }) => <ul className="my-2 list-disc space-y-1.5 pl-4 marker:text-blue-500 sm:pl-5 dark:marker:text-[#8AB4F8]">{children}</ul>,
   ol: ({ children }) => (
-    <ol className="my-2 list-decimal space-y-1.5 pl-5 marker:font-semibold marker:text-[#1A73E8] dark:marker:text-[#8AB4F8]">
+    <ol className="my-2 list-decimal space-y-1.5 pl-4 marker:font-semibold marker:text-[#1A73E8] sm:pl-5 dark:marker:text-[#8AB4F8]">
       {children}
     </ol>
   ),
   li: ({ children }) => (
-    <li className="text-[13px] leading-relaxed text-slate-600 dark:text-slate-300 [&>ol]:my-1.5 [&>p]:my-0 [&>ul]:my-1.5">
+    <li className="text-[13.5px] leading-relaxed text-slate-600 sm:text-[13px] [&>ol]:my-1.5 [&>p]:my-0 [&>ul]:my-1.5 dark:text-slate-300">
       {children}
     </li>
   ),
   blockquote: ({ children }) => (
-    <blockquote className="my-2.5 rounded-r-xl border-l-2 border-indigo-400/70 bg-indigo-500/[0.06] px-3 py-2 text-[12.5px] text-slate-600 dark:bg-indigo-400/[0.08] dark:text-slate-300 [&>p]:my-0 [&>p]:italic">
+    <blockquote className="my-2.5 rounded-r-xl border-l-2 border-indigo-400/70 bg-indigo-500/[0.06] px-2.5 py-2 text-[13px] text-slate-600 sm:px-3 sm:text-[12.5px] dark:bg-indigo-400/[0.08] dark:text-slate-300 [&>p]:my-0 [&>p]:italic">
       {children}
     </blockquote>
   ),
@@ -67,7 +67,7 @@ const MARKDOWN_COMPONENTS: Components = {
   /* ─── Signature comparison-table shell ──────────────────────────────────── */
   table: ({ children }) => (
     <div className="my-3 overflow-x-auto rounded-xl border border-slate-200/70 bg-white/60 dark:border-white/10 dark:bg-white/[0.03]">
-      <table className="w-full min-w-[520px] border-collapse text-left text-[12.5px]">{children}</table>
+      <table className="w-full min-w-[480px] border-collapse text-left text-[12.5px] sm:min-w-[520px]">{children}</table>
     </div>
   ),
   thead: ({ children }) => <thead className="bg-slate-50/70 dark:bg-white/[0.04]">{children}</thead>,
@@ -75,12 +75,12 @@ const MARKDOWN_COMPONENTS: Components = {
     <tr className="border-b border-slate-200/80 last:border-b-0 dark:border-white/10">{children}</tr>
   ),
   th: ({ children }) => (
-    <th className="whitespace-nowrap px-3 py-2 font-mono text-[9.5px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
+    <th className="whitespace-nowrap px-2.5 py-2 font-mono text-[9.5px] font-semibold uppercase tracking-[0.12em] text-slate-500 sm:px-3 dark:text-slate-400">
       {children}
     </th>
   ),
   td: ({ children }) => (
-    <td className="px-3 py-2.5 align-top leading-relaxed text-slate-600 first:font-semibold first:text-slate-700 dark:text-slate-300 dark:first:text-slate-100 [&[align=center]]:text-center">
+    <td className="px-2.5 py-2.5 align-top leading-relaxed text-slate-600 first:font-semibold first:text-slate-700 sm:px-3 dark:text-slate-300 dark:first:text-slate-100 [&[align=center]]:text-center">
       {children}
     </td>
   ),

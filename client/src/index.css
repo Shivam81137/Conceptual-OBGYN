@@ -286,6 +286,17 @@
 @layer utilities {
   .tabular-nums { font-variant-numeric: tabular-nums; }
 
+  /* Horizontal chip rails on touch devices: swipeable, no visible scrollbar. */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
   /* Travelling highlight for the trace lines in the mini widgets. */
   .trace-run {
     stroke-dasharray: 26 260;
