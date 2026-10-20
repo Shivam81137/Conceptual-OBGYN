@@ -135,7 +135,18 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-    preview: { port: 4173, strictPort: true },
+    preview: {
+      port: 4173,
+      strictPort: true,
+      /* Same proxy as dev so the built PWA can be smoke-tested against the local API. */
+      proxy: {
+        '/api': {
+          target: API_PROXY_TARGET,
+          changeOrigin: true,
+          secure: false,
+        },
+      },
+    },
     build: {
       target: 'es2022',
       sourcemap: false,

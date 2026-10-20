@@ -2,7 +2,7 @@ import compression from 'compression';
 import cors, { type CorsOptions } from 'cors';
 import express, { type Application, type Request, type Response } from 'express';
 import helmet from 'helmet';
-import { env } from './config/env.js';
+import { env, isOriginAllowed } from './config/env.js';
 import { getDatabaseStatus } from './config/database.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { requestContext } from './middleware/requestContext.js';
@@ -46,8 +46,7 @@ export const createApp = (): Application => {
   const corsOptions: CorsOptions = {
     origin: (origin, callback) => {
       if (!origin) return callback(null, true); // same-origin / server-to-server / curl
-      if (!env.isProduction && env.corsOrigins.includes('*')) return callback(null, true);
-      if (env.corsOrigins.includes(origin)) return callback(null, true);
+      if (isOriginAllowed(origin)) return callback(null, true);
       return callback(new Error(`Origin ${origin} is not permitted by the CORS policy.`));
     },
     methods: ['GET', 'POST', 'PATCH', 'OPTIONS'],

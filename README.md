@@ -187,6 +187,18 @@ npm run preview    # serve the built PWA on :4173
 npm start          # run the compiled API on :5000
 ```
 
+### Deployment (Vercel + Render)
+
+| Piece | Host | URL / config |
+| --- | --- | --- |
+| PWA client | Vercel | `https://conceptual-obgyn.vercel.app` — `vercel.json` builds `build:client`, outputs `client/dist` |
+| API | Render | `https://conceptual-obgyn.onrender.com` — blueprint in `render.yaml`, health check `/health` |
+
+- **API routing.** The production build calls the Render API directly (`client/src/api/client.ts`); `vercel.json` additionally rewrites `/api/v1/:path*` to Render so older cached bundles and direct links keep working. Override with `VITE_API_BASE_URL` if the API moves.
+- **CORS.** Render must allow the Vercel origin. The default `CORS_ORIGINS` already matches `https://*.vercel.app` (production **and** preview deploys); add a custom domain, or `*` for the public credential-less API.
+- **Render environment.** `render.yaml` declares `CORS_ORIGINS`, `MONGODB_URI`, `GEMINI_API_KEY` and `GROQ_API_KEY` as `sync: false`, so their values are entered once in the Render dashboard (they are never committed). `GROQ_MODEL` defaults to `openai/gpt-oss-120b`.
+- **Cold starts.** The free Render instance spins down when idle; the client paints from its bundled corpus immediately and reconciles when the API wakes. AI requests use a 90 s budget, well above the wake-up time.
+
 ---
 
 ## Scripts (root)
@@ -210,7 +222,7 @@ npm start          # run the compiled API on :5000
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `VITE_API_BASE_URL` | `/api/v1` | Base path for API calls; keep relative so the dev proxy applies |
+| `VITE_API_BASE_URL` | `/api/v1` | Base path for API calls. Local dev keeps the Vite proxy; a production build defaults to the Render API unless this is set |
 | `VITE_ENABLE_SW_IN_DEV` | `false` | Register the service worker under `vite dev` |
 
 ### `server/.env.example`
@@ -224,7 +236,7 @@ npm start          # run the compiled API on :5000
 | `MONGODB_URI` | — *(empty = seed mode)* | Mongo connection string |
 | `MONGODB_CONNECT_TIMEOUT_MS` | `5000` | Server-selection timeout per attempt |
 | `MONGODB_MAX_RETRIES` | `5` | Bounded connection attempts before falling back |
-| `CORS_ORIGINS` | `http://localhost:5173,http://localhost:4173` | Comma-separated allowlist |
+| `CORS_ORIGINS` | `http://localhost:5173,http://localhost:4173,https://*.vercel.app` | Comma-separated allowlist; supports exact origins, `*` wildcards and `*` |
 | `RATE_LIMIT_WINDOW_MS` / `RATE_LIMIT_MAX` | `60000` / `180` | Global read limiter |
 | `JSON_BODY_LIMIT` | `256kb` | Body parser limit |
 | `AI_EMBEDDING_DIMENSIONS` | `384` | Deterministic embedder vector width |

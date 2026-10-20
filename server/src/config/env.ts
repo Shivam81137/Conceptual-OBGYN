@@ -18,7 +18,9 @@ const envSchema = z.object({
   MONGODB_CONNECT_TIMEOUT_MS: z.coerce.number().int().positive().default(5000),
   MONGODB_MAX_RETRIES: z.coerce.number().int().nonnegative().default(5),
 
-  CORS_ORIGINS: z.string().default('http://localhost:5173,http://localhost:4173'),
+  CORS_ORIGINS: z
+    .string()
+    .default('http://localhost:5173,http://localhost:4173,https://*.vercel.app'),
   RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(60_000),
   RATE_LIMIT_MAX: z.coerce.number().int().positive().default(180),
   JSON_BODY_LIMIT: z.string().default('256kb'),
@@ -87,8 +89,22 @@ export const env = {
   isProduction: raw.NODE_ENV === 'production',
   isDevelopment: raw.NODE_ENV === 'development',
   corsOrigins: raw.CORS_ORIGINS.split(',')
-    .map((origin) => origin.trim())
+    .map((origin) => origin.trim().replace(/\/+$/, ''))
     .filter((origin) => origin.length > 0),
 } as const;
+
+/**
+ * CORS origin matcher. Patterns may be:
+ *   - exact origins:        `https://conceptual-obgyn.vercel.app`
+ *   - wildcard subdomains:  `https://*.vercel.app` (preview + production deploys)
+ *   - the global wildcard:  `*` (public, credential-less API)
+ */
+export const isOriginAllowed = (origin: string): boolean =>
+  env.corsOrigins.some((pattern) => {
+    if (pattern === '*') return true;
+    if (!pattern.includes('*')) return pattern === origin;
+    const escaped = pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*');
+    return new RegExp(`^${escaped}$`, 'i').test(origin);
+  });
 
 export type Env = typeof env;

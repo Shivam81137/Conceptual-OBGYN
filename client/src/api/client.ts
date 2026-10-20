@@ -1,9 +1,25 @@
 import { z } from 'zod';
 
-const DEFAULT_BASE_URL = '/api/v1';
+/**
+ * Production API origin (Render). The static Vercel build has no dev proxy, so a
+ * relative `/api/v1` would be rewritten to index.html — call Render directly.
+ * Local dev/preview keeps the relative path so Vite's proxy applies, and
+ * `VITE_API_BASE_URL` always wins (staging, custom API, self-hosting).
+ */
+const RENDER_API_BASE_URL = 'https://conceptual-obgyn.onrender.com/api/v1';
+const LOCAL_BASE_URL = '/api/v1';
 const REQUEST_TIMEOUT_MS = 6500;
 
-export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? DEFAULT_BASE_URL).replace(/\/$/, '');
+const isLocalHost = (): boolean => {
+  if (typeof window === 'undefined') return true;
+  const { hostname } = window.location;
+  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '0.0.0.0' || hostname === '[::1]';
+};
+
+const configuredBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? '').trim();
+const DEFAULT_BASE_URL = configuredBaseUrl.length > 0 ? configuredBaseUrl : isLocalHost() ? LOCAL_BASE_URL : RENDER_API_BASE_URL;
+
+export const API_BASE_URL = DEFAULT_BASE_URL.replace(/\/$/, '');
 
 export class ApiError extends Error {
   public readonly status: number;
