@@ -15,6 +15,15 @@ import {
   type ObgynTopic,
   type ObgynTrack,
 } from '../data/obgynAiKnowledge.js';
+import {
+  APPROVED_REFERENCE_PREFIXES,
+  PROMPT_VERSION,
+  buildEvidencePack,
+  contradictsFactLock,
+  getTopicReferences,
+  normaliseAnswerText,
+  sanitiseReferences,
+} from '../data/obgynEvidence.js';
 
 /**
  * OBGYN AI Studio engine for POST /api/v1/ai/obgyn-assist.
@@ -41,27 +50,55 @@ import {
    System instruction — the exam persona served to Gemini on every request
    ========================================================================== */
 
-export const OBGYN_AI_SYSTEM_INSTRUCTION = `You are 'Conceptual OBGYN AI', a senior Obstetrics & Gynecology academic mentor for NEET UG, NEET PG and INI-CET aspirants.
+export const OBGYN_AI_SYSTEM_INSTRUCTION = `You are 'Conceptual OBGYN AI', consultant-level Obstetrics & Gynaecology faculty writing exam revision material for NEET UG, NEET PG and INI-CET.
 
-Accuracy rules (non-negotiable):
-1. Anchor every fact to mainstream, current guidance — Williams Obstetrics / Shaw's Gynaecology / Dutta for mechanism and FOGSI / RCOG / ACOG / FIGO / WHO for management. Prefer published guideline cut-offs and doses over memory.
-2. Never invent citations, page numbers, trial names, doses, thresholds or "recent studies". Only list a source in "references" if you are confident it exists — if unsure of the year or edition, name the guideline/source without a year rather than guessing. If a value varies between guidelines, give the accepted range and name the guideline it comes from.
-3. If the evidence is uncertain, contested, or the question is outside exam scope, say so in one plain line instead of guessing.
-4. Use precise standard clinical nomenclature and units (e.g. MCA-PSV > 1.5 MoM, MgSO4 4 g IV loading dose). Expand any abbreviation the first time it appears.
-5. This is exam revision material for clinicians-in-training, not individual patient advice — keep every management statement guideline-referenced.
+PRIME DIRECTIVE — accuracy before fluency.
+A short answer that is right beats a long answer that is nearly right. If a fact is uncertain, say so in one line instead of filling the gap. Never guess a number, dose, threshold or staging detail.
 
-Tailor depth strictly to the requested track:
-- track === 'UG': NCERT Class 12 Human Reproduction and Reproductive Health, with core physiology and embryology bridges.
-- track === 'PG': examinable clinical depth — definitions, diagnostic criteria, staging, investigations, management and complications as tested in NEET PG / INI-CET.
+SOURCE HIERARCHY (highest first)
+1. The VERIFIED EVIDENCE block supplied with the question. It is faculty-curated: reuse its exact numbers, doses, thresholds and staging, and never contradict it. Any **FACT LOCK** line inside it overrides your training memory — even if you were taught a different first-line drug, threshold or dose. Never present an outdated alternative as first-line.
+2. Mainstream textbooks — Williams Obstetrics, Shaw's Textbook of Gynaecology, Dutta's Textbook of Obstetrics and Gynaecology, Speroff's, Novak's.
+3. Current guidance — WHO, FIGO, RCOG Green-top, ACOG Practice Bulletin, NICE, FOGSI, Cochrane.
+4. Nothing else. Never cite a paper, trial, page number or edition you cannot verify.
 
-Structure every response into three crisp, scannable sections:
-- 🎯 **High-Yield Exam Pearl:** a 1-2 sentence golden takeaway frequently tested in MCQs.
-- 🧠 **Core Clinical Concept:** bullet points, numbered steps, or a compact Markdown table (comparisons, staging, cut-offs).
-- ⚡ **Rapid Recall & Exam Trap:** the classic discriminator or trap (e.g. 'most sensitive vs most specific', 'best initial vs definitive test').
+CITATION RULES (hard)
+- Every entry in "references" must begin with an approved source name: ${APPROVED_REFERENCE_PREFIXES.join(', ')}.
+- Give 2-4 entries. Name the guideline or textbook; add a year or edition only when you are certain.
+- Never invent a guideline, bulletin number or edition. If no honest source supports the answer, return an empty array.
 
-If a PDF document is uploaded, extract and condense its entire text into: Executive Topic Summary, Top 5 High-Yield One-Liners, and 3 Rapid-Fire Practice MCQs with explanations — while still filling every response field.
+CLINICAL ACCURACY RULES (hard)
+- Give the defining threshold with its unit and the population it applies to (e.g. "BP ≥ 140/90 mmHg after 20 weeks").
+- State doses as drug + route + dose + frequency + duration (e.g. "MgSO4 4 g IV over 10-15 min, then 1 g/hour").
+- When guidance differs (WHO vs ACOG, for example), give the accepted range and name the body behind each value.
+- Distinguish "most sensitive" from "most specific", "best initial" from "definitive", and "screening" from "diagnostic".
+- Never attach a drug to an indication it does not treat. MgSO4 treats and prevents eclamptic fits; it is not a haemorrhage drug and does not lower blood pressure.
+- If a statement is practice variation rather than a universal rule, mark it with "commonly" or "in many settings".
+- If you cannot recall a score, formula or staging cut-off exactly, describe the principle and say the exact value should be checked — do not approximate.
 
-Markdown must be clean and well-formed: no stray asterisks, no filler introductions, bold only genuine clinical keywords.`;
+ANSWER STRUCTURE (exactly three sections, in this order)
+- 🎯 **High-Yield Exam Pearl:** one or two sentences carrying the single most testable fact.
+- 🧠 **Core Clinical Concept:** definition, mechanism and stepwise clinical approach as bullets or a compact Markdown table. Bold every number.
+- ⚡ **Rapid Recall & Exam Trap:** the discriminating fact, the classic mistake or the viva trap.
+
+TRACK DEPTH
+- UG: NCERT Class 12 depth — definitions, physiology, classical signs, plain language.
+- PG: examinable clinical depth — criteria, staging, investigations, doses, management steps and complications.
+
+STYLE
+- No introduction, no "great question", no repetition, no filler, no preview of what you are about to write.
+- Markdown only inside "answer": bold clinical keywords, tables for comparisons, clean formatting, no stray asterisks.
+- Length: 150-260 words for a focused question; up to 400 when the question asks for a full protocol or comparison.
+
+MODES
+- ask: answer the question directly.
+- flashcards: 8-10 one-line question → answer cards inside "answer".
+- summarize_pdf: Executive Topic Summary, Top 5 High-Yield One-Liners, and 3 Rapid-Fire MCQs with explanations (four options each, bold the correct option).
+
+FINAL SELF-CHECK (do this silently before writing the JSON)
+1. Does every number and dose match the evidence block or a named approved source?
+2. Is every reference a real, approved source?
+3. Are all three sections present, distinct and free of repetition?
+If any answer is "no", correct it before outputting.`;
 
 /* ============================================================================
    Request / response contract
@@ -123,6 +160,7 @@ export interface ObgynAssistCapabilities {
   openrouterConfigured: boolean;
   groqConfigured: boolean;
   pollinationsEnabled: boolean;
+  promptVersion: string;
   omnirouteModel: string;
   model: string;
   openrouterModel: string;
@@ -202,11 +240,12 @@ type OpenAiCompatibleEngine = keyof typeof OPENAI_COMPATIBLE_PROVIDERS;
 /** JSON mode across OpenAI-compatible engines needs the contract spelled out. */
 const JSON_CONTRACT = `
 Return ONLY a single valid JSON object (no markdown fences, no commentary) with exactly these keys:
-- "answer": string — the full markdown answer following the section rules above.
+- "answer": string — the full markdown answer following the three-section structure above.
 - "highYieldPearl": string — the 1-2 sentence golden MCQ takeaway.
 - "followUpQuestions": array of exactly 3 short strings — clickable next questions.
-- "sourceTag": string — one badge line, e.g. "Synthesized for NEET PG • Williams 26e & FIGO Aligned".
-- "references": array of 2-5 short strings — real guideline/textbook citations supporting the answer (name, plus year/edition only if certain; never invented page numbers or editions).`;
+- "sourceTag": string — one badge line, e.g. "Synthesized for NEET PG • Williams & FIGO aligned".
+- "references": array of 2-4 short strings — each MUST start with an approved source name listed in the citation rules; never invent a guideline, edition or page number.
+Output shape: {"answer":"...","highYieldPearl":"...","followUpQuestions":["...","...","..."],"sourceTag":"...","references":["...","..."]}`;
 
 /**
  * Pollinations' anonymous tier caps a single completion at 1500 tokens, and its
@@ -225,6 +264,8 @@ Conciseness override (mandatory for this engine):
 const PROVIDER_COOLDOWN_MS = 3 * 60_000;
 const PROVIDER_RATE_LIMIT_COOLDOWN_MS = 30_000;
 const PROVIDER_TIMEOUT_COOLDOWN_MS = 10 * 60_000;
+/** Truncated/unparseable output is usually transient — retry the engine sooner. */
+const PROVIDER_PARSE_COOLDOWN_MS = 60_000;
 
 interface CuratedAnswer {
   answer: string;
@@ -475,6 +516,7 @@ export class ObgynAiService {
       openrouterConfigured: Boolean(env.OPENROUTER_API_KEY),
       groqConfigured: Boolean(env.GROQ_API_KEY),
       pollinationsEnabled: env.POLLINATIONS_ENABLED,
+      promptVersion: PROMPT_VERSION,
       omnirouteModel: env.OMNIROUTE_MODEL,
       model: env.GEMINI_MODEL,
       openrouterModel: env.OPENROUTER_MODEL,
@@ -668,6 +710,22 @@ export class ObgynAiService {
   ): string {
     const lines = [`Track: ${TRACK_LABELS[request.track]}`, `Mode: ${request.mode}`];
 
+    /* Retrieval step: give the model the curated facts instead of relying on recall. */
+    const pack = buildEvidencePack(request.prompt, request.track, attachment?.name ?? null);
+    if (document) {
+      lines.push(
+        'SOURCE OF TRUTH: the attached document below. Summarise what it actually says; use approved sources only for context, and never invent content that is not in the document.',
+      );
+    } else if (pack.markdown) {
+      lines.push(
+        `VERIFIED EVIDENCE — faculty-curated ground truth for this question. Reuse these exact values and do not contradict them:\n"""\n${pack.markdown}\n"""`,
+      );
+    } else {
+      lines.push(
+        'No curated evidence block covers this question. Answer from the approved sources only, keep every number conservative, and state genuine uncertainty explicitly.',
+      );
+    }
+
     if (request.mode === 'summarize_pdf') {
       lines.push(
         'Deliver exactly three blocks inside the markdown answer: Executive Topic Summary, Top 5 High-Yield One-Liners (numbered), and 3 Rapid-Fire Practice MCQs with explanations (four options each, bold the correct one).',
@@ -709,7 +767,7 @@ export class ObgynAiService {
         contents: this.buildPromptContents(request, attachment, document),
         config: {
           systemInstruction: OBGYN_AI_SYSTEM_INSTRUCTION,
-          temperature: 0.4,
+          temperature: 0.2,
           maxOutputTokens: 2600,
           responseMimeType: 'application/json',
           responseJsonSchema: OBGYN_ASSIST_LLM_SCHEMA,
@@ -720,7 +778,7 @@ export class ObgynAiService {
       const raw = response.text ?? '';
       const payload = parseLlmPayload(raw);
       if (!payload) {
-        this.markFailed('gemini');
+        this.markFailed('gemini', PROVIDER_PARSE_COOLDOWN_MS);
         logger.warn('gemini response unparseable — trying the next engine', {
           requestId,
           head: raw.slice(0, 140),
@@ -736,13 +794,7 @@ export class ObgynAiService {
         latencyMs: Math.round(performance.now() - startedAt),
       });
 
-      return {
-        answer: payload.answer,
-        highYieldPearl: payload.highYieldPearl,
-        followUpQuestions: payload.followUpQuestions,
-        sourceTag: payload.sourceTag,
-        references: payload.references,
-      };
+      return this.finaliseGeneratedAnswer(payload, request, attachment);
     } catch (error) {
       /* Network-stuck providers (e.g. an unreachable generation backend) park longer. */
       const errorName = (error as { name?: string } | null)?.name;
@@ -790,7 +842,7 @@ export class ObgynAiService {
         },
         body: JSON.stringify({
           model,
-          temperature: 0.4,
+          temperature: 0.2,
           max_tokens: maxTokens,
           ...(responseFormat ? { response_format: responseFormat } : {}),
           ...(reasoningEffort ? { reasoning_effort: reasoningEffort } : {}),
@@ -826,7 +878,7 @@ export class ObgynAiService {
       const raw = body.choices?.[0]?.message?.content ?? '';
       const payload = parseLlmPayload(raw);
       if (!payload) {
-        this.markFailed(engine);
+        this.markFailed(engine, PROVIDER_PARSE_COOLDOWN_MS);
         logger.warn(`${engine} response unparseable — trying the next engine`, {
           requestId,
           head: raw.slice(0, 140),
@@ -842,13 +894,7 @@ export class ObgynAiService {
         latencyMs: Math.round(performance.now() - startedAt),
       });
 
-      return {
-        answer: payload.answer,
-        highYieldPearl: payload.highYieldPearl,
-        followUpQuestions: payload.followUpQuestions,
-        sourceTag: payload.sourceTag,
-        references: payload.references,
-      };
+      return this.finaliseGeneratedAnswer(payload, request, attachment);
     } catch (error) {
       const errorName = (error as { name?: string } | null)?.name;
       const timedOut = errorName === 'AbortError' || errorName === 'TimeoutError';
@@ -918,6 +964,7 @@ export class ObgynAiService {
       highYieldPearl: topic.pearl[track],
       followUpQuestions: topic.followUps[track],
       sourceTag: topic.sourceTag[track],
+      references: getTopicReferences(topic, track),
     };
   }
 
@@ -935,6 +982,7 @@ ${topic.flashcardTrap}`,
       highYieldPearl: topic.pearl[track],
       followUpQuestions: topic.followUps[track],
       sourceTag: topic.sourceTag[track],
+      references: getTopicReferences(topic, track),
     };
   }
 
@@ -1095,6 +1143,44 @@ ${lines}
   }
 
   /* --------------------------------------------------------------- helpers - */
+
+  /**
+   * Post-generation grounding applied to every live engine:
+   * drops invented citations, restores the topic's admissible bibliography and
+   * normalises follow-ups. The UI can therefore never show a fabricated source.
+   */
+  private finaliseGeneratedAnswer(
+    payload: z.infer<typeof llmAnswerSchema>,
+    request: ObgynAssistRequest,
+    attachment: DocumentAttachment | null,
+  ): CuratedAnswer | null {
+    const pack = buildEvidencePack(request.prompt, request.track, attachment?.name ?? null);
+
+    /* Safety net: reject a live answer that repeats an outdated fact the curated
+       evidence explicitly overrides, then let the chain fall through. Document
+       summaries are exempt — the document, not the vault, is their source. */
+    const documentGrounded =
+      request.mode === 'summarize_pdf' ||
+      (attachment !== null && attachment.text.length >= MIN_USABLE_DOCUMENT_CHARS);
+    const violation = documentGrounded
+      ? null
+      : contradictsFactLock(pack.topic, `${payload.answer}\n${payload.highYieldPearl}`);
+    if (violation) {
+      logger.warn('live answer contradicted a fact lock — falling back to the curated vault', {
+        topic: pack.topic?.id ?? null,
+        violation,
+      });
+      return null;
+    }
+
+    return {
+      answer: normaliseAnswerText(payload.answer),
+      highYieldPearl: normaliseAnswerText(payload.highYieldPearl),
+      followUpQuestions: this.ensureFollowUps(payload.followUpQuestions, request.track).map(normaliseAnswerText),
+      sourceTag: normaliseAnswerText(payload.sourceTag),
+      references: sanitiseReferences(payload.references ?? [], pack.references),
+    };
+  }
 
   private ensureFollowUps(questions: readonly string[], track: ObgynTrack): string[] {
     const pool: string[] = [];

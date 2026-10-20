@@ -681,12 +681,12 @@ const buildScaffoldAnswer = (request: StudioQuery): StudioAnswer => {
     },
     {
       kind: 'bullets',
-      title: 'Curated Vault · What Ships in This Build',
+      title: 'Curated Vault · High-Yield Coverage',
       items: [
-        'Placenta previa vs abruptio — full comparison table.',
-        'Menstrual hormonal axis — UG and PG depth.',
-        'PPH — stepwise protocol with doses.',
-        'FIGO 2023 endometrial staging — anatomy + molecular classes.',
+        'Partograph · preeclampsia & MgSO4 · PPH protocol.',
+        'Placenta previa vs abruptio · FIGO 2023 endometrial staging.',
+        'Menstrual hormonal axis · PCOS · uterine fibroids.',
+        'Ectopic pregnancy · shoulder dystocia · gestational diabetes.',
       ],
     },
     {

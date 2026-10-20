@@ -13,7 +13,20 @@
 
 export type ObgynTrack = 'UG' | 'PG';
 
-export type ObgynTopicId = 'partograph' | 'preeclampsia' | 'pph' | 'aph' | 'figo' | 'axis';
+import { EXTRA_OBGYN_TOPICS } from './obgynAiKnowledgeExtra.js';
+
+export type ObgynTopicId =
+  | 'partograph'
+  | 'preeclampsia'
+  | 'pph'
+  | 'aph'
+  | 'figo'
+  | 'axis'
+  | 'ectopic'
+  | 'shoulder'
+  | 'pcos'
+  | 'fibroid'
+  | 'gdm';
 
 export interface ObgynTopic {
   id: ObgynTopicId;
@@ -285,7 +298,7 @@ export const AXIS = {
    TOPIC REGISTRY
    ===================================================================== */
 
-export const OBGYN_TOPICS: readonly ObgynTopic[] = [
+const CORE_OBGYN_TOPICS: readonly ObgynTopic[] = [
   {
     id: 'partograph',
     label: PARTOGRAPH.label,
@@ -444,6 +457,9 @@ export const OBGYN_TOPICS: readonly ObgynTopic[] = [
   },
 ];
 
+/** Core vault (six topics) + the 2026 extra wave (ectopic, shoulder, PCOS, fibroids, GDM). */
+export const OBGYN_TOPICS: readonly ObgynTopic[] = [...CORE_OBGYN_TOPICS, ...EXTRA_OBGYN_TOPICS];
+
 /* =====================================================================
    MATCHING & SCAFFOLDING
    ===================================================================== */
@@ -453,13 +469,28 @@ const matches = (haystack: string, matcher: string): boolean => {
   return haystack.includes(matcher);
 };
 
-/** First topic whose matchers appear in the (lowercased) haystack, or null. */
+/** Best topic for the (lowercased) haystack, weighting the primary matcher highest. */
 export const detectObgynTopic = (haystack: string): ObgynTopic | null => {
   const text = haystack.toLowerCase();
+  let best: ObgynTopic | null = null;
+  let bestScore = 0;
+
   for (const topic of OBGYN_TOPICS) {
-    if (topic.matchers.some((matcher) => matches(text, matcher))) return topic;
+    let score = 0;
+    topic.matchers.forEach((matcher, index) => {
+      if (!matches(text, matcher)) return;
+      /* The first matcher is the topic's identity term (e.g. "pcos"); it must
+         outrank generic symptom words such as "ovulation" or "menstrual". */
+      if (index === 0) score += 5;
+      else score += matcher.length >= 8 ? 2 : 1;
+    });
+    if (score > bestScore) {
+      best = topic;
+      bestScore = score;
+    }
   }
-  return null;
+
+  return best;
 };
 
 export const OBGYN_VAULT_LABELS: readonly string[] = OBGYN_TOPICS.map((topic) => topic.label);
