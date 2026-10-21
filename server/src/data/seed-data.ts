@@ -147,8 +147,8 @@ export const TRACK_BLUEPRINTS: Record<TrackId, TrackBlueprint> = {
   NEET_PG: {
     id: 'NEET_PG',
     title: 'Clinical Vault',
-    kicker: 'NEET PG / INI-CET',
-    badge: 'POSTGRADUATE CLINICAL • NEXT / INI-CET / NEET PG',
+    kicker: 'NEET PG',
+    badge: 'POSTGRADUATE CLINICAL • NEET PG',
     description:
       'Convert textbook recall into bedside decisions: partograph interpretation, Robson auditing and emergency algorithms rehearsed under time pressure.',
     ctaLabel: 'Enter NEET PG Clinical Vault',

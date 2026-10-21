@@ -322,3 +322,82 @@
     display: none;
   }
 }
+
+/* ============================================================================
+   Offline A4 print sheet — concept notes, diagrams, tables and cards
+   --------------------------------------------------------------------------
+   Printing a module produces a clean A4 revision handout: glass effects,
+   sticky navigation and interactive controls are dropped, while every SVG
+   diagram and comparison table is kept intact on a single page where possible.
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 10mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  header.fixed,
+  nav,
+  .no-print {
+    display: none !important;
+  }
+
+  button {
+    display: none !important;
+  }
+
+  main {
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .glass-card,
+  .glass-capsule {
+    background: #ffffff !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+    border-color: #cbd5e1 !important;
+    transform: none !important;
+  }
+
+  section,
+  figure,
+  table,
+  tr,
+  svg {
+    break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  table {
+    width: 100% !important;
+    font-size: 8.5pt;
+  }
+
+  .print-break {
+    break-before: page;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+}
+
+.print-only {
+  display: none;
+}

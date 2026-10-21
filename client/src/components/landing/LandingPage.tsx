@@ -43,7 +43,7 @@ const TRACK_CARDS: readonly TrackCardData[] = [
     eyebrow: 'PG CLINICAL',
     eyebrowClassName: 'border-indigo-500/20 bg-indigo-500/10 text-indigo-700 dark:border-indigo-400/20 dark:bg-indigo-400/10 dark:text-indigo-300',
     badgeDotClass: 'bg-indigo-500',
-    title: 'NEET PG & INI-CET',
+    title: 'NEET PG',
     scope: 'Clinical vignettes, labor & staging.',
     moduleLabel: '28 Clinical Vaults',
     modulePillClass: 'border-indigo-500/20 bg-indigo-500/10 text-indigo-800 dark:border-indigo-400/20 dark:bg-indigo-400/10 dark:text-indigo-300',

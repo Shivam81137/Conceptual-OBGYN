@@ -454,7 +454,7 @@ const buildFlashcardAnswer = (topic: TopicId, track: StudioTrack): StudioAnswer 
     blocks: [
       {
         kind: 'flashcards',
-        title: `Rapid Deck · 5 High-Yield Q&A Pearls (${track === 'NEET_UG' ? 'NEET UG' : 'NEET PG / INI-CET'})`,
+        title: `Rapid Deck · 5 High-Yield Q&A Pearls (${track === 'NEET_UG' ? 'NEET UG' : 'NEET PG'})`,
         items: cards,
       },
     ],
@@ -700,7 +700,7 @@ const buildScaffoldAnswer = (request: StudioQuery): StudioAnswer => {
     },
   );
 
-  const trackLabel = request.track === 'NEET_UG' ? 'NEET UG' : 'NEET PG / INI-CET';
+  const trackLabel = request.track === 'NEET_UG' ? 'NEET UG' : 'NEET PG';
   return {
     pearl: `Frame “${topic}” the clinical way: definition → classification → classical sign → first-line management — in that order, every time.`,
     blocks,

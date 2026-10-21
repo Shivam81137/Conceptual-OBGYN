@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Bookmark, BookmarkCheck, Check, Copy, Sparkles, Terminal } from 'lucide-react';
+import { ClinicalDiagram } from '@/components/studio/ClinicalDiagram';
 import { useRecallStore } from '@/store/useRecallStore';
 import { cn } from '@/lib/utils';
 import type {
@@ -30,6 +31,8 @@ function sectionSearchText(section: StudioNoteSection): string {
     ...(section.pearls ?? []),
     section.trap?.title ?? '',
     section.trap?.body ?? '',
+    ...(section.traps ?? []).flatMap((trap) => [trap.title, trap.body]),
+    ...(section.diagram ?? []).flatMap((diagram) => [diagram.title, diagram.caption ?? '']),
     ...(section.table?.head ?? []),
     ...(section.table?.rows.flat() ?? []),
     section.code?.label ?? '',
@@ -317,6 +320,10 @@ function NoteSection({
 
       {section.flow ? <FlowSteps steps={section.flow} theme={theme} /> : null}
 
+      {section.diagram
+        ? section.diagram.map((diagram) => <ClinicalDiagram key={diagram.kind} diagram={diagram} />)
+        : null}
+
       {section.bullets ? (
         <ul className="mt-2.5 space-y-1.5">
           {section.bullets.map((bullet) => (
@@ -333,6 +340,8 @@ function NoteSection({
       {section.code ? <CodePanel code={section.code} /> : null}
 
       {section.trap ? <TrapCard trap={section.trap} module={module} /> : null}
+
+      {section.traps ? section.traps.map((trap) => <TrapCard key={trap.title} trap={trap} module={module} />) : null}
 
       {section.pearls ? (
         <div className="mt-2.5 space-y-1.5">

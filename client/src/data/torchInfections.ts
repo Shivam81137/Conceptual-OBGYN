@@ -1,15 +1,22 @@
 import type { StudioModule } from '@/data/revisionStudio';
 
 /**
- * NEET PG & INI-CET · Module 01 — TORCH Infections
+ * NEET PG · Module 01 — TORCH Infections
  * ---------------------------------------------------------------------------
- * Complete extracted knowledge base (Chapter 20: TORCH Infections — Pavika Lal,
- * Renu Gupta, Prativa Verma) rendered as mechanism-first revision notes:
- * serological algorithms, clinical tables, the ten extracted Mermaid
- * algorithms verbatim, examiner traps and save-to-⌘K golden rules.
+ * Complete congenital-infection vault rebuilt from Chapter 20 (Pavika Lal,
+ * Renu Gupta, Prativa Verma) and standard obstetric practice:
+ * the TORCH complex, serology and IgG avidity, the fetal-infection clock,
+ * amniotic-fluid PCR windows, the fetal ultrasound signature, and the six
+ * infections — toxoplasmosis, syphilis, rubella, CMV, HSV, parvovirus B19
+ * and varicella-zoster.
  *
- * Zero data loss: every percentage, week cutoff, sensitivity/specificity value
- * and drug dosage from the source is retained.
+ * Eleven numbered concept blocks, eight colour-coded SVG diagrams and every
+ * percentage, week cutoff, sensitivity/specificity value, drug dose and
+ * treatment-failure caveat from the source are retained. The ten source
+ * algorithms are rendered as readable flow chains inside the relevant block.
+ *
+ * Offline-first: notes, diagrams, flashcards and MCQs all ship in the client
+ * bundle; the API only reconciles the module index.
  */
 
 export const TORCH_INFECTIONS_MODULE: StudioModule = {
@@ -18,29 +25,46 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
   title: 'TORCH Infections',
   shortTitle: 'TORCH',
   summary:
-    'The complete congenital-infection vault: serological timing, amniotic-fluid PCR windows, and toxoplasmosis, syphilis, rubella, CMV, HSV, parvovirus B19 and VZV — with the ten source algorithms and every treatment regimen.',
+    'The complete congenital-infection vault: serology and IgG avidity, the 18–20-week amniotic-PCR gateway, the fetal ultrasound signature, and toxoplasmosis, syphilis, rubella, CMV, HSV, parvovirus B19 and VZV — with every treatment regimen, gestational cutoff and examiner trap.',
   highYield: true,
-  weightage: 'High Yield',
-  durationMinutes: 42,
-  tags: ['TORCH', 'Congenital infection', 'Serology', 'Antenatal', 'High Yield'],
+  weightage: 'Very High Yield',
+  durationMinutes: 45,
+  tags: [
+    'TORCH',
+    'Serology & Avidity',
+    'Toxoplasmosis',
+    'Syphilis',
+    'Rubella & CMV',
+    'HSV & Parvovirus B19',
+    'Antenatal',
+  ],
   sourceTag: 'Pavika Lal, Renu Gupta, Prativa Verma • Chapter 20: TORCH Infections',
-  updatedAtISO: '2026-10-18T06:00:00.000Z',
+  updatedAtISO: '2026-10-21T06:00:00.000Z',
   notes: [
     /* ==================================================================== */
-    /* 1. Overview                                                          */
+    /* 1. The TORCH complex & serology                                      */
     /* ==================================================================== */
     {
-      id: 'overview',
-      heading: 'Overview & the TORCH complex',
+      id: 'torch-complex-serology',
+      heading: 'The TORCH complex & serological principles',
       intro:
-        'TORCHes (Toxoplasmosis, Rubella, Cytomegalovirus, Herpes, and Other diseases) are congenital fetal infections that cause diverse neonatal sequelae — ranging from severe heart and brain defects to long-term neurodevelopmental delay.',
+        'TORCHes (Toxoplasmosis, Rubella, Cytomegalovirus, Herpes, and Other diseases) are congenital fetal infections that cause diverse neonatal sequelae — ranging from severe heart and brain defects to long-term neurodevelopmental delay. ELISA is the workhorse: paired virus-specific IgG and IgM time the infection against gestational age, and IgG avidity breaks the tie.',
+      bullets: [
+        'TORCH is an acronym for the common congenital infections — Toxoplasma, Rubella, CMV, Herpes (and Others: syphilis, varicella, parvovirus B19).',
+        'ELISA is the most commonly employed serological modality: paired virus-specific IgG and IgM time the infection against gestational age.',
+        'IgM kinetics: produced within 1 week of primary infection; cannot cross the placenta (large molecular weight) — a raised IgM is the marker of recent maternal infection, not of fetal infection.',
+        'IgG kinetics: produced after 1 week as a secondary response or after reinfection; crosses the placenta (small size) and confers lifelong immunity.',
+        'Immune maturation (avidity): IgG undergoes a conformational change after 3 months, replacing low avidity with high avidity. Avidity testing resolves the diagnostic dilemma between acute/recent (< 3 months) and prior (> 3 months) infection.',
+        'Pattern reading: IgM⁺ / IgG⁻ = recent infection (< 10 days); IgM⁺ / IgG⁺ = recent infection (> 10 days) → run avidity; IgG⁺ / IgM⁻ = past infection; IgM⁻ / IgG⁻ = infection excluded.',
+        'Maternal serology only confirms maternal infection — fetal infection requires amniotic-fluid PCR or neonatal PCR.',
+      ],
       table: {
         head: ['Infection', 'Causative organism', 'Type of organism'],
         rows: [
           ['Toxoplasmosis', 'Toxoplasma gondii', 'Protozoan parasite'],
           [
-            'Others (Syphilis, Chickenpox, Parvovirus)',
-            'Treponema pallidum, Varicella zoster, Parvovirus B19',
+            'Others (syphilis, chickenpox, parvovirus)',
+            'Treponema pallidum, varicella zoster, parvovirus B19',
             'Treponema: spirochaete bacterium · Varicella zoster: herpes virus member (dsDNA) · Parvovirus: ssDNA virus (Parvoviridae family)',
           ],
           ['Rubella', 'Rubella virus', 'ssRNA virus (Togaviridae)'],
@@ -48,81 +72,59 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
           ['Herpes simplex (1 & 2)', 'Herpes simplex virus', 'DNA virus'],
         ],
       },
-      pearls: [
-        'TORCH is an acronym for the common congenital infections — Toxoplasma, Rubella, CMV, Herpes (and Others: Syphilis, Varicella, Parvovirus B19).',
-        'Congenital sequelae span severe heart and brain defects through to long-term neurodevelopmental delay.',
+      diagram: [
+        {
+          kind: 'torch-serology-avidity-pcr',
+          title: 'Diagram 1 · Serology matrix, IgG avidity & the PCR gateway',
+          caption:
+            'Read paired IgM and IgG as a two-by-two matrix, then use IgG avidity to date an IgM-positive result: low avidity (< 30%) means primary infection within 3 months, high avidity (> 60%) means past infection or vaccination. Amniotic-fluid PCR only becomes meaningful after 18–20 weeks — 6–8 weeks after maternal infection and after fetal urination is established.',
+        },
       ],
-    },
-
-    /* ==================================================================== */
-    /* 2. Serology                                                          */
-    /* ==================================================================== */
-    {
-      id: 'serology',
-      heading: 'Serological principles & avidity testing',
-      intro:
-        'ELISA is the most commonly employed modality: paired virus-specific IgG and IgM time the infection against gestational age.',
-      bullets: [
-        'IgM kinetics: produced within 1 week of primary infection; cannot cross the placenta (large molecular weight) — so a raised IgM is the fetal-unaffected marker of recent maternal infection.',
-        'IgG kinetics: produced after 1 week as a secondary response or due to reinfection; crosses the placenta (small size) and confers lifelong immunity.',
-        'Immune maturation (avidity): IgG undergoes a conformational change after 3 months, replacing low avidity with high avidity. Avidity testing resolves the diagnostic dilemma between acute/recent (<3 months) and prior (>3 months) infection.',
-      ],
-      code: {
-        label: 'Algorithm 1 — General principles of serological tests',
-        language: 'mermaid',
-        source: `graph TD
-  A[Serological Tests: IgM & IgG] --> B[IgM+ / IgG-]
-  A --> C[IgM+ / IgG+]
-  A --> D[IgG+ / IgM-]
-  A --> E[IgM- / IgG-]
-  B --> B1[Recent infection: < 10 days]
-  C --> C1[Recent infection: > 10 days]
-  D --> D1[Past infection]
-  E --> E1[Infection excluded]
-  C1 --> F[Avidity Test]
-  F --> G[High IgG Avidity: infection > 3 months ago or vaccination]
-  F --> H[Low IgG Avidity: infection < 3 months ago]`,
-      },
       trap: {
-        title: 'Examiner trap',
-        body: 'IgM is the recent-infection marker but never crosses the placenta; IgG is the immunity marker and is the only one that crosses. A stem that asks "fetal infection marker" is contrasting IgM (maternal recent) against IgG (protective/transplacental).',
+        title: 'Examiner trap · IgM versus IgG',
+        body: 'IgM is the recent-infection marker but never crosses the placenta; IgG is the immunity marker and is the only one that crosses. A stem that asks for the "fetal infection marker" is contrasting IgM (maternal, recent) against IgG (protective, transplacental).',
       },
+      traps: [
+        {
+          title: 'Examiner trap · low avidity is not always recent',
+          body: 'Low IgG avidity can persist for years in some women. A positive IgG + IgM needs a confirmatory second sample before you commit to recent infection — never act on a single low-avidity result alone.',
+        },
+      ],
       pearls: [
-        'IgM⁺ / IgG⁻ → recent infection (<10 days). IgM⁺ / IgG⁺ → recent infection (>10 days) → run avidity.',
-        'High IgG avidity = infection >3 months ago (or vaccination); low IgG avidity = infection <3 months ago.',
+        'IgM⁺ / IgG⁻ → recent infection (< 10 days). IgM⁺ / IgG⁺ → recent infection (> 10 days) → run avidity. High avidity = infection > 3 months ago (or vaccination); low avidity = infection < 3 months ago.',
+        'Serology proves maternal infection only. Fetal infection needs amniotic-fluid PCR at ≥ 18–20 weeks, or neonatal saliva/urine PCR after birth.',
       ],
     },
 
     /* ==================================================================== */
-    /* 3. Timing & amniotic PCR                                             */
+    /* 2. Timing, severity & amniotic PCR                                   */
     /* ==================================================================== */
     {
-      id: 'timing',
-      heading: 'Timing of maternal exposure & amniotic-fluid PCR',
-      bullets: [
-        'Pre-pregnancy infection: protects the fetus via preexisting transplacental maternal IgG; fetal infection is very rare.',
-        'Acute primary infection in pregnancy: causes severe fetal outcomes due to the absence of protective maternal IgG.',
-        'Recurrent Pregnancy Loss (RPL) rule: because TORCHes infections occur once in a lifetime and confer immunity (except syphilis, and very rarely reinfection with another strain of CMV or Toxoplasma), TORCH testing is NOT recommended in recurrent pregnancy loss.',
-        'Trimester severity rule: with the exception of HSV, infections during the first trimester have the worst fetal outcomes. The fetus is most vulnerable between week 3 and weeks 8–12 postfertilization.',
+      id: 'torch-timing-amniotic-pcr',
+      heading: 'Timing of maternal exposure & the amniotic-fluid PCR window',
+      intro:
+        'The same infection is a different disease at different gestational ages. With the exception of HSV, first-trimester infection carries the worst fetal outcome, while late infection transmits more often but damages less.',
+      flow: [
+        'Preconception · 2–5 weeks — pre-existing maternal IgG protects, fetal affection is very rare',
+        'Embryogenesis · 3–12 weeks — neural-tube formation and active organogenesis, the MOST severe affection',
+        'Fetal period · after organogenesis — less severe affection, but higher transmission',
       ],
-      code: {
-        label: 'Algorithm 2 — Severity of fetal affection vs timing',
-        language: 'mermaid',
-        source: `graph LR
-  A[Preconception: 2-5 weeks] -->|No affection| B[Embryogenesis: 3 to 12 weeks]
-  B -->|Neural tube formation & active organogenesis: MOST severe affection| C
-  C -->|Less severe affection| D[Fetal period]`,
-      },
+      bullets: [
+        'Pre-pregnancy infection protects the fetus via pre-existing transplacental maternal IgG; fetal infection is very rare.',
+        'Acute primary infection in pregnancy causes severe fetal outcomes because protective maternal IgG is absent.',
+        'Recurrent pregnancy loss (RPL) rule: because TORCH infections occur once in a lifetime and confer immunity (except syphilis, and very rarely reinfection with another strain of CMV or Toxoplasma), TORCH testing is NOT recommended in recurrent pregnancy loss.',
+        'Trimester severity rule: with the exception of HSV, infections during the first trimester have the worst fetal outcomes. The fetus is most vulnerable between week 3 and weeks 8–12 postfertilization.',
+        'Amniotic-fluid PCR is only meaningful after 18–20 weeks: the PCR turns positive 6–8 weeks after initial maternal infection, and fetal urination (which excretes the pathogen into amniotic fluid) is fully established only by 18–20 weeks.',
+        'Legal window constraint: MTP is legally not performed beyond 20 weeks (or beyond 24 weeks for lethal fetal malformations) — the result must be back inside that window to be actionable.',
+        'Interpretation: a positive PCR confirms fetal infection (but not necessarily fetal disease); a negative PCR does not exclude infection because sensitivity is never 100%.',
+      ],
       table: {
         head: ['Amniotic-fluid PCR rule', 'Detail'],
         rows: [
-          [
-            'What serology proves',
-            'Maternal serology only confirms maternal infection, not fetal infection.',
-          ],
+          ['What serology proves', 'Maternal serology only confirms maternal infection, not fetal infection.'],
           [
             'Why not before 18–20 weeks',
-            '(1) Amniotic-fluid PCR turns positive only 6–8 weeks after initial maternal infection; (2) fetal urination (which excretes the pathogen into amniotic fluid) is fully established only by 18–20 weeks.',
+            '(1) Amniotic-fluid PCR turns positive only 6–8 weeks after initial maternal infection; (2) fetal urination (which excretes the pathogen) is fully established only by 18–20 weeks.',
           ],
           [
             'Legal window constraint',
@@ -134,20 +136,31 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
           ],
         ],
       },
+      trap: {
+        title: 'Examiner trap · transmission is not severity',
+        body: 'Transplacental transmission rises with advancing gestation for most TORCH agents, but the risk of severe fetal disease falls. Do not answer "worse outcome" just because third-trimester transmission is highest — the first trimester is the teratogenic window.',
+      },
       pearls: [
-        'Amniocentesis for TORCH PCR is only meaningful after 18–20 weeks — because PCR needs 6–8 weeks to turn positive and fetal urination must be established.',
+        'Amniocentesis for TORCH PCR is only meaningful after 18–20 weeks — PCR needs 6–8 weeks to turn positive and fetal urination must be established.',
         'TORCH serology is NOT indicated in recurrent pregnancy loss — these infections confer lifelong immunity.',
       ],
     },
 
     /* ==================================================================== */
-    /* 4. Fetal USG signs                                                   */
+    /* 3. Fetal ultrasound signature                                        */
     /* ==================================================================== */
     {
-      id: 'usg',
-      heading: 'Ultrasonography (USG) signs presumptive of TORCH',
+      id: 'torch-usg-signature',
+      heading: 'The fetal ultrasound signature of TORCH',
       intro:
-        'These are the sonographic red flags that trigger a TORCH work-up — grouped by anatomical compartment.',
+        'These are the sonographic red flags that trigger a TORCH work-up — grouped by anatomical compartment. No single finding is pathognomonic, so the diagnosis is pattern-plus-serology.',
+      bullets: [
+        'Intracranial calcifications and ventriculomegaly are the two most common cranial ultrasound findings in fetal TORCH.',
+        'Hydrops with fetal anemia (MCA-PSV > 1.5 MoM) and no maternal atypical antibodies should prompt a parvovirus B19 and TORCH screen.',
+        'Placentomegaly, placental calcification and either oligohydramnios or polyhydramnios complete the extracranial picture.',
+        'A normal ultrasound does not exclude infection — especially CMV, where brain findings may evolve through the third trimester.',
+        'Pattern clues: toxoplasmosis → scattered intracranial calcifications with hydrocephalus; CMV → periventricular calcifications with microcephaly; rubella → deafness, cataract and cardiac defects; HSV → skin vesicles and encephalitis.',
+      ],
       table: {
         head: ['Cranial abnormalities', 'Extracranial abnormalities', 'Placental / amniotic fluid'],
         rows: [
@@ -172,194 +185,172 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
           ],
         ],
       },
+      diagram: [
+        {
+          kind: 'torch-usg-signature-map',
+          title: 'Diagram 2 · Fetal ultrasound signature by compartment',
+          caption:
+            'Three compartments, one work-up. Cranial findings (ventriculomegaly, calcification, synechiae, cerebellar and cortical malformation) sit beside extracranial findings (SGA, echogenic bowel, liver calcification, effusions, hydrops) and placental/fluid findings (placentomegaly, calcification, oligo- or polyhydramnios).',
+        },
+      ],
+      trap: {
+        title: 'Examiner trap · hydrops is not always immune',
+        body: 'Hydrops plus fetal anemia (MCA-PSV > 1.5 MoM) with a negative maternal antibody screen is parvovirus B19 until proven otherwise — not "idiopathic hydrops" and not automatically a TORCH serology panel.',
+      },
       pearls: [
-        'Intracranial calcifications and ventriculomegaly are the two most common cranial USG findings in fetal TORCH.',
-        'Hydrops + fetal anemia (MCA-PSV > 1.5 MoM) with no maternal atypical antibodies should prompt a parvovirus B19 and TORCH screen.',
+        'Intracranial calcifications + ventriculomegaly are the two most common cranial USG findings in fetal TORCH.',
+        'Hydrops + fetal anemia (MCA-PSV > 1.5 MoM) with no maternal atypical antibodies → parvovirus B19 and TORCH screen.',
       ],
     },
 
     /* ==================================================================== */
-    /* 5. Toxoplasmosis — epidemiology                                      */
+    /* 4. Toxoplasmosis — epidemiology, maternal & fetal diagnosis          */
     /* ==================================================================== */
     {
-      id: 'toxo-epi',
-      heading: 'Toxoplasmosis — epidemiology & life cycle',
+      id: 'toxoplasmosis-diagnosis',
+      heading: 'Toxoplasmosis — epidemiology, maternal & fetal diagnosis',
+      intro:
+        'Toxoplasma gondii is an obligate intracellular protozoan with a cat definitive host. Transmission rises with placental maturation, but disease severity falls — so first-trimester infection is managed for severity and third-trimester infection for transmission.',
       bullets: [
         'Prevalence: 10–55% in temperate areas; up to 80% in tropical areas.',
-        'Definitive host: cats and felines — sexual reproduction produces oocytes passed in cat feces, contaminating soil and water.',
-        'Intermediate hosts: humans, pigs, and lambs — ingest oocytes → parasitemia lasting up to 10 days → transforms into lifelong dormant tissue cysts.',
+        'Definitive host: cats and felines — sexual reproduction produces oocysts passed in cat feces, contaminating soil and water.',
+        'Intermediate hosts: humans, pigs and lambs — ingest oocysts → parasitemia lasting up to 10 days → transforms into lifelong dormant tissue cysts.',
         'Transmission kinetics: transplacental transfer increases with placental maturation and advancing gestational age (MTCT risk is lower in early gestation, higher in late gestation). No transmission occurs via breastfeeding or direct human-to-human contact.',
         'MTCT risk factors: acute primary infection during pregnancy or within 3 months preconception; reactivation in immunocompromised mothers (HIV/immunosuppressants); lack of antepartum treatment; or virulent-strain reinfection.',
+        'Maternal infection: asymptomatic in ~80%; symptomatic in ~20% — fever, chills, sweats, headache, myalgia, pharyngitis; hepatosplenomegaly and maculopapular rash.',
+        'Most common maternal sign: bilateral nontender cervical lymphadenopathy. Severe/reactivation disease causes chorioretinitis with floaters and vision loss.',
+        'Fetal ultrasound — the two most common findings: intracranial calcifications and bilateral progressive ventricular dilatation.',
+        'Poor prognostic fetal findings: severe ventriculomegaly, brain necrosis, gyration disorders and microcephaly.',
+        'Neonatal infection: asymptomatic in 80%; symptomatic in 20% — two-thirds have moderate disease (intracranial calcifications, peripheral retinochoroiditis), one-third have disseminated disease (hydrocephalus, macular chorioretinitis).',
+        'Newborn work-up: examination by a neonatologist, retinal specialist and pediatric neurologist, plus neonatal IgM, IgG and IgA serology and PCR of blood, urine and CSF at birth.',
+      ],
+      table: {
+        head: ['Test / situation', 'Interpretation & rule'],
+        rows: [
+          ['Maternal IgG', 'Negative = non-immune → give prevention advice. Positive → check IgM.'],
+          [
+            'IgM positive',
+            'Run IgG avidity: high avidity = past infection (> 3 months) → reassure; low avidity = recent infection → investigate the fetus.',
+          ],
+          [
+            'Amniotic-fluid / fetal-blood PCR',
+            'Most reliable prenatal method: PPV 100% and specificity 100%. Positive confirms fetal infection, not the severity of fetal disease.',
+          ],
+          [
+            'Amniocentesis contraindication',
+            'Do NOT perform in HIV-positive or HBsAg-positive mothers — the needle can seed the fetus with maternal virus.',
+          ],
+          ['Universal screening', 'NOT recommended; screen only for abnormal ultrasound findings.'],
+          [
+            'Serological caveats',
+            'Low IgG avidity can persist for years in some women. A positive IgG + IgM requires a confirmatory second sample.',
+          ],
+        ],
+      },
+      flow: [
+        'Suspected toxoplasma · IgG assay — negative → preventive strategies, positive → check IgM',
+        'IgM negative · reassurance (past infection), IgM positive → IgG avidity test',
+        'High avidity · past infection → reassure; low avidity · recent infection → investigate the fetus',
+        'Fetal investigation · detailed USG + amniotic-fluid PCR at ≥ 18 weeks (PPV 100%, specificity 100%)',
+      ],
+      diagram: [
+        {
+          kind: 'toxoplasmosis-diagnosis-treatment',
+          title: 'Diagram 3 · Toxoplasmosis — diagnosis, fetal work-up & the 18-week treatment switch',
+          caption:
+            'Maternal IgG → IgM → avidity gates the work-up; fetal diagnosis rests on intracranial calcification with progressive ventriculomegaly and amniotic-fluid PCR after 18 weeks. Treatment switches at 18 weeks from spiramycin to pyrimethamine + sulfadiazine + folinic acid, and switches back if the PCR and ultrasound are negative.',
+        },
       ],
       trap: {
-        title: 'Examiner trap',
-        body: 'The risk of transmission rises with gestational age, but the risk of severe fetal disease falls. That is why first-trimester toxoplasmosis is managed for severity and third-trimester infection is managed for transmission.',
-      },
-      pearls: [
-        'Only the cat is the definitive host (sexual reproduction); humans are intermediate hosts that form dormant tissue cysts.',
-        'Transplacental toxoplasma transfer increases with advancing gestation — unlike most teratogens, where early equals worse.',
-      ],
-    },
-
-    /* ==================================================================== */
-    /* 6. Toxoplasmosis — clinical                                          */
-    /* ==================================================================== */
-    {
-      id: 'toxo-clinical',
-      heading: 'Toxoplasmosis — clinical presentation & maternal diagnosis',
-      bullets: [
-        'Maternal: asymptomatic in ~80%; symptomatic in ~20% — fever, chills, sweats, headache, myalgia, pharyngitis; hepatosplenomegaly and maculopapular rash.',
-        'Most common sign: bilateral nontender cervical lymphadenopathy.',
-        'Severe/reactivation disease: chorioretinitis with floaters and vision loss.',
-        'Fetal USG — two most common findings: intracranial calcifications and bilateral progressive ventricular dilatation.',
-        'Maternal diagnosis (Algorithm 4): start with toxoplasma IgG; if negative run a PCR, if positive check IgM; when IgM is positive run an IgG avidity test.',
-      ],
-      code: {
-        label: 'Algorithms 3A, 3B & 4 — clinical presentation & maternal diagnosis',
-        language: 'mermaid',
-        source: `graph TD
-  subgraph Alg3A [Algorithm 3A: Maternal Toxoplasmosis]
-    M[Maternal Toxoplasmosis] --> M1[Asymptomatic: 80%]
-    M --> M2[Symptomatic: 20% - Fever, chills, sweats, headache, myalgia, pharyngitis, hepatosplenomegaly, maculopapular rash<br>Most common: Bilateral nontender cervical lymphadenopathy<br>Severe/Reactivation: Chorioretinitis with floaters/vision loss]
-  end
-  subgraph Alg3B [Algorithm 3B: Fetal USG Findings]
-    F[Two Most Common Fetal USG Findings] --> F1[Intracranial calcifications]
-    F --> F2[Bilateral progressive ventricular dilatation]
-  end
-  subgraph Alg4 [Algorithm 4: Maternal Diagnostic Workup]
-    S[Suspected Toxoplasma Infection] --> IGG[IgG Assay]
-    IGG -->|Negative| PREV[Advise preventive strategies]
-    IGG -->|Positive| IGM[Check IgM]
-    IGM -->|Negative| RE[Reassurance]
-    IGM -->|Positive| AVID[IgG Avidity Test]
-    AVID -->|High Avidity| PAST[Past Infection -> Reassurance]
-    AVID -->|Low Avidity| REC[Recent Infection -> Consider Fetal Investigation]
-  end`,
-      },
-      pearls: [
-        'Bilateral nontender cervical lymphadenopathy is the commonest maternal sign of acute toxoplasmosis.',
-        'Intracranial calcifications + bilateral progressive ventricular dilatation are the two most common fetal USG findings.',
-      ],
-    },
-
-    /* ==================================================================== */
-    /* 7. Toxoplasmosis — neonatal                                          */
-    /* ==================================================================== */
-    {
-      id: 'toxo-neonatal',
-      heading: 'Toxoplasmosis — neonatal features & diagnosis',
-      bullets: [
-        'Asymptomatic: 80%.',
-        'Symptomatic: 20% — two-thirds have moderate disease (intracranial calcifications, peripheral retinochoroiditis); one-third have disseminated disease (hydrocephalus, macular chorioretinitis).',
-        'Poor prognostic factors on USG: severe ventriculomegaly, brain necrosis, gyration disorders, and microcephaly.',
-        'Amniotic fluid / fetal blood PCR: most reliable prenatal method with PPV = 100% and specificity = 100%.',
-        'Contraindication to amniocentesis: do NOT perform in HIV-positive or HBsAg-positive mothers due to the procedural risk of fetal viral transmission.',
-        'Serological caveats: universal screening is not recommended; screen only for abnormal USG findings. Low IgG avidity can persist for years in some women. Positive IgG + IgM requires a confirmatory second sample.',
-        'Newborn work-up: exam by neonatologist, retinal specialist, and pediatric neurologist + neonatal IgM, IgG, IgA serology and PCR of blood, urine, and CSF at birth.',
-      ],
-      trap: {
-        title: 'Examiner trap',
+        title: 'Examiner trap · amniocentesis in HIV or HBsAg',
         body: 'Amniocentesis is contraindicated in HIV-positive and HBsAg-positive mothers because the needle can seed the fetus with maternal virus — a procedural risk, not a serological one.',
       },
+      traps: [
+        {
+          title: 'Examiner trap · transmission rises, severity falls',
+          body: 'The risk of transmission rises with gestational age, but the risk of severe fetal disease falls. That is why first-trimester toxoplasmosis is managed for severity and third-trimester infection is managed for transmission.',
+        },
+      ],
       pearls: [
+        'Bilateral nontender cervical lymphadenopathy is the commonest maternal sign; intracranial calcifications + bilateral progressive ventricular dilatation are the two commonest fetal ultrasound findings.',
         'Amniotic-fluid / fetal-blood PCR has PPV 100% and specificity 100% — the most reliable prenatal test for fetal toxoplasmosis.',
-        'Do not perform amniocentesis in HIV-positive or HBsAg-positive mothers.',
+        'Only the cat is the definitive host (sexual reproduction); humans are intermediate hosts that form dormant tissue cysts.',
       ],
     },
 
     /* ==================================================================== */
-    /* 8. Toxoplasmosis — treatment                                         */
+    /* 5. Toxoplasmosis — treatment, neonatal care & prevention             */
     /* ==================================================================== */
     {
-      id: 'toxo-treatment',
-      heading: 'Toxoplasmosis — treatment in pregnancy',
+      id: 'toxoplasmosis-treatment',
+      heading: 'Toxoplasmosis — treatment, neonatal care & prevention',
       intro:
-        'The regimen is decided by gestational age: spiramycin before 18 weeks, pyrimethamine + sulfadiazine + folinic acid at or after 18 weeks.',
+        'The regimen is decided by gestational age: spiramycin before 18 weeks, pyrimethamine + sulfadiazine + folinic acid at or after 18 weeks. The choice then follows the fetal PCR and ultrasound result.',
+      flow: [
+        'Fetal USG + amniotic-fluid PCR at ≥ 18 weeks → decides the switch, not the start date',
+        'Started < 18 weeks on spiramycin · PCR negative and USG negative → continue spiramycin',
+        'Started < 18 weeks on spiramycin · PCR positive and/or USG positive → switch to pyrimethamine + sulfadiazine + folinic acid',
+        'Started > 18 weeks on pyrimethamine + sulfadiazine · PCR negative and USG negative → change to spiramycin',
+        'Started > 18 weeks · PCR positive and/or USG positive → continue pyrimethamine + sulfadiazine + folinic acid',
+      ],
       table: {
-        head: ['Parameter', '<18 weeks of gestation', '≥18 weeks of gestation'],
+        head: ['Parameter', '< 18 weeks of gestation', '≥ 18 weeks of gestation'],
         rows: [
           [
             'Drug regimen',
             'Spiramycin: 1 g TDS (three times daily)',
-            'Pyrimethamine 50 mg/day + Sulfadiazine three 500 mg tablets/day (1.5 g/day) + Folinic acid two 25 mg capsules/week + Hydration 2 L water/day to alkalinize urine',
+            'Pyrimethamine 50 mg/day + sulfadiazine three 500 mg tablets/day (1.5 g/day) + folinic acid two 25 mg capsules/week + hydration 2 L water/day to alkalinize urine',
           ],
           ['Contraindications (C/I)', 'Long QT syndrome', 'G6PD deficiency'],
           [
             'Side effects (S/E)',
             'GIT symptoms (nausea, vomiting), skin reactions',
-            'Skin reactions, bone marrow suppression, reversible acute kidney injury',
+            'Skin reactions, bone-marrow suppression, reversible acute kidney injury',
           ],
           ['Monitoring', 'No monitoring required', 'Weekly complete blood count (CBC)'],
         ],
       },
-      code: {
-        label: 'Algorithm 5 — treatment according to fetal toxoplasmosis diagnosis',
-        language: 'mermaid',
-        source: `graph TD
-  A[Fetal USG + Amniotic Fluid PCR at >18 Weeks] --> B[Presented < 18 Weeks: Started on Spiramycin]
-  A --> C[Presented > 18 Weeks: Started on Pyrimethamine + Sulfadiazine + Folinic Acid]
-  B -->|PCR Negative & USG Negative| B1[Continue Spiramycin]
-  B -->|PCR Positive and/or USG Positive| B2[Switch to Pyrimethamine + Sulfadiazine + Folinic Acid]
-  C -->|PCR Negative & USG Negative| C1[Change to Spiramycin]
-  C -->|PCR Positive and/or USG Positive| C2[Continue Pyrimethamine + Sulfadiazine + Folinic Acid]`,
-      },
-      pearls: [
-        'Spiramycin is the <18-week drug; pyrimethamine + sulfadiazine + folinic acid is the ≥18-week drug.',
-        'Pyrimethamine causes bone marrow suppression — add folinic acid and monitor weekly CBC; it is contraindicated in G6PD deficiency.',
-        'Spiramycin is contraindicated in long QT syndrome; pyrimethamine is contraindicated in G6PD deficiency.',
-      ],
-    },
-
-    /* ==================================================================== */
-    /* 9. Toxoplasmosis — prevention                                        */
-    /* ==================================================================== */
-    {
-      id: 'toxo-prevention',
-      heading: 'Toxoplasmosis — obstetric rules & primary prevention',
       bullets: [
-        'Perform monthly fetal USG if fetal PCR is positive.',
+        'Perform monthly fetal ultrasound if the fetal PCR is positive.',
         'Congenital toxoplasmosis does NOT alter the timing or mode of delivery, and breastfeeding is not contraindicated (exercise caution if nipples are cracked or bleeding).',
         'Primary prevention: cook meat to 63–74°C; refrigerate meat for at least 72 hours; avoid unpasteurized goat milk, bare-hand meat handling, skinning animals without gloves, and cat feces.',
+        'Serological caveats: universal screening is not recommended — screen only for abnormal ultrasound findings. Positive IgG + IgM requires a confirmatory second sample, and low avidity can persist for years.',
       ],
       trap: {
-        title: 'Examiner trap',
+        title: 'Examiner trap · toxoplasmosis does not change delivery',
         body: 'Congenital toxoplasmosis is not an indication for caesarean delivery, nor a contraindication to breastfeeding — a favourite "does it change management?" distractor.',
       },
+      traps: [
+        {
+          title: 'Examiner trap · folinic acid is not folic acid',
+          body: 'Pyrimethamine blocks dihydrofolate reductase and causes bone-marrow suppression. Rescue the marrow with folinic acid (two 25 mg capsules/week) and monitor a weekly CBC — folic acid is not a substitute. Pyrimethamine is contraindicated in G6PD deficiency.',
+        },
+      ],
       pearls: [
-        'Congenital toxoplasmosis does not change timing or mode of delivery, and does not contraindicate breastfeeding.',
-        'Primary prevention is dietary and hygiene-based: cook meat to 63–74°C, freeze ≥72 h, avoid raw goat milk, gloves for soil/cat litter.',
+        'Spiramycin is the < 18-week drug; pyrimethamine + sulfadiazine + folinic acid is the ≥ 18-week drug. Switch to the combination if PCR/USG turns positive, and back to spiramycin if both are negative.',
+        'Spiramycin is contraindicated in long QT syndrome; pyrimethamine is contraindicated in G6PD deficiency and needs weekly CBC.',
       ],
     },
 
     /* ==================================================================== */
-    /* 10. Syphilis — screening                                             */
+    /* 6. Syphilis — screening & staging                                    */
     /* ==================================================================== */
     {
-      id: 'syph-screening',
-      heading: 'Syphilis — transmission & WHO universal screening',
+      id: 'syphilis-screening-staging',
+      heading: 'Syphilis — transmission, universal screening & clinical stages',
+      intro:
+        'Syphilis is the TORCH infection that does not confer lifelong immunity. Vertical transmission is highest in early-stage disease and in the third trimester, so screening is universal at the first antenatal visit and treatment is never delayed for confirmatory titres in high-prevalence settings.',
       bullets: [
-        'Transmitted via direct lesion contact, sexual contact (1/3 of cases), or vertical transmission (highest in early-stage disease and the third trimester).',
-        'Universal screening: recommended for all pregnant women at the first antenatal visit, regardless of prevalence or prior pregnancy results.',
-        'Low-prevalence areas (<5%): single on-site Rapid Syphilis Test (RST) is preferred over Rapid Plasma Reagin (RPR).',
-        'High-prevalence areas (>5%): perform RST — if positive, administer the first treatment dose immediately, then perform RPR to guide further duration-based therapy.',
+        'Transmitted via direct lesion contact, sexual contact (one-third of cases), or vertical transmission (highest in early-stage disease and the third trimester).',
+        'Universal screening is recommended for all pregnant women at the first antenatal visit, regardless of prevalence or prior pregnancy results.',
+        'Low-prevalence areas (< 5%): a single on-site Rapid Syphilis Test (RST) is preferred over Rapid Plasma Reagin (RPR).',
+        'High-prevalence areas (> 5%): perform RST — if positive, administer the first treatment dose immediately, then perform RPR to guide further duration-based therapy.',
         'Repeat screening is indicated only if at risk of reinfection, presenting with STI symptoms, or HIV-positive.',
+        'Early syphilis: incubation 9–90 days (average 21 days); pregnancy cutoff till 27 weeks. A single painless papule with regional lymphadenopathy ulcerates into the classic chancre.',
+        'Latent / secondary syphilis: occurs after months in 25% of patients; pregnancy cutoff 28 weeks till term. Widespread mucocutaneous papular rash with generalized lymphadenopathy.',
+        'Tertiary syphilis: occurs after 20–40 years (in one-third of patients) — neurosyphilis and cardiovascular syphilis.',
+        'Adverse fetal outcomes: fetal anemia, FGR, hepatosplenomegaly, intrahepatic calcification, fetal hydrops and stillbirth.',
       ],
-      trap: {
-        title: 'Examiner trap',
-        body: 'In high-prevalence settings the first benzathine penicillin dose is given on the same day as a positive RST, before awaiting RPR — do not delay treatment for confirmatory titres.',
-      },
-      pearls: [
-        'Universal syphilis screening at the first antenatal visit — irrespective of prevalence or previous results.',
-        'In high-prevalence areas, treat on the positive RST immediately, then titrate with RPR.',
-      ],
-    },
-
-    /* ==================================================================== */
-    /* 11. Syphilis — stages                                                */
-    /* ==================================================================== */
-    {
-      id: 'syph-stages',
-      heading: 'Syphilis — clinical features & pregnancy outcomes',
       table: {
         head: ['Stage', 'Timing / incubation', 'Clinical presentation & outcomes'],
         rows: [
@@ -381,275 +372,257 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
           ],
         ],
       },
+      trap: {
+        title: 'Examiner trap · do not wait for RPR',
+        body: 'In high-prevalence settings the first benzathine penicillin dose is given on the same day as a positive RST, before awaiting RPR — do not delay treatment for confirmatory titres. In low-prevalence settings, a single on-site RST is preferred over RPR.',
+      },
       pearls: [
-        'The classic chancre is a single painless papule that ulcerates, with regional lymphadenopathy — incubation 9–90 days (avg 21).',
+        'Universal syphilis screening at the first antenatal visit — irrespective of prevalence or previous results.',
+        'In high-prevalence areas, treat on the positive RST immediately, then titrate with RPR.',
         'Syphilis is the one TORCH infection that does not confer lifelong immunity — reinfection is possible.',
       ],
     },
 
     /* ==================================================================== */
-    /* 12. Syphilis — treatment                                             */
+    /* 7. Syphilis — treatment & congenital classification                  */
     /* ==================================================================== */
     {
-      id: 'syph-treatment',
-      heading: 'Syphilis — treatment regimens in pregnancy',
-      bullets: [
-        'Early syphilis, till 27+6 weeks: Benzathine penicillin G 2.4 MU IM single dose (preferred over procaine penicillin).',
-        'Early syphilis, 28 weeks till term: Benzathine penicillin G 2.4 MU IM on Day 1 and Day 8, with careful neonatal assessment at birth.',
-        'Penicillin allergy (early): attempt desensitization first. If impossible — Erythromycin 500 mg PO QID for 14 days, OR Ceftriaxone 1 g IM OD for 10–14 days, OR Azithromycin 2 g PO once (these carry treatment-failure risk and require treating the neonate for congenital syphilis).',
-        'Late / cardiovascular / gummatous: Benzathine penicillin G 2.4 MU IM weekly on Days 1, 8 and 15 (3 doses), preferred over Procaine penicillin 1.2 MU IM OD for 20 days. Penicillin allergy: Erythromycin 500 mg PO QID for 30 days.',
-        'Neurosyphilis: Procaine penicillin G 1.8–2.4 MU IM OD + Probenecid 500 mg PO QID for 14 days, OR Benzyl penicillin 10.8–14.4 g daily (1.8–2.4 g IV every 4 hours) for 14 days.',
-        'Mandatory steroid cover: for both neurosyphilis and cardiovascular syphilis, administer Prednisolone 40–60 mg OD for 3 days, starting 24 hours prior to antibiotics.',
-        'Retreatment indications: inadequate prior therapy or failure to achieve a fourfold drop in RPR/VDRL titre.',
+      id: 'syphilis-treatment-classification',
+      heading: 'Syphilis — treatment regimens & congenital-syphilis classification',
+      intro:
+        'Penicillin is the only drug proven to treat the fetus. The regimen is set by stage, and the neonate is then risk-stratified by how recently the mother was treated and with which drug.',
+      table: {
+        head: ['Clinical scenario', 'Regimen in pregnancy'],
+        rows: [
+          [
+            'Early syphilis, up to 27+6 weeks',
+            'Benzathine penicillin G 2.4 MU IM single dose (preferred over procaine penicillin).',
+          ],
+          [
+            'Early syphilis, 28 weeks to term',
+            'Benzathine penicillin G 2.4 MU IM on Day 1 and Day 8, with careful neonatal assessment at birth.',
+          ],
+          [
+            'Penicillin allergy (early syphilis)',
+            'Desensitize first. If impossible: erythromycin 500 mg PO QID × 14 days, OR ceftriaxone 1 g IM OD × 10–14 days, OR azithromycin 2 g PO once — all carry treatment-failure risk and require treating the neonate for congenital syphilis.',
+          ],
+          [
+            'Late / cardiovascular / gummatous',
+            'Benzathine penicillin G 2.4 MU IM weekly on Days 1, 8 and 15 (3 doses), preferred over procaine penicillin 1.2 MU IM OD × 20 days. Penicillin allergy: erythromycin 500 mg PO QID × 30 days.',
+          ],
+          [
+            'Neurosyphilis',
+            'Procaine penicillin G 1.8–2.4 MU IM OD + probenecid 500 mg PO QID × 14 days, OR benzyl penicillin 10.8–14.4 g/day (1.8–2.4 g IV every 4 hours) × 14 days.',
+          ],
+          [
+            'Steroid cover',
+            'For neurosyphilis and cardiovascular syphilis: prednisolone 40–60 mg OD × 3 days, starting 24 hours before antibiotics.',
+          ],
+          [
+            'Retreatment',
+            'Inadequate prior therapy, or failure to achieve a fourfold drop in RPR/VDRL titre.',
+          ],
+        ],
+      },
+      flow: [
+        'Risk of congenital syphilis · no risk = treated before the index pregnancy and no reinfection risk → no further investigation',
+        'Low risk · normal neonatal exam + adequate treatment > 4 weeks before delivery → maternal and infant treponemal/nontreponemal IgM serology, rule out reinfection, review at 3 months',
+        'High risk · maternal treatment < 4 weeks before delivery, a non-beta-lactam drug, or inadequate treatment → treat the neonate for congenital syphilis',
+        'Possible case · untreated/inadequately treated mother at delivery + positive infant RPR',
+        'Probable case · possible case + physical or long-bone X-ray signs, or RPR titre > 4× normal',
+        'Confirmed case · probable case + T. pallidum on dark-field microscopy, or positive PCR of urine/blood/placenta/skin',
+      ],
+      diagram: [
+        {
+          kind: 'syphilis-treatment-congenital-risk',
+          title: 'Diagram 4 · Syphilis — screening, treatment ladder & congenital risk',
+          caption:
+            'Universal RST screening at booking; in high-prevalence areas the first penicillin dose follows a positive RST on the same day. The treatment ladder runs from single-dose benzathine penicillin for early disease to three weekly doses for late disease and a 14-day neurosyphilis regimen with steroid cover. The neonate is then classified as no risk, low risk or high risk, and as a possible, probable or confirmed congenital case.',
+        },
       ],
       trap: {
-        title: 'Examiner trap',
-        body: 'Penicillin is the only drug proven to treat the fetus. Other agents (erythromycin, ceftriaxone, azithromycin) treat the mother but not reliably the fetus — the neonate must then be treated for congenital syphilis.',
+        title: 'Examiner trap · penicillin is the only fetal drug',
+        body: 'Penicillin is the only drug proven to cross the placenta and treat the fetus. Erythromycin, ceftriaxone and azithromycin treat the mother but not reliably the fetus — the neonate must then be treated for congenital syphilis. Desensitize rather than substitute.',
       },
+      traps: [
+        {
+          title: 'Examiner trap · the 4-week rule',
+          body: 'Maternal treatment less than 4 weeks before delivery defines a high-risk neonate regardless of how "adequate" the regimen looked — treat the neonate for congenital syphilis.',
+        },
+      ],
       pearls: [
         'Penicillin is the only therapy proven to cross the placenta and treat the fetus — desensitize rather than substitute.',
-        'Neurosyphilis and cardiovascular syphilis need steroid cover: prednisolone 40–60 mg OD for 3 days, starting 24 h before antibiotics.',
+        'Neurosyphilis and cardiovascular syphilis need steroid cover: prednisolone 40–60 mg OD for 3 days, starting 24 hours before antibiotics.',
+        'Congenital case ladder: possible (untreated mother + positive infant RPR) → probable (add X-ray signs or RPR > 4×) → confirmed (dark-field or PCR).',
       ],
     },
 
     /* ==================================================================== */
-    /* 13. Syphilis — classification                                        */
+    /* 8. Rubella                                                           */
     /* ==================================================================== */
     {
-      id: 'syph-classification',
-      heading: 'Syphilis — risk stratification & case classification',
+      id: 'rubella-crs',
+      heading: 'Rubella — maternal disease & congenital rubella syndrome',
       intro:
-        'Algorithms 6 and 7 separate the neonate who needs nothing, the neonate who needs serological follow-up, and the neonate who must be treated for congenital syphilis.',
-      code: {
-        label: 'Algorithms 6 & 7 — congenital syphilis risk and case classification',
-        language: 'mermaid',
-        source: `graph TD
-  subgraph Alg6 [Algorithm 6: Risk of Congenital Syphilis]
-    R[Risk of Congenital Syphilis] --> NR[No Risk: Treated prior to index pregnancy + no reinfection risk]
-    R --> LR[Low Risk: Normal neonate exam + adequate treatment >4 wks before delivery]
-    R --> HR[High Risk: Maternal treatment <4 wks before delivery OR non-beta-lactam drug OR inadequate treatment]
-    NR --> NR1[No further investigation required]
-    LR --> LR1[Mother & infant treponemal + nontreponemal IgM serology; rule out reinfection; evaluate neonate at 3 months]
-    HR --> HR1[Treat neonate for Congenital Syphilis]
-  end
-  subgraph Alg7 [Algorithm 7: Types of Congenital Syphilis]
-    P1[Possible Case: Untreated/inadequately treated mother at delivery + positive infant RPR] --> P2[Probable Case: Possible Case + physical/long-bone X-ray signs OR RPR titre > 4x normal]
-    P2 --> P3[Confirmed Case: Probable Case + T. pallidum on dark-field microscopy OR positive PCR of urine/blood/placenta/skin]
-  end`,
-      },
-      pearls: [
-        'Maternal treatment <4 weeks before delivery = high-risk neonate → treat for congenital syphilis.',
-        'Possible → Probable → Confirmed case ladder: add physical/long-bone X-ray or RPR >4× titre (probable), then dark-field microscopy or PCR (confirmed).',
-      ],
-    },
-
-    /* ==================================================================== */
-    /* 14. Rubella                                                          */
-    /* ==================================================================== */
-    {
-      id: 'rubella',
-      heading: 'Rubella — virology & maternal disease',
+        'Rubella is a Togaviridae ssRNA virus with a 14-day incubation. Transmission stays high throughout pregnancy, but the defect risk collapses after 16 weeks — after which the only expected sequela is deafness.',
       bullets: [
         'Togaviridae family (ssRNA); incubation period 14 days (range 12–23 days).',
         'Infectivity period: from 7 days before rash onset to 7–10 days after rash onset.',
         'High community herd immunity (98–99%) from MMR vaccination makes routine antenatal screening unnecessary.',
         'Adult clinical manifestations: diffuse fine maculopapular rash (3-day rash) with cephalocaudal spread from face to trunk and limbs.',
-        'Characteristic suboccipital, postauricular, and cervical lymphadenopathy.',
+        'Characteristic suboccipital, postauricular and cervical lymphadenopathy.',
         'Occasional migratory, symmetrical, nonerosive small-joint arthritis, or mild flu-like illness.',
+        'Classic CRS triad: sensorineural hearing loss, cataracts and congenital heart disease (patent ductus arteriosus and ventricular septal defect).',
+        'Other features: hepatosplenomegaly, FGR, jaundice, anemia, rash, neurodevelopmental delay and endocrinopathies.',
+        'Maternal rubella IgM has a 15–20% false-positive rate (cross-reactivity, post-vaccine persistence, autoantibodies); confirm a positive IgG + IgM with IgG avidity or pharyngeal exudate RT-PCR.',
+        'Management: < 12 weeks infection → consider termination of pregnancy without invasive testing, because the defect rate is 97%. 12–20 weeks infection → amniocentesis for viral RNA PCR, waiting at least 6 weeks after maternal infection to avoid false negatives.',
+        'Vaccination rules: MMR is a live-attenuated vaccine (contraindicated in pregnancy); avoid conception for 1 month post-vaccine; safe during breastfeeding.',
       ],
-      pearls: [
-        'Rubella: Togaviridae ssRNA; incubation 14 days; infectious from 7 days before to 7–10 days after the rash.',
-        'The 3-day maculopapular rash spreads cephalocaudally, with suboccipital, postauricular and cervical lymphadenopathy.',
-      ],
-    },
-
-    /* ==================================================================== */
-    /* 15. Rubella — CRS                                                    */
-    /* ==================================================================== */
-    {
-      id: 'rubella-crs',
-      heading: 'Rubella — congenital rubella syndrome (CRS)',
       table: {
         head: ['Gestational age', 'Fetal transmission risk', 'Congenital defect risk'],
         rows: [
-          ['<12 weeks', '90%', '97%'],
+          ['< 12 weeks', '90%', '97%'],
           ['12–16 weeks', '55%', '20%'],
-          ['>16 weeks', '45%', 'Minimal — risk of deafness only'],
+          ['> 16 weeks', '45%', 'Minimal — risk of deafness only'],
         ],
       },
-      bullets: [
-        'Classic CRS triad: sensorineural hearing loss, cataracts, and congenital heart disease (patent ductus arteriosus [PDA] and ventricular septal defect [VSD]).',
-        'Other features: hepatosplenomegaly, FGR, jaundice, anemia, rash, neurodevelopmental delay, and endocrinopathies.',
+      diagram: [
+        {
+          kind: 'rubella-crs-risk-gradient',
+          title: 'Diagram 5 · Rubella — the CRS transmission-versus-defect gradient',
+          caption:
+            'Transmission falls only modestly across pregnancy (90% → 55% → 45%), whereas the congenital defect risk collapses from 97% before 12 weeks to 20% at 12–16 weeks and to deafness alone after 16 weeks. The CRS triad is sensorineural deafness, cataracts and cardiac defects (PDA/VSD).',
+        },
       ],
       trap: {
-        title: 'Examiner trap',
-        body: 'Transmission risk stays substantial throughout pregnancy, but the defect risk collapses after 16 weeks — after which the only expected sequela is deafness.',
+        title: 'Examiner trap · a low-positive IgM is not a diagnosis',
+        body: 'Ignore a low-positive rubella IgM in isolation — the 15–20% false-positive rate means you confirm with IgG avidity or pharyngeal RT-PCR before acting, and never terminate on IgM alone.',
       },
+      traps: [
+        {
+          title: 'Examiner trap · MMR is live',
+          body: 'MMR is live-attenuated and contraindicated during pregnancy. Avoid conception for 1 month after vaccination; breastfeeding is not a contraindication. Give the vaccine postpartum to a non-immune woman before discharge.',
+        },
+      ],
       pearls: [
-        'CRS transmission vs defect risk — <12 weeks: 90% / 97%; 12–16 weeks: 55% / 20%; >16 weeks: 45% / deafness only.',
+        'CRS transmission versus defect risk — < 12 weeks: 90% / 97%; 12–16 weeks: 55% / 20%; > 16 weeks: 45% / deafness only.',
         'Classic CRS triad: sensorineural deafness + cataracts + congenital heart disease (PDA, VSD).',
+        'For 12–20-week infection, wait ≥ 6 weeks after maternal infection before amniotic-fluid RNA PCR to avoid false negatives.',
       ],
     },
 
     /* ==================================================================== */
-    /* 16. Rubella — management                                             */
-    /* ==================================================================== */
-    {
-      id: 'rubella-mgmt',
-      heading: 'Rubella — diagnosis & management',
-      bullets: [
-        'Maternal rubella IgM has a 15–20% false-positive rate (cross-reactivity, post-vaccine persistence, autoantibodies); confirm positive IgG + IgM with IgG avidity or pharyngeal exudate RT-PCR.',
-        '<12 weeks infection: consider Termination of Pregnancy (TOP) without invasive testing, due to the 97% defect rate.',
-        '12–20 weeks infection: perform amniocentesis for viral RNA PCR (wait at least 6 weeks after maternal infection to avoid false negatives).',
-        'Vaccination rules: MMR is a live-attenuated vaccine (contraindicated in pregnancy); avoid conception for 1 month post-vaccine; safe during breastfeeding.',
-      ],
-      trap: {
-        title: 'Examiner trap',
-        body: 'Ignore a low-positive rubella IgM in isolation — the 15–20% false-positive rate means you confirm with IgG avidity or pharyngeal RT-PCR before acting.',
-      },
-      pearls: [
-        'Rubella IgM has a 15–20% false-positive rate — confirm with IgG avidity or pharyngeal exudate RT-PCR.',
-        'For 12–20-week infection, wait ≥6 weeks after maternal infection before amniotic-fluid RNA PCR to avoid false negatives.',
-      ],
-    },
-
-    /* ==================================================================== */
-    /* 17. CMV — epidemiology                                               */
+    /* 9. Cytomegalovirus                                                   */
     /* ==================================================================== */
     {
       id: 'cmv',
-      heading: 'Cytomegalovirus (CMV) — epidemiology & transmission',
+      heading: 'Cytomegalovirus — transmission, diagnosis & treatment',
+      intro:
+        'CMV is the most common perinatal viral infection and the most common cause of nongenetic sensorineural hearing loss. Transmission rises with gestation, but severe neurological and hearing damage is almost exclusively a first-trimester event.',
       bullets: [
         'Most common perinatal viral infection, affecting 0.2–2.2% of all live births.',
         'Most common cause of nongenetic sensorineural hearing loss (SNHL) and a major cause of neurological disability.',
         'Remains dormant lifelong in salivary glands; the primary source is saliva/urine of young children.',
         'Maternal presentation: asymptomatic in 85–90%; symptomatic in 10–15% (mononucleosis-like fever, malaise, cervical lymphadenopathy, or non-A/B/C hepatitis).',
-        'Primary vs nonprimary transmission: 30–40% fetal transmission in primary maternal CMV vs 1–2% in nonprimary/reactivated CMV.',
+        'Primary versus nonprimary transmission: 30–40% fetal transmission in primary maternal CMV versus 1–2% in nonprimary/reactivated CMV.',
         'Gestational-age dynamics: transmission increases from ~30% in early pregnancy to ~47% in the third trimester, but severe neurological and hearing damage occurs almost exclusively with first-trimester infection.',
-        'Congenital features at birth: SGA, microcephaly, jaundice, hepatosplenomegaly, hypotonia, "blueberry muffin" rash, chorioretinitis, and late-onset SNHL.',
-      ],
-      pearls: [
-        'CMV is the most common congenital viral infection AND the most common cause of nongenetic sensorineural hearing loss.',
-        'Transmission rises with gestation (~30% → ~47%), but severe neuro/hearing damage is almost exclusively a first-trimester event.',
-      ],
-    },
-
-    /* ==================================================================== */
-    /* 18. CMV — diagnosis & management                                     */
-    /* ==================================================================== */
-    {
-      id: 'cmv-mgmt',
-      heading: 'CMV — diagnosis, prognosis & treatment',
-      bullets: [
-        'CMV IgG avidity: <30% avidity indicates recent primary infection; >60% avidity indicates past infection (>3 months).',
-        'Amniocentesis PCR: performed ideally after 20 weeks gestation and at least 8 weeks after maternal infection. It is the only way to confirm fetal transmission from nonprimary/different strains.',
-        'Prognosis: cerebral abnormality on USG is the single most important prognostic indicator. Normal fetal brain USG + MRI indicates minimal neurodevelopmental disability risk, though it does not exclude hearing impairment.',
+        'Congenital features at birth: SGA, microcephaly, jaundice, hepatosplenomegaly, hypotonia, "blueberry muffin" rash, chorioretinitis and late-onset SNHL.',
+        'CMV IgG avidity: < 30% avidity indicates recent primary infection; > 60% avidity indicates past infection (> 3 months).',
+        'Amniocentesis PCR: ideally after 20 weeks gestation and at least 8 weeks after maternal infection. It is the only way to confirm fetal transmission from nonprimary/different strains.',
+        'Prognosis: cerebral abnormality on ultrasound is the single most important prognostic indicator. A normal fetal brain ultrasound + MRI indicates minimal neurodevelopmental disability risk, though it does not exclude hearing impairment.',
         'Confirm congenital CMV within 3 weeks of birth using neonatal saliva or urine PCR (to distinguish congenital from natal transmission).',
-        'Initiate Valganciclovir within the first 4 weeks of life for symptomatic neonates to prevent symptom progression and improve long-term outcomes.',
+        'Initiate valganciclovir within the first 4 weeks of life for symptomatic neonates to prevent symptom progression and improve long-term outcomes.',
       ],
-      code: {
-        label: 'Algorithm 8 — treatment approach in confirmed fetal CMV',
-        language: 'mermaid',
-        source: `graph TD
-  A[Confirmed Fetal CMV Infection] --> B[Mandatory USG every 2-4 weeks<br>Note: Fetal brain MRI & fetal blood sampling not compulsory]
-  B --> C[Asymptomatic Fetus]
-  B --> D[Mild-to-Moderate Fetus]
-  B --> E[Severely Symptomatic Fetus]
-  C --> C1[Conservative Management]
-  C1 --> C2[Clinical, neurodevelopmental, ophthalmic & lab evaluation of neonate]
-  C2 --> C3[Long-term follow-up & consider Valganciclovir]
-  D --> D1[In-utero treatment with Valaciclovir can be considered]
-  D1 --> C
-  D1 --> E
-  E --> E1[Termination of Pregnancy]
-  E1 --> E2[Fetal autopsy + placental examination]`,
+      table: {
+        head: ['CMV parameter', 'Value / rule'],
+        rows: [
+          [
+            'Most common perinatal viral infection',
+            '0.2–2.2% of live births; most common cause of nongenetic sensorineural hearing loss.',
+          ],
+          ['Primary maternal CMV', '30–40% fetal transmission.'],
+          ['Nonprimary / reactivated CMV', '1–2% fetal transmission.'],
+          [
+            'Gestational transmission',
+            'Rises from ~30% in early pregnancy to ~47% in the third trimester.',
+          ],
+          [
+            'Severity by gestation',
+            'Severe neurological and hearing damage is almost exclusively first-trimester infection.',
+          ],
+          ['IgG avidity', '< 30% = recent primary infection; > 60% = past infection (> 3 months).'],
+          [
+            'Amniotic-fluid PCR',
+            'After 20 weeks and ≥ 8 weeks after maternal infection; the only way to confirm transmission with a different strain.',
+          ],
+          [
+            'Neonatal confirmation',
+            'Saliva or urine PCR within 3 weeks of birth; valganciclovir within the first 4 weeks of life if symptomatic.',
+          ],
+        ],
       },
+      flow: [
+        'Confirmed fetal CMV → mandatory ultrasound every 2–4 weeks (fetal brain MRI and fetal blood sampling are not compulsory)',
+        'Asymptomatic fetus → conservative management → clinical, neurodevelopmental, ophthalmic and laboratory evaluation of the neonate → long-term follow-up, consider valganciclovir',
+        'Mild-to-moderate fetus → in-utero valaciclovir can be considered → re-enter the ultrasound loop, escalate if severe',
+        'Severely symptomatic fetus → termination of pregnancy → fetal autopsy + placental examination',
+      ],
+      diagram: [
+        {
+          kind: 'cmv-avidity-amniocentesis',
+          title: 'Diagram 6 · CMV — transmission, severity & the diagnostic ladder',
+          caption:
+            'Transmission climbs from ~30% early to ~47% in the third trimester while severe damage concentrates in the first trimester. The diagnostic ladder runs IgG avidity (< 30% recent, > 60% past) → amniotic-fluid PCR after 20 weeks and ≥ 8 weeks after infection → fetal brain ultrasound/MRI → neonatal saliva/urine PCR within 3 weeks → valganciclovir within 4 weeks if symptomatic.',
+        },
+      ],
       trap: {
-        title: 'Examiner trap',
-        body: 'A normal fetal brain USG + MRI lowers but does not abolish risk — hearing impairment can still occur, so neonatal hearing surveillance is mandatory.',
+        title: 'Examiner trap · a normal MRI does not exclude deafness',
+        body: 'A normal fetal brain ultrasound + MRI lowers but does not abolish risk — hearing impairment can still occur, so neonatal hearing surveillance is mandatory. Cerebral abnormality on ultrasound remains the strongest prognostic marker.',
       },
+      traps: [
+        {
+          title: 'Examiner trap · transmission versus severity again',
+          body: 'The commonest exam distractor is "severe damage is most likely with third-trimester infection" because transmission is highest then. It is false: severe neuro/hearing damage is almost exclusively first-trimester.',
+        },
+      ],
       pearls: [
-        'CMV avidity <30% = recent primary infection; >60% = past infection (>3 months).',
-        'Congenital CMV is confirmed within 3 weeks of birth by neonatal saliva or urine PCR; start Valganciclovir within the first 4 weeks of life in symptomatic neonates.',
+        'CMV avidity < 30% = recent primary infection; > 60% = past infection (> 3 months).',
+        'Congenital CMV is confirmed within 3 weeks of birth by neonatal saliva or urine PCR; start valganciclovir within the first 4 weeks of life in symptomatic neonates.',
+        'Amniotic-fluid PCR for CMV: after 20 weeks and ≥ 8 weeks after maternal infection.',
       ],
     },
 
     /* ==================================================================== */
-    /* 19. HSV — epidemiology & classification                              */
+    /* 10. Herpes simplex virus                                             */
     /* ==================================================================== */
     {
       id: 'hsv',
-      heading: 'Herpes simplex virus (HSV-1 & HSV-2) — epidemiology & classification',
+      heading: 'Herpes simplex — classification, perinatal transmission & prevention',
+      intro:
+        'HSV is the most common STI in the reproductive age group. The neonatal risk is driven by the maternal immune status at delivery — primary genital infection carries the highest risk because no homologous antibody crosses to the fetus.',
       bullets: [
         'Most common STI in the reproductive age group; seroprevalence is 60–75% for HSV-1 and 11–30% for HSV-2.',
-        'Share 40% genomic similarity (producing cross-neutralizing heterologous antibodies); incubation period is 2–12 days.',
+        'The two types share 40% genomic similarity (producing cross-neutralizing heterologous antibodies); incubation period is 2–12 days.',
         'Vertical transmission risk is highest with primary infection in the third trimester (especially within 6 weeks of delivery) due to active viral shedding and lack of protective maternal antibodies.',
-      ],
-      code: {
-        label: 'Algorithm 9 — types of genital herpes',
-        language: 'mermaid',
-        source: `graph TD
-  subgraph Alg9 [Algorithm 9: Types of Genital Herpes]
-    GH[Genital Herpes] --> IE[Initial Episode: HSV-1 or HSV-2]
-    GH --> RE[Recurrent Episode: Few lesions, resolve in days, no systemic illness, high reactivation tendency]
-    IE --> PG[Primary Genital Infection: Occurs in absence of both HSV-1 & HSV-2 antibodies; asymptomatic to severe lesions + inguinal lymphadenopathy]
-    IE --> NPG[Nonprimary Genital Infection: Occurs in patient with preexisting heterologous antibodies]
-  end`,
-      },
-      pearls: [
-        'Primary genital herpes = no antibodies to either HSV type; nonprimary = preexisting heterologous antibodies; recurrent = preexisting homologous antibodies.',
-        'Vertical transmission risk is highest with primary infection in the third trimester, especially within 6 weeks of delivery.',
-      ],
-    },
-
-    /* ==================================================================== */
-    /* 20. HSV — perinatal transmission                                     */
-    /* ==================================================================== */
-    {
-      id: 'hsv-perinatal',
-      heading: 'HSV — perinatal transmission (Algorithm 10)',
-      code: {
-        label: 'Algorithm 10 — three types of perinatal HSV transmission',
-        language: 'mermaid',
-        source: `graph TD
-  subgraph Alg10 [Algorithm 10: Three Types of Perinatal HSV Transmission]
-    PT[Perinatal HSV Transmission] --> T1[5% Congenital: Mostly asymptomatic, little teratogenic capacity; may cause disseminated skin, ocular & CNS lesions]
-    PT --> T2[85% Neonatal: Risk order = Primary genital > 1st nonprimary > Recurrent infection]
-    PT --> T3[10% Postnatally Acquired: Horizontal transmission]
-  end`,
-      },
-      trap: {
-        title: 'Examiner trap',
-        body: 'Neonatal HSV (85%) is overwhelmingly the dominant perinatal route, and the neonatal risk order is primary genital > first nonprimary > recurrent. Congenital HSV is only 5% and has little teratogenic capacity.',
-      },
-      pearls: [
-        'Perinatal HSV split: 5% congenital, 85% neonatal, 10% postnatally acquired.',
+        'Genital herpes classification: initial episode (HSV-1 or HSV-2) versus recurrent episode (few lesions, resolution in days, no systemic illness, high reactivation tendency).',
+        'Initial episode splits into primary genital infection (no HSV-1 or HSV-2 antibodies; asymptomatic to severe lesions with inguinal lymphadenopathy) and nonprimary genital infection (pre-existing heterologous antibodies).',
+        'Perinatal transmission split: 5% congenital (mostly asymptomatic, little teratogenic capacity), 85% neonatal, 10% postnatally acquired (horizontal).',
         'Neonatal risk order: primary genital > first nonprimary > recurrent infection.',
-      ],
-    },
-
-    /* ==================================================================== */
-    /* 21. HSV — diagnosis & MTCT prevention                                */
-    /* ==================================================================== */
-    {
-      id: 'hsv-mtct',
-      heading: 'HSV — diagnosis & prevention of mother-to-child transmission',
-      bullets: [
-        'Lesion swab (gold standard): cell culture (sensitivity 80–90% in primary active infection) or PCR taken from the base of the lesion with a nylon swab, placed in transport media, and stored at 4°C.',
-        'Type-specific serology: indicated only in women presenting with a first episode of genital herpes in the final weeks of pregnancy, to confirm the absence of homologous antibodies and guide the delivery mode.',
+        'Diagnosis — lesion swab is the gold standard: cell culture (sensitivity 80–90% in primary active infection) or PCR taken from the base of the lesion with a nylon swab, placed in transport media and stored at 4°C.',
+        'Type-specific serology is indicated only in women presenting with a first episode of genital herpes in the final weeks of pregnancy, to confirm the absence of homologous antibodies and guide the mode of delivery.',
       ],
       table: {
         head: ['Phase / intervention', 'Primary infection', 'Recurrent infection'],
         rows: [
           [
             'Acute episode regimen',
-            '7–10 days · Oral Acyclovir 400 mg every 8 h · Oral Valaciclovir 500 mg–1 g every 12 h',
-            '3–5 days · Oral Acyclovir 400 mg every 8 h · Oral Valaciclovir 500 mg–1 g every 12 h',
+            '7–10 days · Oral acyclovir 400 mg every 8 h · Oral valaciclovir 500 mg–1 g every 12 h',
+            '3–5 days · Oral acyclovir 400 mg every 8 h · Oral valaciclovir 500 mg–1 g every 12 h',
           ],
           [
-            'Suppressive regimen (from >36 weeks until delivery)',
-            'Start at >36 weeks until delivery · Oral Acyclovir 400 mg every 8 h · Oral Valaciclovir 500 mg every 12 h',
-            'Start at >36 weeks until delivery · Oral Acyclovir 400 mg every 8 h · Oral Valaciclovir 500 mg every 12 h',
+            'Suppressive regimen (from > 36 weeks until delivery)',
+            'Start at > 36 weeks until delivery · Oral acyclovir 400 mg every 8 h · Oral valaciclovir 500 mg every 12 h',
+            'Start at > 36 weeks until delivery · Oral acyclovir 400 mg every 8 h · Oral valaciclovir 500 mg every 12 h',
           ],
           [
             'Cesarean section (elective LSCS)',
@@ -658,14 +631,109 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
           ],
           [
             'Severe / disseminated maternal herpes',
-            'IV Acyclovir 5–10 mg/kg every 8 h for 2–7 days, followed by oral therapy for 10 days',
+            'IV acyclovir 5–10 mg/kg every 8 h for 2–7 days, followed by oral therapy for 10 days',
             'Supportive care: paracetamol + topical lidocaine 2% gel or 5% ointment',
           ],
         ],
       },
+      diagram: [
+        {
+          kind: 'hsv-perinatal-suppression',
+          title: 'Diagram 7 · HSV — perinatal routes, risk order & suppression at 36 weeks',
+          caption:
+            'Perinatal HSV is 5% congenital, 85% neonatal and 10% postnatally acquired, with risk highest after primary genital infection and lowest after recurrence. Suppressive oral acyclovir or valaciclovir from > 36 weeks cuts recurrences and caesarean need; active lesions at delivery still mandate caesarean section.',
+        },
+      ],
+      trap: {
+        title: 'Examiner trap · the 85% neonatal route',
+        body: 'Neonatal HSV (85%) is overwhelmingly the dominant perinatal route, and the neonatal risk order is primary genital > first nonprimary > recurrent. Congenital HSV is only 5% and has little teratogenic capacity.',
+      },
+      traps: [
+        {
+          title: 'Examiner trap · suppression is not treatment',
+          body: 'Suppressive acyclovir/valaciclovir starts at > 36 weeks and continues until delivery; it does not replace caesarean section when active genital lesions are present at the time of labour.',
+        },
+      ],
       pearls: [
+        'Perinatal HSV split: 5% congenital, 85% neonatal, 10% postnatally acquired. Neonatal risk order: primary genital > first nonprimary > recurrent.',
+        'Suppressive acyclovir/valaciclovir from > 36 weeks until delivery reduces recurrence and the need for caesarean.',
         'Lesion swab is the gold standard — culture (80–90% sensitive in primary active infection) or PCR from the base of the lesion.',
-        'Suppressive acyclovir/valaciclovir from >36 weeks until delivery reduces recurrence and the need for caesarean.',
+      ],
+    },
+
+    /* ==================================================================== */
+    /* 11. Parvovirus B19 & varicella-zoster                                */
+    /* ==================================================================== */
+    {
+      id: 'parvovirus-vzv',
+      heading: 'Parvovirus B19 & varicella-zoster — the "Other" emergencies',
+      intro:
+        'The "O" of TORCH is not a single disease. Parvovirus B19 causes fetal anemia and hydrops through erythroid aplasia, while varicella-zoster causes congenital varicella syndrome early and neonatal varicella at term — two different clocks, two different interventions.',
+      bullets: [
+        'Parvovirus B19 is a small ssDNA virus (Parvoviridae) that targets blood-group antigen "P" on erythroid precursors, myocardium and placenta — arresting erythropoiesis.',
+        'Vertical transmission is 25–32%. Maternal infection may be asymptomatic or present as erythema infectiosum ("slapped cheek") with arthralgia; the fetus can develop severe anemia, myocarditis, hepatitis, thrombocytopenia and hydrops within 4–6 weeks.',
+        'Fetal anemia is monitored by serial middle cerebral artery peak systolic velocity (MCA-PSV): > 1.5 MoM predicts severe anemia with 95% sensitivity. MCA-PSV may miss mild anemia after 33 weeks.',
+        'Maternal IgM has a 20–40% false-negative rate; pair it with IgG and PCR. There is no vaccine — management is intrauterine transfusion for MCA-PSV > 1.5 MoM or hydrops.',
+        'Varicella-zoster is a herpes virus (dsDNA). Primary chickenpox in pregnancy can cause maternal pneumonia; herpes zoster (shingles) in pregnancy carries 0% risk of congenital varicella syndrome.',
+        'Congenital varicella syndrome risk: < 13 weeks 0.5%; 13–20 weeks 2% (the highest teratogenic window); > 20 weeks minimal. Features include limb hypoplasia, dermatomal cicatricial scarring, chorioretinitis and cortical atrophy.',
+        'Late gestation: > 36 weeks carries a 50% risk of fetal infection and a 25% risk of clinical neonatal varicella. Delivery is delayed 5–7 days after maternal rash onset when possible, so maternal antibody can cross before birth.',
+        'Post-exposure prophylaxis: varicella-zoster immunoglobulin (VZIG) within 10 days of exposure in a non-immune pregnant woman. Active maternal varicella is treated with oral acyclovir within 24 hours of rash onset.',
+        'Neonatal varicella: give VZIG and/or IV acyclovir to the exposed neonate; isolate the mother and baby if maternal lesions are active.',
+      ],
+      table: {
+        head: ['Feature', 'Parvovirus B19', 'Varicella-zoster virus'],
+        rows: [
+          ['Organism', 'ssDNA virus (Parvoviridae)', 'Herpes virus (dsDNA)'],
+          [
+            'Maternal illness',
+            'Erythema infectiosum ("slapped cheek"), arthralgia; often asymptomatic',
+            'Chickenpox — fever and vesicular rash; pneumonia is the maternal danger',
+          ],
+          [
+            'Fetal target',
+            'Blood-group P antigen on erythroid precursors, myocardium and placenta → aplastic crisis, hydrops',
+            'Congenital varicella syndrome — limb hypoplasia, dermatomal scarring, chorioretinitis, cortical atrophy',
+          ],
+          [
+            'Risk window',
+            'Any trimester; vertical transmission 25–32%; hydrops within 4–6 weeks',
+            '< 13 weeks 0.5%; 13–20 weeks 2%; > 20 weeks minimal; > 36 weeks 50% fetal infection / 25% neonatal varicella',
+          ],
+          [
+            'Fetal diagnosis',
+            'Serial MCA-PSV > 1.5 MoM (95% sensitivity)',
+            'Ultrasound for congenital varicella syndrome; amniotic-fluid VZV PCR',
+          ],
+          [
+            'Intervention',
+            'Intrauterine transfusion for MCA-PSV > 1.5 MoM or hydrops',
+            'VZIG within 10 days of exposure; oral acyclovir within 24 hours of rash',
+          ],
+          ['Maternal shingles', '—', '0% risk of congenital varicella syndrome'],
+        ],
+      },
+      diagram: [
+        {
+          kind: 'parvovirus-vzv-timeline',
+          title: 'Diagram 8 · Parvovirus B19 versus varicella-zoster',
+          caption:
+            'Left: B19 targets P antigen on erythroid precursors, so serial MCA-PSV > 1.5 MoM is the monitor and intrauterine transfusion is the treatment. Right: the congenital varicella syndrome risk peaks at 13–20 weeks (2%), collapses after 20 weeks, then reverses at term into neonatal varicella (50% infection, 25% clinical disease after 36 weeks).',
+        },
+      ],
+      trap: {
+        title: 'Examiner trap · shingles is not chickenpox',
+        body: 'Maternal herpes zoster (shingles) carries a 0% risk of congenital varicella syndrome because maternal IgG is already present. Only primary varicella in a non-immune woman carries the congenital and neonatal risk.',
+      },
+      traps: [
+        {
+          title: 'Examiner trap · VZIG is not a vaccine',
+          body: 'Varicella vaccine is live and contraindicated in pregnancy. Post-exposure protection is passive: VZIG within 10 days. Active maternal chickenpox is treated with oral acyclovir within 24 hours of rash onset.',
+        },
+      ],
+      pearls: [
+        'Parvovirus B19 targets blood-group antigen "P" on erythroid precursors; severe fetal anemia is detected by MCA-PSV > 1.5 MoM (95% sensitivity) and treated by intrauterine transfusion.',
+        'VZV congenital varicella syndrome risk: < 13 weeks 0.5%; 13–20 weeks 2%; > 20 weeks minimal; > 36 weeks 50% fetal infection and 25% clinical neonatal varicella.',
+        'VZIG within 10 days of exposure in a non-immune pregnant woman; oral acyclovir within 24 hours of rash onset for active varicella.',
       ],
     },
   ],
@@ -673,7 +741,7 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
     {
       id: 'pg-torch-f1',
       front: 'Which immunoglobulin crosses the placenta — and which one marks recent infection?',
-      back: 'IgG crosses the placenta (small size) and confers lifelong immunity; IgM is the recent-infection marker (<10 days) but cannot cross the placenta due to its large molecular weight.',
+      back: 'IgG crosses the placenta (small size) and confers lifelong immunity; IgM is the recent-infection marker (< 10 days) but cannot cross the placenta due to its large molecular weight.',
     },
     {
       id: 'pg-torch-f2',
@@ -702,8 +770,8 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
     },
     {
       id: 'pg-torch-f7',
-      front: 'Rubella CRS — transmission vs defect risk at <12 weeks, 12–16 weeks, >16 weeks?',
-      back: '<12 weeks: 90% transmission / 97% defect. 12–16 weeks: 55% / 20%. >16 weeks: 45% transmission / deafness only.',
+      front: 'Rubella CRS — transmission vs defect risk at < 12 weeks, 12–16 weeks, > 16 weeks?',
+      back: '< 12 weeks: 90% transmission / 97% defect. 12–16 weeks: 55% / 20%. > 16 weeks: 45% transmission / deafness only.',
     },
     {
       id: 'pg-torch-f8',
@@ -713,7 +781,7 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
     {
       id: 'pg-torch-f9',
       front: 'CMV IgG avidity cutoffs for recent vs past infection?',
-      back: '<30% avidity = recent primary infection; >60% avidity = past infection (>3 months).',
+      back: '< 30% avidity = recent primary infection; > 60% avidity = past infection (> 3 months).',
     },
     {
       id: 'pg-torch-f10',
@@ -728,7 +796,7 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
     {
       id: 'pg-torch-f12',
       front: 'At what gestational age do you start HSV suppressive therapy, and why?',
-      back: 'From >36 weeks until delivery (acyclovir or valaciclovir) — to suppress recurrence and reduce the need for caesarean section.',
+      back: 'From > 36 weeks until delivery (acyclovir or valaciclovir) — to suppress recurrence and reduce the need for caesarean section.',
     },
     {
       id: 'pg-torch-f13',
@@ -738,17 +806,27 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
     {
       id: 'pg-torch-f14',
       front: 'VZV — risk of congenital varicella syndrome by gestational age?',
-      back: '<13 weeks: 0.5%. 13–20 weeks: 2% (highest teratogenic window). >20 weeks: minimal. >36 weeks: 50% fetal infection, 25% clinical neonatal varicella. Maternal shingles: 0% risk.',
+      back: '< 13 weeks: 0.5%. 13–20 weeks: 2% (highest teratogenic window). > 20 weeks: minimal. > 36 weeks: 50% fetal infection, 25% clinical neonatal varicella. Maternal shingles: 0% risk.',
+    },
+    {
+      id: 'pg-torch-f15',
+      front: 'Syphilis screening in a high-prevalence area (> 5%) — what happens on the day of a positive RST?',
+      back: 'Give the first benzathine penicillin G 2.4 MU IM dose immediately on the positive Rapid Syphilis Test, then perform RPR to guide duration-based therapy. Never delay treatment for confirmatory titres.',
     },
   ],
   mcqs: [
     {
       id: 'pg-torch-q1',
-      stem: 'A pregnant woman is IgM-positive and IgG-negative for toxoplasma. How is this interpreted?',
-      options: ['Past infection', 'Recent infection (<10 days)', 'Infection excluded', 'Recent infection (>10 days)'],
+      stem: 'A 27-year-old primigravida at 12 weeks has a rubella IgM-positive, IgG-positive serology. She is asymptomatic and has no rash. What is the next best step?',
+      options: [
+        'Reassure her that she is immune and needs no further testing',
+        'Perform an IgG avidity test to distinguish recent from past infection',
+        'Arrange immediate termination of pregnancy',
+        'Repeat IgM in 6 months',
+      ],
       answerIndex: 1,
       explanation:
-        'IgM⁺ / IgG⁻ indicates recent infection within 10 days. IgM⁺/IgG⁺ indicates recent infection >10 days and needs an IgG avidity test; IgG⁺/IgM⁻ is past infection; IgM⁻/IgG⁻ excludes infection.',
+        'IgM⁺/IgG⁺ indicates infection more than 10 days ago, but does not by itself date it. An IgG avidity test resolves the dilemma: high avidity means infection > 3 months ago (or vaccination), low avidity means infection < 3 months ago. Rubella IgM also has a 15–20% false-positive rate, so a single result is never acted on alone.',
     },
     {
       id: 'pg-torch-q2',
@@ -760,7 +838,7 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
     },
     {
       id: 'pg-torch-q3',
-      stem: 'A woman at 22 weeks has confirmed fetal toxoplasmosis. Which regimen is correct?',
+      stem: 'A woman at 22 weeks has confirmed fetal toxoplasmosis on amniotic-fluid PCR and ultrasound. Which regimen is correct?',
       options: [
         'Spiramycin 1 g TDS',
         'Pyrimethamine + sulfadiazine + folinic acid with weekly CBC',
@@ -769,19 +847,24 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
       ],
       answerIndex: 1,
       explanation:
-        'At/after 18 weeks the regimen is pyrimethamine 50 mg/day + sulfadiazine 1.5 g/day + folinic acid 25 mg twice weekly, with weekly CBC (bone-marrow suppression). Spiramycin is the <18-week drug.',
+        'At/after 18 weeks the regimen is pyrimethamine 50 mg/day + sulfadiazine 1.5 g/day + folinic acid 25 mg twice weekly, with weekly CBC (bone-marrow suppression). Spiramycin is the < 18-week drug and is used only when both PCR and ultrasound are negative at ≥ 18 weeks.',
     },
     {
       id: 'pg-torch-q4',
-      stem: 'Which is the only anti-treponemal drug proven to treat the fetus in syphilis?',
-      options: ['Erythromycin', 'Azithromycin', 'Benzathine penicillin G', 'Ceftriaxone'],
-      answerIndex: 2,
+      stem: 'A pregnant woman with early syphilis has a documented anaphylactic penicillin allergy. What is the correct management?',
+      options: [
+        'Give erythromycin 500 mg QID for 14 days and no neonatal treatment',
+        'Attempt penicillin desensitization and treat with benzathine penicillin G',
+        'Give azithromycin 2 g once and discharge',
+        'Defer treatment until after delivery',
+      ],
+      answerIndex: 1,
       explanation:
-        'Penicillin is the only drug proven to cross the placenta and treat the fetus. Alternatives carry treatment-failure risk and require treating the neonate for congenital syphilis.',
+        'Penicillin is the only drug proven to cross the placenta and treat the fetus, so desensitization is the preferred path. If desensitization is impossible, erythromycin/ceftriaxone/azithromycin treat the mother but not reliably the fetus — the neonate must then be treated for congenital syphilis.',
     },
     {
       id: 'pg-torch-q5',
-      stem: 'A neonate of a mother treated for syphilis 2 weeks before delivery — which risk group and action?',
+      stem: 'A neonate is born to a mother treated for early syphilis 2 weeks before delivery. Which risk group and action are correct?',
       options: [
         'No risk — no further investigation',
         'Low risk — serology and review at 3 months',
@@ -790,7 +873,7 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
       ],
       answerIndex: 2,
       explanation:
-        'Maternal treatment <4 weeks before delivery (or a non-beta-lactam drug or inadequate therapy) = high risk → treat the neonate for congenital syphilis.',
+        'Maternal treatment < 4 weeks before delivery (or a non-beta-lactam drug or inadequate therapy) defines a high-risk neonate → treat for congenital syphilis. Low risk requires normal neonatal examination plus adequate treatment more than 4 weeks before delivery.',
     },
     {
       id: 'pg-torch-q6',
@@ -798,7 +881,7 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
       options: ['20%', '45%', '55%', '97%'],
       answerIndex: 3,
       explanation:
-        '<12 weeks: 90% transmission and 97% congenital defect risk — the era of maximal teratogenicity. Defect risk falls to ~20% at 12–16 weeks.',
+        '< 12 weeks: 90% transmission and 97% congenital defect risk — the era of maximal teratogenicity. Defect risk falls to ~20% at 12–16 weeks and to deafness alone after 16 weeks.',
     },
     {
       id: 'pg-torch-q7',
@@ -811,7 +894,7 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
       ],
       answerIndex: 1,
       explanation:
-        'CMV is the most common congenital viral infection and the most common cause of nongenetic SNHL. Transmission rises with gestation, but severe neuro/hearing damage is almost exclusively first-trimester.',
+        'CMV is the most common congenital viral infection and the most common cause of nongenetic SNHL. Transmission rises with gestation, but severe neuro/hearing damage is almost exclusively first-trimester. Ultrasound every 2–4 weeks is mandatory; MRI and fetal blood sampling are not compulsory.',
     },
     {
       id: 'pg-torch-q8',
@@ -837,20 +920,20 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
       ],
       answerIndex: 1,
       explanation:
-        'Serial MCA-PSV (>1.5 MoM) is measured during fetal inactivity and predicts severe fetal anemia with 95% sensitivity. Maternal IgM has a 20–40% false-negative rate.',
+        'Serial MCA-PSV (> 1.5 MoM) measured during fetal inactivity predicts severe fetal anemia with 95% sensitivity and is the trigger for intrauterine transfusion. Maternal IgM has a 20–40% false-negative rate and cannot grade fetal anemia.',
     },
     {
       id: 'pg-torch-q10',
-      stem: 'VZV exposure in a nonimmune pregnant woman — what is the post-exposure prophylaxis?',
+      stem: 'A non-immune pregnant woman is exposed to chickenpox at 16 weeks. What is the correct post-exposure management?',
       options: [
         'Oral acyclovir within 24 hours',
-        'Varicella Zoster Immunoglobulin (VZIG) within 10 days',
+        'Varicella-zoster immunoglobulin (VZIG) within 10 days',
         'Varicella vaccine immediately',
         'No prophylaxis; observe only',
       ],
       answerIndex: 1,
       explanation:
-        'VZIG is given within 10 days of exposure to nonimmune pregnant women. Active maternal rash is treated with oral acyclovir within 24 hours of rash onset.',
+        'VZIG is given within 10 days of exposure to non-immune pregnant women; the vaccine is live and contraindicated in pregnancy. Active maternal varicella is treated with oral acyclovir within 24 hours of rash onset. At 13–20 weeks the congenital varicella syndrome risk is 2%, the highest teratogenic window.',
     },
   ],
 };

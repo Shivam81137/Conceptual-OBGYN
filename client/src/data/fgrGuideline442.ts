@@ -1,15 +1,16 @@
 import type { StudioModule } from '@/data/revisionStudio';
 
 /**
- * NEET PG & INI-CET · Module 02 — Fetal Growth Restriction (SOGC No. 442)
+ * NEET PG · Module 02 — Fetal Growth Restriction (SOGC No. 442)
  * ---------------------------------------------------------------------------
  * Complete clinical vault for SOGC Clinical Practice Guideline No. 442
- * (J Obstet Gynaecol Can 2023;45(10):102154): SGA vs pathological FGR,
- * the International Delphi Consensus diagnostic criteria, angiogenic
- * biomarkers, multi-vessel Doppler progression, the TRUFFLE-style delivery
- * ladder and every examiner trap from the source analysis.
+ * (Kingdom et al.) and the International Gordijn Delphi Consensus:
+ * constitutional SGA vs pathological FGR, early (< 32+0 weeks) vs late
+ * (≥ 32+0 weeks) criteria, maternal vascular malperfusion and the PlGF /
+ * sFlt-1 axis, aspirin prevention, the UtA → UA → MCA/CPR → DV Doppler
+ * cascade, the TRUFFLE protocol and the stage-based delivery ladder.
  *
- * Offline-first: all notes, simulator inputs, flashcards and MCQs ship in the
+ * Offline-first: every note, diagram blueprint, flashcard and MCQ ships in the
  * client bundle. The API only reconciles the module index.
  */
 
@@ -19,614 +20,632 @@ export const FGR_GUIDELINE_442_MODULE: StudioModule = {
   title: 'Fetal Growth Restriction (SOGC Guideline No. 442)',
   shortTitle: 'FGR · SOGC 442',
   summary:
-    'SOGC No. 442 in one vault: SGA vs pathological FGR, Early (<32w) vs Late (≥32w) Delphi criteria, PlGF and sFlt-1/PlGF stratification, the UtA → UA → MCA/CPR → DV Doppler cascade, steroid transient vasodilation and stage-based delivery timing.',
+    'SOGC No. 442 + Gordijn Delphi in one vault: constitutional SGA vs pathological FGR, early (< 32w) vs late (≥ 32w) criteria, PlGF < 100 pg/mL and sFlt-1/PlGF > 38–85, bedtime aspirin before 16 weeks, the UtA → UA → MCA/CPR → DV Doppler cascade, AEDF/REDF villous thresholds, TRUFFLE cCTG STV and the 30–39-week delivery ladder.',
   highYield: true,
   weightage: 'Very High Yield',
-  durationMinutes: 38,
+  durationMinutes: 45,
   tags: [
-    'FGR',
-    'Delphi Consensus',
-    'Umbilical & DV Doppler',
-    'PlGF',
-    'Delivery Timing',
-    'Doppler',
-    'AEDV',
-    'REDV',
-    'Ductus Venosus',
+    'Delphi Consensus (<32 vs ≥32 Wks)',
+    'SGA (<10th) vs Severe FGR (<3rd)',
+    'PlGF <100 pg/mL & Aspirin <16 Wks',
+    'UA Doppler (AEDF / REDF) & CPR',
+    'Ductus Venosus a-Wave & cCTG STV',
+    'SOGC Delivery Cutoffs (30 to 39 Wks)',
   ],
-  sourceTag: 'SOGC Clinical Practice Guideline No. 442 • J Obstet Gynaecol Can 2023;45(10):102154',
-  updatedAtISO: '2026-10-19T06:00:00.000Z',
+  sourceTag: 'SOGC Clinical Practice Guideline No. 442 • Gordijn Delphi Consensus • ISUOG / FIGO',
+  updatedAtISO: '2026-10-21T06:00:00.000Z',
   notes: [
     /* ==================================================================== */
-    /* 1. SGA vs pathological FGR & biometry thresholds                     */
+    /* 1. Terminology, SGA vs FGR & the Delphi consensus                    */
     /* ==================================================================== */
     {
-      id: 'sga-vs-fgr',
-      heading: 'SGA vs. Pathological FGR & Biometry Thresholds',
+      id: 'delphi-consensus-sga-vs-fgr',
+      heading: 'Terminology, SGA vs FGR & the Gordijn Delphi Consensus',
       intro:
-        'SGA is a statistical label; FGR is a pathological diagnosis. SOGC No. 442 separates the constitutionally small fetus from the growth-restricted fetus using biometry, growth velocity and placental Doppler — because only the latter carries the stillbirth and long-term morbidity signal.',
-      table: {
-        head: ['Term', 'Definition', 'Clinical significance'],
-        rows: [
-          [
-            'Small for gestational age (SGA)',
-            'EFW or AC < 10th percentile for gestational age on a validated reference chart.',
-            'Includes constitutionally small, healthy fetuses (~60–70%) who reach their genetic growth potential without placental pathology.',
-          ],
-          [
-            'Fetal growth restriction (FGR)',
-            'Failure to achieve biological growth potential from an underlying pathological process — most often maternal vascular malperfusion (MVM).',
-            'Associated with IUFD, intrapartum distress, neonatal acidosis, hypothermia, hypoglycaemia, NEC, and long-term neurodevelopmental and cardiovascular morbidity (Barker hypothesis).',
-          ],
-          [
-            'Severe SGA / extreme biometry',
-            'EFW or AC < 3rd percentile.',
-            'A standalone FGR criterion at any gestational age regardless of Doppler, because stillbirth risk rises steeply below the 3rd percentile.',
-          ],
-          [
-            'Suboptimal growth velocity',
-            'Fall in EFW or AC by > 2 quartiles (> 50 percentiles) on serial scans ≥ 2–3 weeks apart.',
-            'Identifies a pathologically decelerating fetus even when the absolute EFW is still ≥ 10th percentile.',
-          ],
-        ],
-      },
-      bullets: [
-        'AC alone is the single most sensitive biometric parameter of fetal nutritional state — it reflects fetal liver glycogen and subcutaneous fat stores before EFW visibly falls.',
-        'Multi-parameter EFW uses the Hadlock formula (HC + AC + FL) and is superior to any single parameter for weight estimation; biometry still needs AC to detect asymmetric placental FGR.',
-        'Pregnancy dating is set by first-trimester CRL at 7+0–13+6 weeks (CRL 10–84 mm). Dating by a later scan can mask or manufacture growth restriction.',
-        'Repeat growth scans at a MINIMUM interval of 2–3 weeks (ideally 3 weeks). Shorter intervals amplify inter-observer measurement error into false velocity changes.',
-        'A fall of > 2 quartiles across serial scans is a Delphi contributory criterion for late-onset FGR even when EFW/AC remains ≥ 10th percentile.',
-      ],
-      trap: {
-        title: 'Examiner trap — the 3-week rescan rule',
-        body: 'Never diagnose a growth-velocity disorder on scans less than 2–3 weeks apart. A single AC or EFW below the 10th percentile is SGA, not automatically FGR: the diagnosis needs a pathological process (Doppler, velocity drop, oligohydramnios, preeclampsia or a severe < 3rd centile). Conversely, an EFW/AC < 3rd percentile is FGR on its own — normal Dopplers do not rescue it.',
-      },
-      pearls: [
-        'SGA = EFW/AC < 10th percentile (a statistical descriptor). FGR = failure of biological growth potential from placental, maternal or fetal pathology.',
-        'EFW or AC < 3rd percentile is a standalone FGR diagnosis at any gestational age, even with normal Dopplers.',
-        'AC is the most sensitive single biometric marker of fetal nutrition; Hadlock EFW combines HC + AC + FL.',
-        'Serial growth scans need ≥ 2–3 weeks (ideally 3 weeks) between measurements to avoid false-positive velocity errors.',
-      ],
-    },
-
-    /* ==================================================================== */
-    /* 2. Delphi consensus — early vs late onset                            */
-    /* ==================================================================== */
-    {
-      id: 'delphi-consensus',
-      heading: 'Early-Onset (< 32 wks) vs. Late-Onset (≥ 32 wks) FGR — Delphi Consensus',
-      intro:
-        'SOGC No. 442 adopts the International Delphi Consensus (Gordijn et al.). The 32+0-week boundary is not arbitrary: early-onset disease is a severe implantation/placentation failure, while late-onset disease is a milder villous lesion unmasked by high near-term fetal metabolic demand. Exclude aneuploidy, structural anomalies and congenital infection before applying the criteria.',
-      table: {
-        head: ['Parameter', 'Early-onset FGR (< 32+0 weeks)', 'Late-onset FGR (≥ 32+0 weeks)'],
-        rows: [
-          [
-            'Prevalence among FGR',
-            '~20–30% of all FGR cases',
-            '~70–80% of all FGR cases',
-          ],
-          [
-            'Primary pathophysiology',
-            'Severe placental implantation failure (> 30–50% villous vascular obliteration); early-onset preeclampsia in ~50–70%.',
-            'Milder villous malperfusion / impaired oxygen diffusion with high fetal metabolic demand near term; preeclampsia in ~10–15%.',
-          ],
-          [
-            'Standalone (solitary) criteria — any one is sufficient',
-            '1) EFW or AC < 3rd percentile, OR 2) Umbilical artery absent or reversed end-diastolic velocity (AEDV / REDV).',
-            '1) EFW or AC < 3rd percentile.',
-          ],
-          [
-            'Contributory criteria — biometry plus Doppler/velocity',
-            'EFW or AC < 10th percentile COMBINED WITH at least one of: 1) UtA-PI > 95th percentile, OR 2) UA-PI > 95th percentile.',
-            'At least 2 of 3: 1) EFW or AC < 10th percentile; 2) EFW or AC crossing down > 2 quartiles (> 50 percentiles) on serial scans; 3) CPR < 5th percentile OR UA-PI > 95th percentile (or MCA-PI < 5th percentile).',
-          ],
-          [
-            'Classic haemodynamic progression',
-            '↑ UtA-PI → ↑ UA-PI → MCA brain-sparing → AEDV → REDV → abnormal ductus venosus → biophysical / cCTG deterioration.',
-            'UA-PI is often normal (< 95th percentile) because < 30% of the placental vascular bed is obliterated; manifests primarily as cerebral redistribution (↓ MCA-PI and CPR < 5th percentile).',
-          ],
-          [
-            'Primary clinical challenge',
-            'Balancing extreme prematurity against intrauterine hypoxia/acidosis and stillbirth.',
-            'Detecting the condition (frequently missed by symphysis-fundal height) and preventing rapid, unexpected term stillbirth or intrapartum asphyxia.',
-          ],
-        ],
-      },
-      bullets: [
-        'Early-onset (< 32+0 weeks): a low UA-PI does not exclude FGR — the solitary criterion is EFW/AC < 3rd percentile OR UA AEDV/REDV; UtA-PI > 95th plus AC/EFW < 10th is enough without UA abnormality.',
-        'Late-onset (≥ 32+0 weeks): the diagnosis needs at least 2 of 3 — < 10th percentile, a > 2-quartile downward crossing, or CPR/MCA < 5th percentile / UA-PI > 95th percentile.',
-        'CPR = MCA-PI ÷ UA-PI. It detects the brain-sparing phenotype that a normal UA-PI misses in late FGR.',
-        'The 32-week cut-off drives surveillance intensity, delivery timing and the expected preeclampsia association.',
-      ],
-      trap: {
-        title: 'Examiner trap — late FGR with a normal umbilical artery',
-        body: 'A normal UA-PI at 34 weeks does not exclude FGR. Late-onset disease often spares the umbilical artery and declares itself through a low CPR or MCA-PI (< 5th percentile), a > 2-quartile growth drop, or EFW/AC < 3rd percentile. The classic wrong answer is "normal UA Doppler, therefore no FGR".',
-      },
-      pearls: [
-        'Delphi / SOGC 442 boundary: early-onset FGR is < 32+0 weeks; late-onset FGR is ≥ 32+0 weeks.',
-        'At < 32 weeks, EFW/AC < 3rd percentile OR UA AEDV/REDV is a standalone FGR diagnosis.',
-        'At ≥ 32 weeks, diagnose late FGR with ≥ 2 of 3: EFW/AC < 10th, > 2-quartile growth drop, or CPR/MCA-PI < 5th percentile (or UA-PI > 95th).',
-        'Late FGR usually has a normal UA-PI — the sensitive marker is the cerebroplacental ratio (CPR < 5th percentile).',
-      ],
-    },
-
-    /* ==================================================================== */
-    /* 3. Etiology, workup & prevention                                     */
-    /* ==================================================================== */
-    {
-      id: 'etiology-workup',
-      heading: 'Etiology, Maternal/Fetal Workup & Prevention Rules',
-      intro:
-        'Uteroplacental disease accounts for 70–80% of non-anomalous FGR. The workup is designed to separate placental MVM from fetal genetic/infectious causes, because the counselling, invasive testing threshold and recurrence risk are completely different.',
-      table: {
-        head: ['Compartment', 'Specific pathologies & risk factors', 'Clinical / sonographic clues'],
-        rows: [
-          [
-            'Uteroplacental (most common, 70–80%)',
-            'Maternal vascular malperfusion (defective spiral-artery remodelling), villitis of unknown etiology (VUE), chronic histiocytic intervillositis (CHIV), massive perivillous fibrin deposition (MPVFD), infarction, circumvallate placenta, chorioangioma, velamentous cord insertion.',
-            'Asymmetric biometry (↑ HC/AC ratio, brain-sparing); UtA-PI > 95th with bilateral diastolic notching; thick/globular placenta (> 4 cm) or cord-to-margin abnormality < 10 cm; maternal PlGF < 100 pg/mL.',
-          ],
-          [
-            'Maternal factors',
-            'Chronic hypertension, preeclampsia, pregestational diabetes with vascular disease (Class D/F/R), SLE, antiphospholipid syndrome (APS), chronic kidney disease, cyanotic heart disease, severe malnutrition, low pre-pregnancy BMI, smoking, cocaine/substance use, high altitude.',
-            'Prior SGA/FGR, prior preeclampsia, prior abruption or stillbirth; positive anticardiolipin, anti-β2-glycoprotein I or lupus anticoagulant in APS.',
-          ],
-          [
-            'Fetal factors (10–20%)',
-            'Aneuploidy (T18, T13, T21, Turner 45,X, triploidy), pathogenic copy-number variants on chromosomal microarray (CMA), single-gene/skeletal syndromes (Cornelia de Lange, Russell-Silver, Smith-Lemli-Opitz), confined placental mosaicism (10–16% of unexplained early FGR), congenital TORCH infection.',
-            'Very early (< 24 weeks) severe symmetric FGR (EFW < 3rd); structural anomaly (20–25% aneuploidy/CNV risk when FGR + anomaly coexist); normal UtA-PI and PlGF > 100 pg/mL; polyhydramnios + FGR (classic Trisomy 18); echogenic bowel, ventriculomegaly, calcifications (CMV/Toxoplasma).',
-          ],
-        ],
-      },
-      bullets: [
-        'PAPP-A < 0.4 MoM at 11–13+6 weeks, with MAP, UtA-PI and PlGF, identifies early placental dysfunction and preeclampsia risk.',
-        'PlGF < 100 pg/mL (or < 5th percentile) between 20+0 and 36+6 weeks strongly supports placental MVM-mediated FGR; PlGF < 12 pg/mL predicts delivery within 14 days.',
-        'A normal PlGF (≥ 100 pg/mL) plus normal UtA-PI in an early severe (< 3rd percentile) FGR raises the probability of a genetic/chromosomal or infectious cause — not placental insufficiency.',
-        'Offer amniocentesis with chromosomal microarray (CMA), not conventional karyotype alone, when FGR is early (< 32 weeks, especially < 24–28 weeks), EFW < 3rd percentile, a structural anomaly or polyhydramnios is present, or uteroplacental perfusion is normal in a severely restricted fetus.',
-        'CMA adds 4–10% pathogenic CNVs over karyotype in isolated early FGR and up to 10–19% when structural anomalies coexist.',
-        'Do not run an unselected full TORCH panel on every late SGA fetus. Target serology plus amniotic-fluid PCR (CMV after 21 weeks and ≥ 6–8 weeks post-maternal infection) when intracranial/hepatic calcifications, ventriculomegaly, microcephaly, echogenic bowel, ascites/hydrops or unexplained severe early symmetric FGR are present.',
-        'Low-dose aspirin 81–162 mg at bedtime (SOGC prefers 162 mg/day) is recommended for women at increased risk of placenta-mediated complications (preeclampsia / early FGR). Start before 16+0 weeks (ideally 12–16 weeks) and continue to 36+0 weeks. Isolated FGR without preeclampsia/placental risk factors is not an automatic aspirin indication.',
-        'LMWH is NOT recommended for recurrent FGR without confirmed APS (TIPPS, EPPI, HEPEPE, FRUIT). Confirmed obstetric APS is the exception: low-dose aspirin plus prophylactic/therapeutic LMWH.',
-        'Sildenafil, nitric-oxide donors, maternal bed rest and hyperoxygenation are NOT recommended. STRIDER showed no survival benefit from sildenafil and a potential signal for neonatal pulmonary hypertension; bed rest increases maternal VTE risk.',
-      ],
-      trap: {
-        title: 'Examiner trap — the "small baby, just add aspirin" reflex',
-        body: 'Aspirin is a prevention strategy for placenta-mediated risk (preeclampsia / early FGR), not a treatment for an already isolated small fetus without preeclampsia or placental risk factors. Equally, LMWH and sildenafil are not FGR therapies: LMWH is reserved for confirmed APS, and sildenafil failed in STRIDER. A normal PlGF/UtA-PI in severe early FGR should push you toward CMA and targeted infection testing, not toward more aspirin.',
-      },
-      pearls: [
-        'PlGF < 100 pg/mL supports placental MVM; PlGF < 12 pg/mL predicts preterm delivery within 14 days.',
-        'Normal PlGF (≥ 100 pg/mL) + normal UtA-PI in severe early FGR → suspect genetics or infection → offer amniocentesis with CMA + targeted TORCH PCR.',
-        'Do not give aspirin for isolated FGR without preeclampsia/placenta-mediated risk factors; LMWH is contraindicated unless APS is confirmed; sildenafil and bed rest are not recommended.',
-        'Low-dose aspirin 162 mg at bedtime, started before 16+0 weeks and continued to 36+0 weeks, prevents recurrent placenta-mediated FGR/preeclampsia.',
-      ],
-    },
-
-    /* ==================================================================== */
-    /* 4. Multi-vessel Doppler progression                                  */
-    /* ==================================================================== */
-    {
-      id: 'doppler-sequence',
-      heading: 'Multi-Vessel Doppler Progression Sequence',
-      intro:
-        'Each vessel answers a different physiological question. UtA interrogates the maternal side, UA the placental villous bed, MCA/CPR the fetal cerebral response, and DV the fetal cardiac preload. Reading them in sequence converts a single abnormal number into a stage and a delivery decision.',
+        'FGR affects up to 10% of singleton pregnancies and is a pathological failure to reach genetic growth potential, usually from maternal vascular malperfusion. Modern practice separates the constitutionally small fetus from true FGR at 32+0 weeks: early disease is a severe placentation failure, late disease a milder villous lesion unmasked by term metabolic demand. Exclude aneuploidy, structural anomalies and infection before applying the criteria.',
       flow: [
-        'UtA-PI > 95th percentile · defective spiral-artery remodelling / MVM',
-        'UA-PI > 95th percentile · ~30% of villous tree damaged',
-        'MCA-PI < 5th / CPR < 5th percentile · brain-sparing (cerebral vasodilation)',
-        'UA AEDV · ~50–60% villous damage',
-        'UA REDV · > 70% villous obliteration',
-        'Ductus venosus absent/reversed a-wave · cardiac decompensation',
-        'cCTG STV collapse / BPP ≤ 4 · pre-terminal fetal acidemia',
+        'Date the pregnancy · CRL 10–84 mm at 7+0–13+6 weeks · never re-date later',
+        'Suspect a small fetus · Hadlock EFW (HC + BPD + AC + FL) or AC < 10th centile',
+        'Early < 32+0 wks · EFW/AC < 3rd or UA-AEDF = FGR; < 10th + (UtA-PI > 95th or UA-PI > 95th) = FGR',
+        'Late ≥ 32+0 wks · EFW/AC < 3rd = FGR; otherwise ≥ 2 of 3: < 10th, drop > 2 quartiles, CPR < 5th or UA-PI > 95th',
+        'No congenital anomaly · then apply the Delphi gate and set surveillance intensity',
+      ],
+      bullets: [
+        'Accurate dating is the prerequisite: first-trimester crown–rump length (CRL 10–84 mm, corresponding to 7+0–13+6 weeks) is the gold standard. Once established by CRL, gestational age must NEVER be recalculated later in pregnancy, because re-dating masks early-onset FGR. If CRL > 84 mm (> 14 weeks), date by head circumference (HC).',
+        'EFW uses the multiparametric Hadlock 3- or 4-parameter formula combining HC, BPD, AC and FL. Abdominal circumference (AC) is the single most sensitive biometric parameter for FGR: fetal hypoxia depletes hepatic glycogen, so abdominal girth shrinks first.',
+        'Minimum scan interval: serial biometry to assess growth velocity must be performed at least 14 days (2–3 weeks) apart, otherwise the difference measured is smaller than ultrasound inter-observer error.',
+        'Constitutional SGA (SOGC No. 442): EFW or AC < 10th percentile (specifically 3rd–9th) for gestational age WITH normal interval growth velocity, normal anatomy, normal umbilical/uterine/MCA Dopplers and normal maternal PlGF. Pathological FGR is a failure to reach genetic growth potential, carrying a 4- to 8-fold increased risk of perinatal morbidity and stillbirth.',
+        'Early-onset FGR (< 32+0 weeks), with no congenital anomalies: SOLITARY criterion (any one suffices) = EFW or AC < 3rd percentile OR umbilical artery absent end-diastolic flow (AEDF). CONTRIBUTORY criteria = EFW or AC < 10th percentile PLUS at least one of UtA-PI > 95th percentile or UA-PI > 95th percentile.',
+        'Late-onset FGR (≥ 32+0 weeks), with no congenital anomalies: SOLITARY criterion = EFW or AC < 3rd percentile. CONTRIBUTORY criteria require at least 2 of 3: (1) EFW or AC < 10th percentile; (2) growth deceleration crossing > 2 quartiles (> 50 percentiles), e.g. 70th → 15th; (3) cerebroplacental ratio (CPR) < 5th percentile OR UA-PI > 95th percentile.',
       ],
       table: {
-        head: ['Vessel / test', 'Physiological role', 'Pathological threshold', 'Clinical interpretation'],
+        head: ['Feature', 'Early-onset FGR (< 32+0 weeks)', 'Late-onset FGR (≥ 32+0 weeks)'],
+        rows: [
+          ['Prevalence (% of all FGR)', '20%–30% (rarer, severe phenotype)', '70%–80% (most common phenotype)'],
+          ['Delphi solitary criteria', 'EFW/AC < 3rd centile OR UA-AEDF', 'EFW/AC < 3rd centile'],
+          [
+            'Delphi contributory criteria',
+            'EFW/AC < 10th + (UtA-PI > 95th OR UA-PI > 95th)',
+            '≥ 2 of 3: EFW/AC < 10th, drop > 2 quartiles (> 50 centiles), CPR < 5th or UA-PI > 95th',
+          ],
+          ['Underlying placental pathology', 'Severe MVM (> 50–70% villous tree obliteration)', 'Mild/focal villous diffusion impairment (< 30% villous obliteration)'],
+          ['Maternal preeclampsia association', 'Very strong (50%–70% develop preeclampsia)', 'Weak to moderate (10%–15%)'],
+          ['Angiogenic profile', 'Markedly abnormal: PlGF < 100 pg/mL; sFlt-1/PlGF > 38 to > 85', 'Moderately reduced PlGF; sFlt-1/PlGF > 38 identifies high risk'],
+          ['Umbilical artery Doppler', 'Almost always abnormal (PI > 95th → AEDF → REDF)', 'Frequently NORMAL (> 70% have normal UA-PI)'],
+          ['Primary surveillance vessels', 'Umbilical artery + Ductus Venosus + cCTG STV', 'MCA-PI < 5th + CPR < 5th'],
+          ['Fetal tolerance to hypoxia', 'High cardiovascular adaptation, high prematurity/IUFD risk', 'Low tolerance to acute intrapartum hypoxia — rapid decompensation in labour'],
+          ['Primary clinical challenge', 'Timing delivery: extreme prematurity vs stillbirth', 'Detection: often missed without third-trimester biometry + CPR'],
+        ],
+      },
+      diagram: [
+        {
+          kind: 'delphi-early-vs-late-fgr',
+          title: 'Diagram 1 · Gordijn Delphi diagnostic architecture',
+          caption:
+            'Constitutional SGA (3rd–10th centile, normal Dopplers/PlGF) sits beside two pathological phenotypes: early-onset FGR (< 32+0 weeks) with solitary or contributory criteria, and late-onset FGR (≥ 32+0 weeks) requiring a solitary criterion or 2 of 3 contributory criteria.',
+        },
+      ],
+      pearls: [
+        'An EFW or AC < 3rd percentile at any gestational age — or umbilical artery AEDF before 32 weeks — is a standalone diagnostic criterion for FGR even when every other Doppler index is normal (Gordijn Delphi Consensus & SOGC No. 442).',
+        'SGA is a statistical descriptor (EFW/AC < 10th centile); FGR is a pathological diagnosis of failed growth potential carrying a 4- to 8-fold rise in perinatal morbidity and stillbirth.',
+        'Never repeat biometry (EFW/AC) less than 14 days apart — shorter intervals measure sonographic noise, whereas Doppler and amniotic fluid can be repeated every 24–72 hours in severe FGR.',
+      ],
+      trap: {
+        title: 'Examiner trap — late FGR can sit above the 10th percentile',
+        body:
+          'In late-onset FGR (≥ 32 weeks), a fetus whose EFW falls from the 75th to the 12th percentile (crossing > 2 quartiles / > 50 centiles) WITH a CPR < 5th percentile meets the Delphi definition of late FGR even though its absolute EFW is slightly above the 10th percentile. Two contributory criteria are enough — do not require EFW < 10th.',
+      },
+    },
+
+    /* ==================================================================== */
+    /* 2. Pathophysiology, PlGF biomarkers & screening                      */
+    /* ==================================================================== */
+    {
+      id: 'mvm-plgf-biomarkers-screening',
+      heading: 'Placental Pathophysiology, PlGF Biomarkers & Screening',
+      intro:
+        'Defective trophoblast invasion leaves the spiral arteries as narrow, muscular, high-resistance vessels. The resulting ischaemia–reperfusion injury, oxidative stress and syncytial knots suppress pro-angiogenic PlGF and overproduce anti-angiogenic sFlt-1 — the biochemical signature that separates placental FGR from a constitutionally small baby.',
+      flow: [
+        'First wave · extravillous trophoblast invades decidual spiral arteries at 8–10 weeks',
+        'Second wave · myometrial invasion at 14–18 weeks destroys the musculoelastic media',
+        'Failure · persistent high-resistance vessels → ischaemia–reperfusion, villous infarction, syncytial knots',
+        'Biomarker shift · PlGF < 100 pg/mL and sFlt-1/PlGF > 38 (> 85 in severe early disease)',
+        'Clinical read-out · placental FGR ± preeclampsia, preterm delivery within 14 days',
+      ],
+      bullets: [
+        'Normal placentation: extravillous cytotrophoblasts invade the maternal spiral arteries in two waves (decidual 8–10 weeks; myometrial 14–18 weeks), destroying the musculoelastic media to create high-capacitance, low-resistance vessels.',
+        'In FGR/preeclampsia, impaired trophoblastic invasion and defective spiral-artery remodelling leave persistent high-resistance uteroplacental vessels, causing ischaemia–reperfusion injury, oxidative stress, villous infarction, distal villous hypoplasia and syncytial knots.',
+        'Placental growth factor (PlGF) is a pro-angiogenic factor secreted by healthy syncytiotrophoblast. Chronic placental underperfusion causes loss of progenitor cytotrophoblasts and suppresses maternal circulating PlGF (< 100 pg/mL or < 5th percentile).',
+        'Soluble fms-like tyrosine kinase-1 (sFlt-1) is an anti-angiogenic decoy receptor over-secreted by hypoxic syncytial knots. It binds free VEGF and PlGF, driving maternal endothelial dysfunction (preeclampsia). The sFlt-1/PlGF ratio rises above 38, and above 85 in severe early disease.',
+        'Clinical utility of maternal PlGF at 19–36 weeks: (1) a low PlGF (< 100 pg/mL) or elevated sFlt-1/PlGF ratio (> 38; > 85 in severe early disease) confirms maternal vascular malperfusion (MVM) and predicts delivery within 14 days plus superimposed preeclampsia; (2) a normal PlGF (≥ 100 pg/mL) or ratio ≤ 38 has a > 98% negative predictive value for severe placental dysfunction requiring delivery within 1–2 weeks.',
+        'Symphysis–fundal height (SFH) is measured serially from 24 weeks but has low sensitivity (~20–30%) and is unreliable in maternal obesity (BMI ≥ 30), multiple fibroids or polyhydramnios.',
+        'Selective third-trimester growth ultrasound (26–28 weeks and/or 32–34 weeks) is recommended for major risk factors: prior FGR or preeclampsia, chronic hypertension, diabetes with vascular disease, renal disease, APS/SLE, smoking or substance use, extremes of maternal age, PAPP-A < 0.4 MoM, low PlGF, an echogenic/thick/globular placenta, or velamentous/marginal cord insertion.',
+      ],
+      diagram: [
+        {
+          kind: 'mvm-plgf-aspirin-pathway',
+          title: 'Diagram 2 · Spiral-artery remodelling, syncytial knots & the PlGF/sFlt-1 axis',
+          caption:
+            'Normal remodelled spiral artery: low UtA-PI, high PlGF, low sFlt-1. FGR maternal vascular malperfusion: narrow muscular artery with a persistent bilateral notch beyond 24 weeks, syncytial knots secreting sFlt-1, PlGF < 100 pg/mL and sFlt-1/PlGF > 38–85. Bedtime low-dose aspirin before 16 weeks shifts the balance back toward PGI2.',
+        },
+      ],
+      pearls: [
+        'Maternal PlGF (< 100 pg/mL) or an elevated sFlt-1/PlGF ratio (> 38) directly reflects placental maternal vascular malperfusion and separates true placental FGR from a constitutionally small (SGA) fetus (SOGC No. 442).',
+        'A normal PlGF (≥ 100 pg/mL) or sFlt-1/PlGF ≤ 38 has a > 98% negative predictive value for severe placental dysfunction requiring delivery within 1–2 weeks — it is a rule-out test, not a rule-in test.',
+      ],
+      trap: {
+        title: 'Examiner trap — the uterine artery notch cutoff is 22–24 weeks',
+        body:
+          'A bilateral early-diastolic (protodiastolic) notch in the uterine artery waveform is physiological in the first trimester. It becomes pathological only when it persists beyond 22–24 weeks gestation alongside a mean UtA-PI > 95th centile — the classic sonographic hallmark of failed trophoblastic invasion of the spiral arteries.',
+      },
+    },
+
+    /* ==================================================================== */
+    /* 3. Prevention, aspirin, LMWH myth & aetiological workup              */
+    /* ==================================================================== */
+    {
+      id: 'prevention-aspirin-genetic-workup',
+      heading: 'Prevention, Aspirin < 16 Weeks & the Genetic/CMV Workup',
+      intro:
+        'Aspirin prevents; it does not treat. Start 81–162 mg at bedtime before 16+0 weeks in high-risk women and stop at 36 weeks. Once FGR is established, the workup asks a single question: is this placental, genetic or infective? The answer changes counselling, not the aspirin dose.',
+      flow: [
+        'High-risk woman · prior FGR/preeclampsia, chronic hypertension, renal disease, APS/SLE, positive multimodal screen',
+        'Start aspirin 81–162 mg PO at bedtime before 16+0 weeks · continue to 36+0 weeks',
+        'Do NOT add LMWH unless antiphospholipid syndrome is confirmed',
+        'Established early FGR · detailed anatomy + maternal PlGF + amniocentesis for QF-PCR + CMA + CMV PCR when indicated',
+        'Screen for preeclampsia in 30–50% of early FGR · BP, urine PCR, platelets, LFT, creatinine, PlGF ratio',
+      ],
+      bullets: [
+        'Low-dose aspirin: 81–162 mg orally once daily at BEDTIME (100–150 mg/day is the optimal dose–response), started before 16+0 weeks (ideally 11–16 weeks) and continued until 36+0 weeks. Indications: prior preeclampsia or placental FGR, chronic hypertension, pregestational diabetes, chronic kidney disease, SLE/APS, or a positive first-trimester multimodal screen (maternal factors + MAP + UtA-PI + PlGF/PAPP-A).',
+        'Aspirin mechanism: irreversible platelet cyclo-oxygenase-1 (COX-1) inhibition suppresses vasoconstrictive thromboxane A2 (TXA2) while sparing endothelial prostacyclin (PGI2), and reduces trophoblast hypoxia-induced sFlt-1 release. Aspirin should NOT be started de novo after 16–20 weeks simply to “treat” established FGR.',
+        'LMWH myth: routine prophylactic low-molecular-weight heparin is NOT recommended to prevent recurrent FGR or placental dysfunction in women without confirmed antiphospholipid syndrome (APS). Multicentre RCTs (TIPPS, FRUIT, HEPEPE) show no reduction in FGR or preeclampsia in non-APS patients.',
+        'Ineffective or harmful interventions for established FGR: maternal bed rest (contraindicated — increases VTE without improving growth), maternal hyperoxygenation, nitric oxide donors and sildenafil. Sildenafil is contraindicated after the STRIDER trial showed increased neonatal pulmonary hypertension and mortality.',
+        'Genetic testing: up to 15–20% of early-onset FGR (< 32 weeks) — especially with structural anomalies, polyhydramnios, short femur or normal uterine/umbilical Dopplers — is caused by aneuploidy (Trisomy 18 [Edwards], Trisomy 13 [Patau], triploidy [69,XXX/XXY], Trisomy 21) or submicroscopic copy-number variants. The gold standard is amniocentesis with QF-PCR/FISH PLUS chromosomal microarray (CMA), which adds 4–10% diagnostic detection over karyotyping in non-anomalous early FGR.',
+        'Why cfDNA (NIPT) cannot replace amniocentesis: it screens only common aneuploidies, misses pathogenic microdeletions/duplications detected by CMA, and may instead reflect confined placental mosaicism (e.g. Trisomy 16 CPM causing severe placental FGR in a chromosomally normal fetus).',
+        'Infection screening is targeted, not a routine full TORCH panel. Test specifically for cytomegalovirus (maternal IgM, IgG, IgG avidity and amniotic-fluid CMV PCR if amniocentesis is done) in early/severe FGR or when ultrasound shows microcephaly, ventriculomegaly, periventricular calcifications, echogenic bowel, ascites or oligohydramnios/polyhydramnios. Screen toxoplasmosis, syphilis, rubella, Zika or malaria only with specific clinical, epidemiological or sonographic clues.',
+        'Preeclampsia surveillance: 30–50% of early-onset FGR develops superimposed preeclampsia. Check blood pressure, urine protein-to-creatinine ratio, CBC/platelets, liver enzymes, creatinine and PlGF or the sFlt-1:PlGF ratio.',
+      ],
+      table: {
+        head: ['Feature', 'Placental insufficiency (MVM)', 'Genetic aneuploidy (e.g. Trisomy 18)', 'Congenital viral infection (e.g. CMV)'],
+        rows: [
+          ['Proportion of FGR', '70%–80% of all FGR', '15%–20% of early-onset FGR (< 32 weeks)', '~5% of FGR'],
+          ['Biometric pattern', 'Asymmetric (head-sparing) first: AC << HC; symmetric only if severe/very early', 'Early symmetric (HC, AC and FL all < 3rd) or isolated short FL', 'Symmetric early FGR + microcephaly (HC < 3rd)'],
+          ['Amniotic fluid', 'Oligohydramnios (SDP < 2.0 cm) from renal vasoconstriction', 'Polyhydramnios (SDP > 8.0 cm / AFI > 25 cm) — classic in Trisomy 18', 'Oligo- or polyhydramnios / non-immune hydrops'],
+          ['Uterine & umbilical Dopplers', 'Markedly abnormal (UtA-PI > 95th, UA-PI > 95th / AEDF / REDF)', 'Typically NORMAL', 'Usually normal'],
+          ['Maternal serum PlGF', 'Low (< 100 pg/mL or < 5th centile)', 'Normal (except triploidy with coexisting placental pathology)', 'Normal'],
+          ['Structural ultrasound clues', 'Thick/globular echogenic “jelly-like” placenta, marginal/velamentous cord', 'Clenched hands, rocker-bottom feet, VSD/AVSD, strawberry skull, choroid plexus cysts, omphalocele', 'Periventricular calcifications (CMV), ventriculomegaly, echogenic bowel, hepatosplenomegaly, ascites'],
+          ['Definitive diagnostic test', 'PlGF / sFlt-1:PlGF + postnatal Amsterdam placental pathology', 'Amniocentesis for QF-PCR + chromosomal microarray (CMA)', 'Amniocentesis (> 20 weeks) for CMV/Toxoplasma DNA PCR + maternal IgG avidity'],
+        ],
+      },
+      diagram: [
+        {
+          kind: 'fgr-genetic-cmv-workup',
+          title: 'Diagram 3 · Early/severe FGR aetiological workup',
+          caption:
+            'Three branches from a single diagnosis: placental MVM (asymmetric AC lag, oligohydramnios, abnormal UtA/UA and low PlGF), genetic aneuploidy (symmetric early FGR, polyhydramnios, normal Dopplers/PlGF) and congenital infection (microcephaly, periventricular calcification, echogenic bowel). Amniocentesis with QF-PCR + CMA + CMV PCR is the definitive test for the non-placental branches.',
+        },
+      ],
+      pearls: [
+        'Prescribe low-dose aspirin 81–162 mg PO at bedtime before 16+0 weeks and continue to 36 weeks in women at high risk of placental FGR/preeclampsia. Do NOT prescribe LMWH for FGR prevention unless antiphospholipid syndrome is confirmed.',
+        'Never prescribe sildenafil or strict maternal bed rest to treat FGR: STRIDER was halted for lethal persistent pulmonary hypertension of the newborn without survival benefit, and bed rest increases maternal VTE.',
+      ],
+      trap: {
+        title: 'Examiner trap — FGR + polyhydramnios + normal Dopplers = Trisomy 18',
+        body:
+          'Placental insufficiency causes oligohydramnios and abnormal Dopplers. When a severely growth-restricted fetus has POLYHYDRAMNIOS and NORMAL uterine/umbilical Dopplers, immediately suspect fetal aneuploidy (Trisomy 18) or a neuromuscular/GI swallowing defect and offer amniocentesis with chromosomal microarray (CMA).',
+      },
+      traps: [
+        {
+          title: 'Examiner trap — aspirin is prevention, not treatment',
+          body:
+            'Do not start aspirin de novo at 24–28 weeks to “treat” an already growth-restricted fetus. The window closes before 16+0 weeks, when spiral-artery remodelling is still modifiable. After that, the drug is prophylaxis for the next pregnancy, not rescue therapy for this one.',
+        },
+      ],
+    },
+
+    /* ==================================================================== */
+    /* 4. Umbilical artery Doppler cascade                                  */
+    /* ==================================================================== */
+    {
+      id: 'umbilical-doppler-cascade',
+      heading: 'Umbilical Artery Doppler — Villous Obliteration, AEDF & REDF',
+      intro:
+        'Umbilical artery Doppler is the only antenatal surveillance modality proven in randomised trials to reduce perinatal mortality in FGR (~29–38%). It is a pressure gauge for the placental villous bed: as tertiary villous arterioles are obliterated, end-diastolic flow falls, disappears and finally reverses.',
+      flow: [
+        'Normal · continuous forward end-diastolic flow · UA-PI < 95th · < 30% villous loss',
+        'Elevated impedance · UA-PI > 95th with positive end-diastolic flow · 30–50% villous loss',
+        'AEDF · end-diastolic velocity reaches 0 cm/s · 50–70% villous loss',
+        'REDF · diastolic flow reverses below baseline · > 70% villous loss · acidemia within days',
+      ],
+      bullets: [
+        'Umbilical artery (UA) Doppler is the ONLY antenatal fetal surveillance modality proven in randomised controlled trials (Cochrane review) to reduce perinatal mortality in high-risk/FGR pregnancies, by ~29–38%.',
+        'Technical standard: sample a free-floating loop of umbilical cord during fetal quiescence/apnoea, with an insonation angle < 30°. Resistance is naturally higher at the fetal abdominal wall insertion and lower at the placental insertion.',
+        'Normal UA waveform: continuous, high-velocity forward flow throughout diastole (S/D ratio < 3.0 after 30 weeks; UA-PI < 95th percentile).',
+        'Elevated UA impedance (UA-PI > 95th percentile with positive end-diastolic flow, PEDF) occurs when 30–50% of the placental tertiary stem villous arterial bed is obliterated.',
+        'Absent end-diastolic flow (AEDF): diastolic velocity reaches the baseline zero line (0 cm/s) at end-diastole, when 50–70% of the placental microvascular bed is obliterated.',
+        'Reversed end-diastolic flow (REDF): diastolic flow reverses below the baseline, back toward the fetus, when > 70% of the placental villous tree is obliterated. It signifies impending fetal acidemia and intrauterine demise within days if left undelivered.',
+      ],
+      diagram: [
+        {
+          kind: 'ua-doppler-waveforms-aedf-redf',
+          title: 'Diagram 4 · Umbilical artery spectral Doppler progression',
+          caption:
+            'Four-stage waveform atlas: normal PEDF (< 30% villous loss) → elevated UA-PI > 95th centile (30–50% loss) → absent end-diastolic flow (50–70% loss) → reversed end-diastolic flow (> 70% loss). The stage, not the absolute PI, sets the delivery window.',
+        },
+      ],
+      pearls: [
+        'Umbilical artery Doppler is the only fetal surveillance modality proven by RCTs to reduce perinatal mortality (~30% reduction) in FGR. AEDF reflects 50–70% placental villous obliteration; REDF reflects > 70%.',
+        'UA Doppler is NOT a routine screening test in low-risk, uncomplicated pregnancies. It is indicated for suspected FGR, SGA, preeclampsia or maternal vascular disease.',
+      ],
+      trap: {
+        title: 'Examiner trap — the corticosteroid “Doppler honeymoon”',
+        body:
+          'After maternal betamethasone or dexamethasone, ~50–60% of fetuses with AEDF show a transient return of positive end-diastolic flow for 48–72 hours because of steroid-induced placental vasodilation. Recognise this as a pharmacological effect and continue intensive surveillance — do not de-escalate or discharge the patient.',
+      },
+    },
+
+    /* ==================================================================== */
+    /* 5. MCA brain-sparing, CPR, ductus venosus & TRUFFLE                  */
+    /* ==================================================================== */
+    {
+      id: 'mca-cpr-ductus-venosus-truffle',
+      heading: 'MCA Brain-Sparing, CPR, Ductus Venosus & the TRUFFLE Protocol',
+      intro:
+        'The fetal circulation defends the brain first. Cerebral vasodilation raises diastolic flow and lowers MCA-PI, while the CPR captures that redistribution against a rising placental resistance. When the heart begins to fail, the ductus venosus a-wave disappears and then reverses — the terminal signal before acidemia.',
+      flow: [
+        'Hypoxaemia · chemoreceptor-mediated cerebral vasodilation · MCA-PI falls < 5th centile',
+        'Combined index · CPR = MCA-PI / UA-PI falls < 5th centile (< 1.08) before either vessel alone',
+        'Preterminal · loss of brain-sparing with cerebral oedema pseudo-normalises MCA-PI',
+        'Myocardial decompensation · DV-PI > 95th → absent a-wave → reversed a-wave + pulsatile umbilical vein',
+        'TRUFFLE · DV a-wave + cCTG STV < 2.6 / 3.0 / 3.5 ms by gestational band governs delivery < 32 weeks',
+      ],
+      bullets: [
+        'Normal fetal cerebral circulation is a high-resistance bed with low diastolic flow and a high MCA pulsatility index. Chronic hypoxaemia and hypercapnia trigger chemoreceptor-mediated cerebral vasodilation that preserves oxygen delivery to brain, heart and adrenals while vasoconstricting renal, splanchnic and peripheral beds — hence oligohydramnios and hepatic shrinkage.',
+        'Doppler signature of brain-sparing: increased diastolic flow in the MCA causes a DECREASE in MCA-PI (< 5th percentile). Insonate the proximal third of the MCA just after its origin from the Circle of Willis at an angle close to 0°, avoiding excessive transducer pressure on the fetal head, which artificially lowers diastolic flow and raises MCA-PI.',
+        'Preterminal “loss of brain-sparing” trap: in terminal acidemia and severe cerebral oedema, intracranial pressure rises above perfusion pressure, so MCA-PI pseudo-normalises (rises back) just before death. MCA Doppler is therefore NEVER used to time delivery in early-onset FGR (< 32 weeks); its primary utility is late-onset FGR (≥ 32 weeks).',
+        'Cerebroplacental ratio: CPR = MCA-PI ÷ UA-PI. Abnormal when < 5th percentile (or an absolute ratio < 1.08 / < 1.0). Because it captures a rising UA-PI and a falling MCA-PI simultaneously, CPR becomes abnormal earlier than either index alone and predicts intrapartum distress, emergency caesarean for non-reassuring fetal heart tracing, neonatal acidemia and NICU admission in late FGR.',
+        'Ductus venosus anatomy and waveform: it connects the intra-abdominal umbilical vein to the inferior vena cava/right atrium, shunting well-oxygenated blood through the foramen ovale to the left atrium. The normal triphasic forward waveform is S-wave (ventricular systole, highest velocity), v-descent (end-systolic relaxation), D-wave (early passive ventricular diastole) and a-wave (atrial contraction, normally positive/forward).',
+        'Pathological DV progression reflects right ventricular afterload, myocardial hypoxia and rising central venous pressure: elevated DV-PI (> 95th percentile) → absent a-wave (touches baseline) → reversed a-wave (retrograde during atrial contraction) + pulsatile umbilical vein flow. An absent or reversed a-wave indicates advanced myocardial decompensation and metabolic acidemia, heralding intrauterine demise within 48–72 hours (up to 7 days) if undelivered.',
+        'Chronological sequence of hypoxic deterioration in early FGR: elevated UtA-PI/UA-PI > 95th → decreased MCA-PI (< 5th) and CPR (< 5th) → UA AEDF → UA REDF → elevated DV-PI (> 95th) → absent/reversed DV a-wave and reduced cCTG STV → loss of fetal tone/movements and late decelerations → stillbirth.',
+        'Order of loss of biophysical profile parameters in chronic hypoxia (last to develop in embryology = first to disappear): (1) fetal heart rate reactivity/NST, lost first at pH ~7.20; (2) fetal breathing, lost at pH ~7.15; (3) gross body movements, lost at pH ~7.10; (4) fetal muscle tone, lost last at pH < 7.05. Oligohydramnios (SDP < 2.0 cm) is a chronic marker of renal hypoperfusion that develops alongside brain-sparing.',
+        'TRUFFLE gold standard for early FGR (< 32 weeks): combining ductus venosus Doppler with computerised CTG short-term variation (STV < 2.6 ms at 26–28+6 weeks; < 3.0 ms at 29–31+6 weeks; < 3.5 ms at 32–33+6 weeks) yields the highest survival without neurodevelopmental impairment at 2 years (85–95% intact survival).',
+      ],
+      table: {
+        head: ['Vessel / modality', 'Normal finding', 'Pathological cutoff in FGR', 'Haemodynamic mechanism', 'Clinical role'],
         rows: [
           [
             'Uterine artery (UtA-PI)',
-            'Maternal spiral-artery trophoblastic invasion and uteroplacental resistance.',
-            'UtA-PI > 95th percentile and/or persistent bilateral early diastolic notching at ≥ 20–24 weeks.',
-            'Diagnostic marker of MVM and preeclampsia risk. Used for diagnosis/risk stratification — NOT an acute trigger for delivery.',
+            'Low resistance, high diastolic flow, no notch after 24 weeks',
+            'Mean UtA-PI > 95th or persistent bilateral notch > 24 weeks',
+            'Failed trophoblastic invasion of the maternal spiral arteries (MVM)',
+            'Screening and Delphi diagnostic criterion < 32 weeks',
           ],
           [
-            'Umbilical artery (UA-PI)',
-            'Fetoplacental villous vascular resistance. The only surveillance modality proven in RCTs to reduce perinatal mortality (~30–38%) in high-risk pregnancy.',
-            'Elevated UA-PI > 95th percentile (~30% villous damage); AEDV (~50–60% damage); REDV (> 70% obliteration).',
-            'Backbone for staging and delivery timing in early FGR. AEDV → REDV signals severe placental resistance and impending acidemia within days to 1–2 weeks.',
+            'Umbilical artery (UA-PI / AEDF / REDF)',
+            'Continuous forward end-diastolic flow (PI < 95th)',
+            'PI > 95th (30–50% villous loss); AEDF (50–70%); REDF (> 70%)',
+            'Progressive obliteration of tertiary placental villous arterioles',
+            'Only modality proven in RCTs to reduce perinatal mortality (~30%); sets 36–37w (PI > 95th), 33–34w (AEDF), 30–32w (REDF)',
           ],
           [
-            'MCA-PI and cerebroplacental ratio (CPR = MCA-PI ÷ UA-PI)',
-            'Fetal hypoxia-induced cerebral vasodilation — the brain-sparing effect.',
-            'MCA-PI < 5th percentile; CPR < 5th percentile (or < 1.08).',
-            'Essential in late FGR (≥ 32 weeks) where UA-PI is often normal. CPR < 5th identifies 3–5× higher risk of intrapartum distress, emergency caesarean and NICU admission. Sudden "normalisation" of MCA-PI with REDV is an ominous pre-terminal sign (cerebral oedema / lost autoregulation).',
+            'Middle cerebral artery (MCA-PI)',
+            'High-resistance bed with low diastolic flow (PI > 5th)',
+            'MCA-PI < 5th (high diastolic velocity = vasodilation)',
+            'Chemoreceptor-mediated cerebral vasodilation in chronic hypoxia (brain-sparing)',
+            'Key trigger in late FGR ≥ 32 weeks; do NOT use to time delivery < 32 weeks',
+          ],
+          [
+            'Cerebroplacental ratio (CPR = MCA-PI / UA-PI)',
+            '> 5th centile (or > 1.08)',
+            'CPR < 5th centile (or < 1.08)',
+            'Combined rising placental resistance and falling cerebral resistance',
+            'Most sensitive index in late FGR; predicts intrapartum distress and emergency caesarean',
           ],
           [
             'Ductus venosus (DV)',
-            'Right ventricular preload, myocardial compliance and central venous pressure under severe hypoxia/acidemia.',
-            'DV-PI > 95th percentile; absent or reversed a-wave (atrial contraction).',
-            'Most powerful short-term predictor of acidemia and imminent stillbirth in early FGR (TRUFFLE). Absent/reversed a-wave precedes demise by ~48–72 hours and mandates delivery after steroid rescue if viable.',
+            'Triphasic forward flow: S, D and positive a-wave',
+            'DV-PI > 95th → absent or reversed a-wave',
+            'Right heart failure, myocardial hypoxia and raised central venous pressure',
+            'Gold-standard delivery trigger in early FGR < 32 weeks; reversed a-wave predicts death within 48–72 hours',
           ],
           [
-            'cCTG (STV) and BPP',
-            'Acute CNS oxygenation and autonomic regulation.',
-            'BPP ≤ 4/10 (or < 6/10 with SDP < 2 cm); STV below gestational threshold: < 2.6 ms at 26–28+6, < 3.0 ms at 29–31+6, < 3.5 ms at 32–33+6, < 4.5 ms at ≥ 34 weeks; repetitive spontaneous late decelerations.',
-            'Late/acute safety net. Loss of tone/movement, repetitive decelerations or critically low STV = acute acidemia requiring immediate delivery once above viability.',
+            'cCTG STV & BPP',
+            'STV > 3.5 ms; BPP 8/8 or 10/10; SDP 2–8 cm',
+            'STV < 2.6 ms (< 29w) or < 3.0 ms (29–32w); BPP ≤ 4/10; SDP < 2.0 cm',
+            'CNS acidemia (pH < 7.15–7.05) and renal hypoperfusion',
+            'Immediate delivery trigger alongside DV in the TRUFFLE protocol',
           ],
         ],
       },
-      bullets: [
-        'UtA-PI is a diagnostic/risk marker, not a reason to deliver tomorrow. UA-PI is the mortality-reducing surveillance tool.',
-        'UA Doppler becomes abnormal only after ~30% of the villous tree is obliterated — normal UA does not exclude late FGR.',
-        'Brain-sparing is an adaptive response, not a benign finding: CPR/MCA < 5th percentile is the late-FGR red flag.',
-        'DV interrogation is most useful < 32 weeks, where it outperforms UA in predicting acidemia and stillbirth.',
-        'The progression is not always linear; a single normal value must be interpreted in the context of GA, biometry, fluid and maternal blood pressure.',
+      diagram: [
+        {
+          kind: 'mca-cpr-ductus-venosus-cascade',
+          title: 'Diagram 5 · Brain-sparing, CPR and the ductus venosus',
+          caption:
+            'Left: MCA shifts from a high-resistance waveform to vasodilated brain-sparing (high diastolic flow, MCA-PI < 5th; CPR < 5th). Right: the ductus venosus triphasic S–D–a waveform progresses from a positive a-wave to an absent then reversed a-wave during atrial contraction.',
+        },
+      ],
+      pearls: [
+        'Early FGR (< 32 weeks) uses ductus venosus + cCTG STV (TRUFFLE); late FGR (≥ 32 weeks) uses MCA-PI < 5th and CPR < 5th. The phenotype decides the trigger vessel.',
+        'Biophysical activities disappear in the reverse order of embryological development: FHR reactivity first → breathing → gross movements → tone last (pH < 7.05).',
       ],
       trap: {
-        title: 'Examiner trap — "the MCA normalised, so the fetus improved"',
-        body: 'In a severely compromised fetus with REDV, a sudden return of MCA-PI to normal is not recovery. It is a pre-terminal sign of cerebral oedema and loss of autoregulation. Likewise, UtA-PI > 95th percentile is not an acute delivery trigger; it establishes MVM and preeclampsia risk while UA/DV/cCTG drive the timing.',
+        title: 'Examiner trap — the percentile direction reverses only at the MCA',
+        body:
+          'In every vascular bed except the MCA, worsening FGR raises the pulsatility index (UtA-PI ↑, UA-PI ↑, DV-PI ↑). In the MCA, compensatory cerebral vasodilation lowers resistance, so MCA-PI DECREASES (< 5th percentile) and CPR DECREASES (< 5th percentile / < 1.08). Distractors love to reverse this.',
       },
-      pearls: [
-        'Doppler order: UtA → UA → MCA/CPR → DV → cCTG/BPP. Each step reflects a different level of placental and fetal decompensation.',
-        'UA Doppler is the only surveillance modality with RCT-proven reduction in perinatal mortality in high-risk pregnancy.',
-        'CPR = MCA-PI / UA-PI; CPR < 5th percentile is the key late-FGR marker when UA-PI is normal.',
-        'Absent/reversed DV a-wave is the strongest short-term predictor of fetal acidemia and demise within 48–72 hours.',
+      traps: [
+        {
+          title: 'Examiner trap — MCA pseudo-normalisation is not recovery',
+          body:
+            'In terminal acidemia, cerebral oedema raises intracranial pressure and MCA-PI drifts back toward normal just before fetal death. A “normalising” MCA in a previously brain-sparing fetus is a preterminal sign, not improvement — never use it to justify delay.',
+        },
       ],
     },
 
     /* ==================================================================== */
-    /* 5. Stage-based surveillance & delivery timing                        */
+    /* 6. Stage-based surveillance & delivery timing                        */
     /* ==================================================================== */
     {
-      id: 'delivery-timing',
-      heading: 'Stage-Based Surveillance & Delivery Timing Matrix',
+      id: 'sogc-delivery-timing-management',
+      heading: 'Stage-Specific Surveillance, Delivery Timing & Peripartum Care',
       intro:
-        'This master table synthesises SOGC No. 442 with TRUFFLE, DIGITAT, GRIT and FIGO/ISUOG consensus. The stage determines surveillance intensity; the gestational age determines whether you deliver now, after steroids, or expectantly.',
+        'The delivery ladder is the highest-yield table in the module. Constitutional SGA waits until 38–39 weeks; severe smallness without Doppler abnormality delivers at 37; abnormal UA-PI or CPR at 36–37; AEDF at 33–34 by caesarean; REDF at 30–32 by caesarean; and a decompensated DV or cCTG at ≥ 26 weeks is an immediate caesarean after steroids and magnesium.',
+      flow: [
+        'Constitutional SGA 3rd–10th · normal growth/Dopplers/PlGF · 38+0–39+0 wks · vaginal IOL',
+        'Isolated EFW/AC < 3rd with normal Dopplers · 37+0 wks (36+0–37+6) · Foley IOL + continuous EFM',
+        'UA-PI > 95th (PEDF) or MCA-PI/CPR < 5th · 36+0–37+0 wks · careful IOL or CS',
+        'UA-AEDF · 33+0–34+0 wks · planned elective caesarean',
+        'UA-REDF · 30+0–32+0 wks · planned elective caesarean',
+        'Absent/reversed DV a-wave, abnormal cCTG STV or BPP ≤ 4/10 · ≥ 26+0 wks · immediate caesarean',
+      ],
+      bullets: [
+        'Constitutional SGA (EFW/AC 3rd–10th centile with normal growth velocity, normal Dopplers and normal PlGF): serial biometry + UA/MCA Doppler every 2 weeks; deliver at 38+0 to 39+0 weeks by vaginal delivery/induction of labour with continuous electronic fetal monitoring. Do not let the pregnancy drift past 39–40 weeks.',
+        'Stage I — mild/uncomplicated FGR: (a) isolated EFW/AC < 3rd centile with normal Dopplers → deliver at 37+0 weeks (36+0–37+6); (b) FGR with UA-PI > 95th (positive end-diastolic flow) or brain-sparing (MCA-PI < 5th or CPR < 5th) → deliver at 36+0 to 37+0 weeks. Surveillance is weekly or twice-weekly Doppler + NST/BPP. Vaginal birth is possible with continuous intrapartum EFM; prefer mechanical ripening with a transcervical Foley balloon over high-dose prostaglandins to avoid tachysystole, and keep a low threshold for emergency caesarean (intrapartum CS rate ~30–40%).',
+        'Stage II — umbilical artery AEDF: inpatient or intensive day-unit monitoring with UA + DV Doppler and cCTG/NST/BPP 2–3 times per week (every 48–72 hours). Deliver at 33+0 to 34+0 weeks (SOGC/ISUOG: by 34+0; SMFM/ACOG: 33+0–34+0) by planned elective caesarean section, because the fetus tolerates repetitive contraction-related cord compression poorly.',
+        'Stage III — umbilical artery REDF: hospital admission, antenatal corticosteroids and MgSO4 readiness, with daily (every 24–48 hours) DV Doppler + cCTG/BPP. Deliver at 30+0 to 32+0 weeks (no later than 32+0) by planned elective caesarean section.',
+        'Stage IV — preterminal decompensation (absent/reversed DV a-wave, pathological cCTG STV, spontaneous repetitive decelerations, or BPP ≤ 4/10): immediate tertiary perinatal-centre admission (level III NICU). Deliver at 26+0 to 30+0 weeks by urgent caesarean after completing or initiating antenatal corticosteroids and IV magnesium sulfate. Between 24+0 and 25+6 weeks, individualise with neonatology and parents, because intact survival is guarded when EFW < 500 g.',
+        'Peripartum care: antenatal corticosteroids (betamethasone 12 mg IM q24h × 2, or dexamethasone 6 mg IM q12h × 4) when delivery is anticipated before 34+6 weeks, and consider up to 36+6 weeks if no prior course was given. Give IV magnesium sulfate (4 g load over 20–30 min ± 1 g/h maintenance) for fetal neuroprotection when delivery is imminent before 32+0 weeks (up to 31+6; reduces cerebral palsy by ~30%). Use delayed cord clamping for 30–60 seconds in vigorous preterm/term FGR neonates.',
+        'Mandatory placental histopathology: send every FGR placenta for formal examination using the Amsterdam Placental Workshop Group Consensus Criteria to confirm maternal vascular malperfusion (MVM) versus villitis of unknown aetiology (VUE), chronic histiocytic intervillositis (CHI) or fetal vascular malperfusion (FVM). This is critical for counselling on recurrence risk and future prophylaxis.',
+      ],
       table: {
-        head: ['Stage / phenotype', 'Biometry & Doppler criteria', 'Surveillance', 'Delivery window', 'Mode'],
+        head: ['Stage / phenotype', 'Biometric & Doppler criteria', 'Surveillance frequency', 'Delivery window', 'Mode of delivery'],
         rows: [
-          [
-            'Constitutional SGA (no FGR)',
-            'EFW/AC 3rd–9th percentile + normal velocity + normal UA-PI, MCA-PI, CPR and PlGF.',
-            'Biometry every 2–3 weeks; UA + MCA Doppler every 1–2 weeks.',
-            '38+0 to 39+0 weeks (do not exceed 39+0–40+0).',
-            'Induction of labour (IOL) with continuous intrapartum EFM.',
-          ],
-          [
-            'Mild late-onset FGR (normal umbilical flow, no brain-sparing)',
-            'EFW/AC < 3rd percentile OR (EFW/AC < 10th + velocity drop > 2 quartiles) with normal UA-PI and normal MCA/CPR.',
-            'Biometry every 2 weeks; weekly or twice-weekly UA + MCA Doppler + NST/BPP.',
-            '37+0 to 37+6 weeks (DIGITAT: delivery at 36–37 weeks prevents stillbirth without increasing neonatal morbidity).',
-            'IOL with mechanical cervical ripening — Foley balloon preferred over prostaglandin — + continuous EFM.',
-          ],
-          [
-            'Late-onset FGR with cerebral redistribution or elevated UA-PI',
-            'EFW/AC < 10th with CPR < 5th, MCA-PI < 5th, UA-PI > 95th with positive end-diastolic flow, oligohydramnios (SDP < 2 cm) or maternal hypertension.',
-            'Twice-weekly UA/MCA/CPR Doppler + twice-weekly NST/BPP.',
-            '36+0 to 37+0 weeks; 34+0–36+6 if severe features, oligohydramnios, static growth > 3 weeks or preeclampsia.',
-            'Careful trial of labour with mechanical ripening and continuous EFM if favourable; low threshold for caesarean.',
-          ],
-          [
-            'Early/preterm FGR with UA-AEDV',
-            'UA absent end-diastolic velocity with normal DV a-wave and reassuring cCTG/BPP.',
-            'Inpatient (or intensive MFM day-unit): UA/MCA/DV 2–3×/week to daily + daily NST/cCTG/BPP. Give antenatal corticosteroids and MgSO4 when delivery is anticipated.',
-            '32+0 to 33+6 weeks (deliver earlier if DV becomes abnormal, BPP ≤ 4, STV falls below threshold, or severe maternal preeclampsia).',
-            'Planned caesarean section is generally recommended — the fetus rarely tolerates labour contractions.',
-          ],
-          [
-            'Early/preterm FGR with UA-REDV',
-            'UA reversed end-diastolic velocity with preserved DV and reassuring cCTG/BPP.',
-            'Inpatient tertiary perinatal centre (Level III NICU): daily UA + DV Doppler + 1–2× daily cCTG/NST and BPP.',
-            '30+0 to 32+0 weeks (after the 24–48 h corticosteroid window if maternal/fetal status remains stable).',
-            'Elective caesarean section is mandatory.',
-          ],
-          [
-            'Critical pre-terminal FGR (abnormal DV or biophysical failure)',
-            'Absent/reversed DV a-wave, pulsatile umbilical vein, cCTG STV below cutoff, repetitive spontaneous decelerations, or BPP ≤ 4/10.',
-            'Immediate inpatient tertiary MFM + neonatology consultation; continuous monitoring.',
-            'Deliver at ≥ 26+0 to 30+0 weeks immediately after steroids (or immediately without waiting for repetitive decelerations / acute maternal indication). At 24+0–25+6 weeks and EFW ≥ 500 g, individualise with neonatology.',
-            'Emergency/urgent caesarean section if viable and active resuscitation is planned.',
-          ],
+          ['Constitutional SGA', 'EFW/AC 3rd–10th centile + normal growth velocity + normal Dopplers + normal PlGF', 'Growth scan + UA/MCA Doppler every 2 weeks', '38+0 to 39+0 weeks', 'Vaginal delivery / induction of labour'],
+          ['Stage I — severe smallness or early redistribution', 'EFW/AC < 3rd centile OR UA-PI > 95th (PEDF) OR MCA-PI < 5th OR CPR < 5th', 'Doppler + NST/BPP 1–2 times per week', 'Isolated < 3rd: 37+0 (36+0–37+6); abnormal UA-PI/MCA/CPR: 36+0–37+0 weeks', 'Careful IOL (Foley preferred + continuous EFM) or CS for obstetric indication'],
+          ['Stage II — AEDF', 'Umbilical artery AEDF with normal ductus venosus', 'UA + DV Doppler and cCTG/BPP 2–3 times/week (every 48–72 h)', '33+0 to 34+0 weeks', 'Planned elective caesarean section'],
+          ['Stage III — REDF', 'Umbilical artery REDF with positive DV a-wave', 'Inpatient daily (q24–48 h) DV Doppler + cCTG/BPP + steroids + MgSO4', '30+0 to 32+0 weeks', 'Planned elective caesarean section'],
+          ['Stage IV — preterminal decompensation', 'Absent/reversed DV a-wave, abnormal cCTG STV, repetitive decelerations or BPP ≤ 4/10', 'Continuous inpatient tertiary care', '≥ 26+0 to 30+0 weeks — immediate delivery after steroids & IV MgSO4', 'Urgent caesarean section'],
         ],
       },
-      bullets: [
-        'Antenatal corticosteroids: betamethasone 12 mg IM × 2 doses 24 h apart, or dexamethasone 6 mg IM × 4 doses 12 h apart, when delivery is anticipated before 34+0 weeks (consider 34+0–36+6 per late-preterm criteria, weighing neonatal hypoglycaemia in SGA infants).',
-        'MgSO4 for fetal neuroprotection: 4 g IV loading over 20–30 min then 1 g/h, when delivery is imminent at < 32+0 weeks (SOGC allows consideration to 33+6 weeks in selected centres).',
-        'For late FGR induction with positive end-diastolic flow, mechanical cervical ripening with a transcervical Foley catheter is preferred over misoprostol/dinoprostone — growth-restricted fetuses tolerate tachysystole poorly.',
-        'Continuous EFM is mandatory in active labour; collect umbilical arterial and venous cord gases in every FGR delivery.',
-        'Send the placenta for synoptic histopathology (Amsterdam criteria) in all FGR, particularly < 34 weeks or < 3rd percentile. MVM recurrence is ~10–15% with aspirin; non-MVM lesions (CHIV, MPVFD, VUE) recur in 30–80% and need specialist MFM immunomodulatory/antithrombotic protocols.',
-        'Placental MVM-mediated FGR doubles the mother\'s lifetime risk of chronic hypertension, ischaemic heart disease and stroke — counsel annual BP, lipid and glycaemic screening.',
+      diagram: [
+        {
+          kind: 'sogc-442-delivery-timing-matrix',
+          title: 'Diagram 6 · SOGC No. 442 delivery-timing ladder',
+          caption:
+            'Gestational axis from 24 to 40 weeks. Constitutional SGA delivers 38–39; isolated EFW < 3rd at 37; abnormal UA-PI/MCA/CPR at 36–37; AEDF at 33–34 by caesarean; REDF at 30–32 by caesarean; and a decompensated DV or cCTG at ≥ 26 weeks by immediate caesarean after steroids and magnesium.',
+        },
+      ],
+      pearls: [
+        'Master delivery ladder: constitutional SGA 38+0–39+0 (IOL) → isolated EFW < 3rd 37+0 → UA-PI > 95th or MCA/CPR < 5th 36+0–37+0 → AEDF 33+0–34+0 (CS) → REDF 30+0–32+0 (CS) → absent/reversed DV a-wave or abnormal cCTG STV ≥ 26+0 (immediate CS).',
+        'Always send the FGR placenta for Amsterdam-criteria histopathology: MVM responds to low-dose aspirin in the next pregnancy, whereas chronic histiocytic intervillositis (CHI) or massive perivillous fibrin deposition (MPFD) carries a 40–80% recurrence risk requiring specialist immunomodulatory counselling.',
       ],
       trap: {
-        title: 'Examiner trap — transient Doppler improvement after betamethasone',
-        body: 'In ~60–70% of UA-AEDV fetuses, betamethasone causes systemic fetoplacental vasodilation and a transient return of positive end-diastolic flow for 48–72 hours. This does NOT mean the placental pathology resolved. The ~30% who fail to improve have a higher risk of rapid acidemic decompensation and need intensive daily DV/cCTG monitoring for 72 hours post-steroids. Do not delay delivery solely because the UA tracing "improved" after steroids.',
+        title: 'Examiner trap — do not deliver every FGR at 37 weeks',
+        body:
+          'The stage, not the label, sets the date. Constitutional SGA waits to 38–39 weeks, isolated EFW < 3rd delivers at 37, abnormal UA-PI/MCA/CPR at 36–37, AEDF at 33–34, REDF at 30–32 and a decompensated DV/cCTG at ≥ 26 weeks. Offering 37 weeks to a constitutionally small fetus, or 39 weeks to AEDF, are both wrong answers.',
       },
-      pearls: [
-        'Delivery ladder: constitutional SGA 38–39w · late FGR with normal Doppler 37w · brain-sparing/CPR < 5th 36–37w · AEDV 32–33+6w · REDV 30–32w · abnormal DV/cCTG immediate (≥ 26–30w after steroids).',
-        'AEDV and REDV are caesarean deliveries — the growth-restricted fetus rarely tolerates labour. Late FGR with positive end-diastolic flow may have a careful trial of labour.',
-        'Give MgSO4 neuroprotection if delivery is < 32+0 weeks and antenatal corticosteroids if < 34+6 weeks.',
-        'Betamethasone transiently restores end-diastolic flow in ~65% of AEDV fetuses for 48–72 h — improvement is pharmacological, not placental recovery.',
-        'Mechanical (Foley) ripening is preferred over prostaglandins in late FGR to avoid tachysystole and intrapartum hypoxia.',
-      ],
-    },
-
-    /* ==================================================================== */
-    /* 6. Golden pearls & examiner traps                                    */
-    /* ==================================================================== */
-    {
-      id: 'golden-pearls',
-      heading: 'Every Golden Pearl & Examiner Trap',
-      intro:
-        'The one-line recall set for SOGC No. 442. Save any pearl to ⌘K and it persists locally in conceptual-obgyn:recall-v1 for rapid revision across the vault.',
-      bullets: [
-        'SOGC 442 / Delphi cutoff: early-onset FGR is < 32+0 weeks; late-onset FGR is ≥ 32+0 weeks.',
-        'Standalone FGR diagnosis: EFW or AC < 3rd percentile alone diagnoses FGR at any gestational age, even with normal Dopplers.',
-        'Late-onset FGR key Doppler: UA-PI is often normal; CPR (MCA-PI / UA-PI) < 5th percentile detects brain-sparing.',
-        'TRUFFLE gold standard: DV absent/reversed a-wave plus cCTG short-term variation (STV) guide delivery in early FGR < 32 weeks.',
-        'Delivery timing ladder: constitutional SGA 38–39w | late FGR normal Doppler 37w | brain-sparing/CPR < 5th 36–37w | UA-AEDV 32–33+6w | UA-REDV 30–32w | abnormal DV a-wave ≥ 26–30w after steroids.',
-        'Examiner trap: maternal betamethasone transiently returns end-diastolic flow in ~65% of UA-AEDV fetuses for 48–72 h; failure to improve carries a worse prognosis.',
-        'Prevention rule: low-dose aspirin 162 mg/day at bedtime started < 16 weeks prevents placental FGR; LMWH is NOT recommended unless APS is confirmed.',
-        'PlGF < 100 pg/mL supports placental MVM; PlGF < 12 pg/mL predicts delivery within 14 days. Normal PlGF + normal UtA-PI in severe early FGR points to genetics or infection.',
-        'Severe early FGR with normal uteroplacental perfusion → amniocentesis with CMA + targeted TORCH PCR, not more Doppler observation.',
-        'Fetal fibronectin is not part of FGR staging; the acute safety net is cCTG STV + BPP, not a single UA value.',
-        'Antenatal corticosteroids < 34+6 weeks; MgSO4 neuroprotection < 32+0 weeks; Foley rather than prostaglandin for late-FGR induction.',
-        'Placental histopathology is mandatory: MVM recurs ~10–15% (aspirin-responsive); CHIV/MPVFD/VUE recur 30–80% and need MFM protocols.',
-      ],
-      trap: {
-        title: 'Four classic examiner traps',
-        body: '1) Calling a normal UA-PI at 34 weeks "no FGR" — check CPR/MCA and growth velocity. 2) Treating EFW/AC 3rd–9th percentile as FGR without a pathological marker. 3) Interpreting the post-betamethasone return of end-diastolic flow as placental recovery. 4) Giving aspirin/LMWH/sildenafil to an isolated FGR fetus without the right indication — aspirin is prevention for placenta-mediated risk, LMWH is for APS, and sildenafil is contraindicated.',
-      },
-      pearls: [
-        'SOGC 442 is a GRADE-based framework: diagnose the phenotype, stage the placental/fetal compromise, then time delivery by the highest-risk Doppler or biophysical marker.',
-        'The two numbers that most often decide the MCQ: 32+0 weeks (early vs late FGR) and the 3rd percentile (standalone severe FGR).',
-        'The two numbers that most often decide management: 34+0 weeks (steroids) and 32+0 weeks (MgSO4 neuroprotection).',
-        'A normal UA Doppler never excludes late FGR; a normal MCA in REDV may be pre-terminal, not reassuring.',
-        'Aspirin 162 mg at bedtime before 16 weeks is prevention; LMWH, sildenafil and bed rest are not FGR treatments.',
-      ],
     },
   ],
 
   flashcards: [
     {
-      id: 'pg-fgr-f1',
+      id: 'fc-fgr-01',
       front:
-        'What gestational age threshold separates early-onset from late-onset FGR according to the Delphi Consensus and SOGC Guideline No. 442?',
-      back: '32+0 weeks. < 32+0 weeks = early-onset FGR; ≥ 32+0 weeks = late-onset FGR.',
+        'What are the solitary and contributory criteria for early-onset FGR (< 32+0 weeks) under the Gordijn Delphi Consensus and SOGC Guideline No. 442?',
+      back:
+        'Solitary (any 1 suffices): EFW or AC < 3rd percentile OR umbilical artery absent end-diastolic flow (AEDF). Contributory: EFW or AC < 10th percentile PLUS either UtA-PI > 95th percentile OR UA-PI > 95th percentile. Congenital anomalies must be absent.',
     },
     {
-      id: 'pg-fgr-f2',
+      id: 'fc-fgr-02',
       front:
-        'What are the two standalone (solitary) ultrasound criteria that diagnose early-onset FGR (< 32 weeks) without requiring additional Doppler abnormalities?',
+        'What are the solitary and contributory criteria for late-onset FGR (≥ 32+0 weeks) under the Gordijn Delphi Consensus?',
       back:
-        '1) EFW or AC < 3rd percentile, OR 2) umbilical artery absent or reversed end-diastolic velocity (AEDV / REDV).',
+        'Solitary: EFW or AC < 3rd percentile. Contributory (requires ≥ 2 of 3): (1) EFW or AC < 10th percentile; (2) growth drop crossing > 2 quartiles (> 50 percentiles); (3) CPR < 5th percentile OR UA-PI > 95th percentile. Congenital anomalies must be absent.',
     },
     {
-      id: 'pg-fgr-f3',
+      id: 'fc-fgr-03',
       front:
-        'Why is umbilical artery Doppler (UA-PI) frequently normal in late-onset FGR (≥ 32 weeks), and which Doppler index is most sensitive instead?',
+        'Which single fetal ultrasound biometric parameter is most sensitive for detecting FGR, and what is the minimum interval between serial growth scans?',
       back:
-        'UA-PI only becomes abnormal when > 30% of the placental villous vasculature is obliterated. Late-onset FGR has milder villous lesions but high fetal oxygen demand, manifesting as cerebral vasodilation detected by a low cerebroplacental ratio (CPR < 5th percentile) or MCA-PI < 5th percentile.',
+        'Abdominal circumference (AC) is most sensitive, because chronic hypoxia depletes hepatic glycogen and shrinks the liver. Serial biometry must be at least 14 days (2–3 weeks) apart to avoid false-positive differences smaller than sonographic measurement error.',
     },
     {
-      id: 'pg-fgr-f4',
+      id: 'fc-fgr-04',
       front:
-        'A 25-week fetus has symmetric FGR with EFW < 3rd percentile, normal uterine artery Doppler, normal maternal PlGF (> 100 pg/mL), and polyhydramnios. What is the most likely etiology and next diagnostic step?',
+        'How do maternal PlGF and the sFlt-1/PlGF ratio help evaluate a small fetus between 19 and 36 weeks?',
       back:
-        'Fetal chromosomal/genetic abnormality (classically Trisomy 18 when FGR + polyhydramnios coexist) or congenital infection. Next step: amniocentesis for chromosomal microarray (CMA) and targeted TORCH PCR.',
+        'Low PlGF (< 100 pg/mL or < 5th centile) or sFlt-1/PlGF > 38 (> 85 in severe early disease) reflects maternal vascular malperfusion, distinguishes placental FGR from constitutional SGA, and predicts delivery within 14 days plus superimposed preeclampsia. Normal PlGF/ratio ≤ 38 has > 98% NPV for severe dysfunction.',
     },
     {
-      id: 'pg-fgr-f5',
+      id: 'fc-fgr-05',
       front:
-        'What are the recommended delivery windows and modes for FGR complicated by UA-AEDV vs UA-REDV with a normal ductus venosus?',
+        'What does SOGC Guideline No. 442 recommend regarding low-dose aspirin and LMWH for preventing placental FGR?',
       back:
-        'UA-AEDV: deliver at 32+0 to 33+6 weeks by caesarean section. UA-REDV: deliver at 30+0 to 32+0 weeks by caesarean section (after antenatal corticosteroids and MgSO4).',
+        'Aspirin 81–162 mg PO daily at bedtime, started before 16+0 weeks (ideally 11–16) and continued to 36 weeks in high-risk women. Prophylactic LMWH is NOT recommended for recurrent FGR or placental disease unless antiphospholipid syndrome (APS) is confirmed.',
     },
     {
-      id: 'pg-fgr-f6',
-      front: 'What is the preferred cervical ripening agent for induction of labour in late-onset FGR at 37 weeks, and why?',
+      id: 'fc-fgr-06',
+      front:
+        'When should invasive genetic testing be offered in FGR, and why is QF-PCR + chromosomal microarray (CMA) preferred over maternal cfDNA?',
       back:
-        'Mechanical ripening with a transcervical Foley balloon catheter is preferred over prostaglandins (misoprostol/dinoprostone) to minimise the risk of uterine tachysystole and acute intrapartum hypoxia.',
+        'Offer amniocentesis for early-onset FGR (< 32 weeks), severe FGR (< 3rd centile), or FGR with structural anomalies, polyhydramnios, short FL or normal uterine/umbilical Dopplers. CMA detects submicroscopic copy-number variants (+4–10% yield over karyotype); cfDNA screens only common trisomies and can reflect confined placental mosaicism.',
     },
     {
-      id: 'pg-fgr-f7',
-      front: 'Which single ultrasound measurement is the most sensitive biometric marker of fetal nutritional state, and which formula produces EFW?',
+      id: 'fc-fgr-07',
+      front:
+        'A fetus at 26 weeks has severe symmetric FGR (EFW < 1st centile), POLYHYDRAMNIOS, clenched hands and NORMAL umbilical artery Doppler. What is the most likely diagnosis?',
       back:
-        'Abdominal circumference (AC) is the most sensitive single parameter (fetal liver glycogen and subcutaneous fat). EFW uses the Hadlock formula incorporating HC, AC and FL.',
+        'Trisomy 18 (Edwards syndrome). Placental insufficiency causes oligohydramnios and abnormal Dopplers; FGR with polyhydramnios and normal Dopplers points to aneuploidy or a fetal GI/neuromuscular swallowing anomaly. Confirm with amniocentesis for QF-PCR + CMA.',
     },
     {
-      id: 'pg-fgr-f8',
-      front: 'What is the minimum safe interval between serial growth scans, and why?',
+      id: 'fc-fgr-08',
+      front:
+        'What percentage of the placental villous arterial bed is obliterated when umbilical artery Doppler shows (1) PI > 95th centile, (2) AEDF and (3) REDF?',
       back:
-        'At least 2–3 weeks (ideally 3 weeks). Shorter intervals turn inter-observer measurement variation into false growth-velocity changes.',
+        '1) UA-PI > 95th with positive end-diastolic flow: 30%–50% villous obliteration. 2) Absent end-diastolic flow (AEDF): 50%–70%. 3) Reversed end-diastolic flow (REDF): > 70%, with acidemia and demise within days if undelivered.',
     },
     {
-      id: 'pg-fgr-f9',
-      front: 'Which first-trimester biomarkers identify early placental dysfunction, and at what thresholds?',
+      id: 'fc-fgr-09',
+      front:
+        'How do MCA-PI and the cerebroplacental ratio (CPR) change during the fetal brain-sparing effect?',
       back:
-        'PAPP-A < 0.4 MoM and PlGF (low) at 11–13+6 weeks, combined with MAP and uterine artery Doppler, identify early placental dysfunction and preeclampsia/FGR risk.',
+        'The normal cerebral bed is high-resistance (high MCA-PI). Chronic hypoxia causes cerebral vasodilation, raising diastolic flow so BOTH MCA-PI (< 5th centile) and CPR (MCA-PI / UA-PI < 5th centile or < 1.08) DECREASE. This is the primary surveillance marker in late-onset FGR (≥ 32 weeks).',
     },
     {
-      id: 'pg-fgr-f10',
-      front: 'What do PlGF < 100 pg/mL and PlGF < 12 pg/mL mean in suspected FGR?',
+      id: 'fc-fgr-10',
+      front:
+        'What does an absent or reversed ductus venosus a-wave signify, and how did TRUFFLE optimise delivery timing in early-onset FGR?',
       back:
-        'PlGF < 100 pg/mL (or < 5th percentile) supports placental MVM-mediated FGR. PlGF < 12 pg/mL indicates severe placental insufficiency with high risk of preterm delivery within 14 days.',
+        'DV a-wave reversal reflects myocardial hypoxia, right ventricular afterload failure and metabolic acidemia, predicting demise within 48–72 hours. TRUFFLE combined DV Doppler with computerised CTG short-term variation (STV < 2.6 / 3.0 / 3.5 ms by gestational band) and achieved 85–95% survival free of neurodevelopmental impairment.',
     },
     {
-      id: 'pg-fgr-f11',
-      front: 'What is the sFlt-1/PlGF ratio used for in FGR and preeclampsia?',
+      id: 'fc-fgr-11',
+      front:
+        'In what chronological order are biophysical profile (BPP) parameters lost during progressive fetal hypoxia and acidemia?',
       back:
-        'It quantifies anti-angiogenic imbalance: a high sFlt-1/PlGF ratio supports placental MVM/preeclampsia and helps triage severity and timing; it is interpreted alongside PlGF, UtA-PI and clinical status.',
+        'Reverse order of embryological development: 1st lost — FHR reactivity/NST (pH ~7.20); 2nd — fetal breathing (pH ~7.15); 3rd — gross body movements (pH ~7.10); 4th and last — fetal muscle tone (pH < 7.05). Oligohydramnios (SDP < 2.0 cm) is a chronic renal-hypoperfusion marker.',
     },
     {
-      id: 'pg-fgr-f12',
-      front: 'When is amniocentesis with chromosomal microarray (CMA) indicated in FGR, and what is its incremental yield?',
+      id: 'fc-fgr-12',
+      front:
+        'State the SOGC No. 442 delivery cutoffs for (1) constitutional SGA, (2) isolated EFW < 3rd centile, and (3) FGR with UA-PI > 95th or MCA/CPR < 5th centile.',
       back:
-        'Offer CMA for early (< 32 weeks, especially < 24–28 weeks) or < 3rd percentile FGR, structural anomalies/polyhydramnios, or normal uteroplacental perfusion in a severely restricted fetus. CMA adds 4–10% pathogenic CNVs over karyotype in isolated early FGR and 10–19% with structural anomalies.',
+        '1) Constitutional SGA (3rd–10th, normal Dopplers/PlGF): 38+0–39+0 weeks, vaginal IOL. 2) Isolated EFW < 3rd with normal Dopplers: 37+0 weeks (36+0–37+6). 3) UA-PI > 95th (PEDF) or brain-sparing (MCA-PI < 5th / CPR < 5th): 36+0–37+0 weeks, careful Foley IOL + continuous EFM.',
     },
     {
-      id: 'pg-fgr-f13',
-      front: 'State the SOGC low-dose aspirin regimen for prevention of placenta-mediated FGR/preeclampsia.',
+      id: 'fc-fgr-13',
+      front:
+        'State the delivery timing and mode for FGR complicated by (1) UA-AEDF, (2) UA-REDF, and (3) absent/reversed DV a-wave.',
       back:
-        '81–162 mg orally once daily at bedtime (SOGC prefers 162 mg/day), started before 16+0 weeks (ideally 12–16 weeks) and continued until 36+0 weeks.',
+        '1) AEDF: 33+0–34+0 weeks by planned elective caesarean. 2) REDF: 30+0–32+0 weeks by planned elective caesarean. 3) Absent/reversed DV a-wave (or abnormal cCTG STV / BPP ≤ 4): ≥ 26+0 weeks by immediate caesarean after steroids and IV MgSO4.',
     },
     {
-      id: 'pg-fgr-f14',
-      front: 'What is the "transient Doppler return" phenomenon after betamethasone, and why does it matter?',
+      id: 'fc-fgr-14',
+      front:
+        'Why is sildenafil contraindicated in FGR, and what transient Doppler effect follows antenatal corticosteroids in AEDF?',
       back:
-        'In ~60–70% of UA-AEDV fetuses, betamethasone causes fetoplacental vasodilation and transient positive end-diastolic flow for 48–72 hours. It is not placental recovery; the ~30% who fail to improve have a higher risk of rapid acidemic decompensation and need intensive DV/cCTG monitoring.',
+        'STRIDER showed sildenafil increased neonatal mortality from persistent pulmonary hypertension (PPHN) without improving growth. Betamethasone/dexamethasone causes transient fetoplacental vasodilation, restoring positive end-diastolic flow in ~50–60% of AEDF fetuses for 48–72 hours — a pharmacological effect, not recovery.',
     },
     {
-      id: 'pg-fgr-f15',
-      front: 'State the MgSO4 regimen for fetal neuroprotection and its gestational window.',
+      id: 'fc-fgr-15',
+      front:
+        'Why should every FGR placenta undergo histopathology using the Amsterdam Consensus Criteria?',
       back:
-        '4 g IV loading over 20–30 minutes, then 1 g/h maintenance, when delivery is imminent at < 32+0 weeks (consider up to 33+6 weeks in selected centres). It reduces cerebral palsy and severe motor dysfunction.',
-    },
-    {
-      id: 'pg-fgr-f16',
-      front: 'How does placental histopathology after FGR change recurrence counselling?',
-      back:
-        'MVM (decidual arteriopathy, accelerated villous maturation, distal villous hypoplasia, infarcts) recurs ~10–15% and responds to aspirin 162 mg from < 16 weeks. Non-MVM lesions (CHIV, MPVFD/maternal floor infarction, VUE) recur 30–80%, respond poorly to aspirin and need specialist MFM immunomodulatory/antithrombotic protocols.',
+        'It separates maternal vascular malperfusion (MVM — lower recurrence, responds to bedtime low-dose aspirin < 16 weeks next pregnancy) from immune/inflammatory lesions such as chronic histiocytic intervillositis (CHI) or massive perivillous fibrin deposition (MPFD), which carry a 40–80% recurrence risk.',
     },
   ],
 
   mcqs: [
     {
-      id: 'pg-fgr-q1',
+      id: 'mcq-fgr-01',
       stem:
-        'A 29-year-old primigravida at 30+2 weeks undergoes ultrasound showing fetal AC at the 6th percentile, EFW at the 8th percentile, normal amniotic fluid, uterine artery PI at the 98th percentile, and normal umbilical artery PI (70th percentile). According to SOGC Guideline No. 442 / Delphi Consensus criteria, what is the diagnosis?',
+        'A 29-year-old primigravida at 34+2 weeks has an EFW at the 14th percentile and AC at the 12th percentile; at 20 and 28 weeks both were at the 78th percentile. Today UA-PI is at the 80th percentile and CPR at the 3rd percentile. According to the Gordijn Delphi Consensus cited in SOGC No. 442, what is the correct diagnosis?',
       options: [
-        'Constitutionally small for gestational age (SGA) fetus',
-        'Early-onset fetal growth restriction (FGR)',
+        'Normal appropriately grown for gestational age (AGA) fetus requiring no further follow-up',
+        'Constitutional small for gestational age (SGA) fetus',
         'Late-onset fetal growth restriction (FGR)',
-        'Normal fetal growth; repeat scan at 36 weeks',
-      ],
-      answerIndex: 1,
-      explanation:
-        'At < 32 weeks, EFW or AC < 10th percentile combined with EITHER uterine artery PI > 95th percentile OR umbilical artery PI > 95th percentile fulfils the Delphi Consensus criteria for early-onset FGR. The normal UA-PI does not exclude the diagnosis because the UtA criterion is satisfied.',
-    },
-    {
-      id: 'pg-fgr-q2',
-      stem:
-        'A 32-year-old woman at 31+0 weeks has severe early-onset FGR (EFW 2nd percentile) with umbilical artery absent end-diastolic velocity (AEDV). The ductus venosus shows a positive a-wave, and computerized CTG short-term variation (STV) is 4.2 ms. She receives betamethasone and inpatient daily surveillance. Assuming fetal testing remains unchanged, when should delivery be scheduled?',
-      options: [
-        'Immediate emergency caesarean section at 31+0 weeks',
-        'At 32+0 to 33+6 weeks by caesarean section',
-        'At 36+0 to 37+0 weeks by induction of labour',
-        'At 37+0 to 38+0 weeks by caesarean section',
-      ],
-      answerIndex: 1,
-      explanation:
-        'Per SOGC Guideline No. 442, persistent UA-AEDV with a reassuring ductus venosus and normal cCTG/BPP is managed expectantly as an inpatient until 32+0 to 33+6 weeks, at which point delivery by caesarean section is recommended. Immediate delivery is reserved for abnormal DV, BPP ≤ 4, STV below threshold, or maternal deterioration.',
-    },
-    {
-      id: 'pg-fgr-q3',
-      stem:
-        'In a fetus at 29+4 weeks with severe FGR and umbilical artery reversed end-diastolic velocity (REDV), which Doppler or biophysical finding is the strongest short-term predictor of fetal acidemia and imminent intrauterine demise within 48–72 hours, mandating immediate delivery after steroid coverage?',
-      options: [
-        'Bilateral uterine artery early diastolic notching',
-        'Middle cerebral artery PI < 5th percentile',
-        'Absent or reversed a-wave in the ductus venosus',
-        'Cerebroplacental ratio (CPR) < 5th percentile',
+        'Early-onset fetal growth restriction (FGR)',
       ],
       answerIndex: 2,
       explanation:
-        'As demonstrated in the TRUFFLE study and endorsed by SOGC No. 442, an absent or reversed a-wave in the ductus venosus (or reduced cCTG STV) reflects myocardial dysfunction and central venous acidemia, preceding fetal death by ~48–72 hours.',
+        'Late-onset FGR (≥ 32+0 weeks) needs either EFW/AC < 3rd centile OR at least 2 of 3 contributory criteria: (1) EFW/AC < 10th, (2) growth deceleration crossing > 2 quartiles (> 50 percentiles — here 78th to 12th–14th), (3) CPR < 5th or UA-PI > 95th. This fetus has both deceleration and CPR < 5th, so it meets late FGR criteria despite an EFW above the 10th percentile.',
     },
     {
-      id: 'pg-fgr-q4',
+      id: 'mcq-fgr-02',
       stem:
-        'A patient with a history of severe placental-mediated FGR and preeclampsia requiring delivery at 30 weeks in her first pregnancy presents at 11 weeks gestation in her second pregnancy. Her antiphospholipid antibody panel is negative. What prophylaxis is recommended by SOGC Guideline No. 442?',
+        'A 32-year-old G2P1 had severe early-onset preeclampsia and FGR requiring delivery at 29 weeks; placental pathology confirmed severe maternal vascular malperfusion, and antiphospholipid antibodies are negative. She presents at 11 weeks in her next pregnancy. According to SOGC No. 442, what is the optimal prophylaxis?',
       options: [
-        'Low-dose aspirin (81–162 mg daily at bedtime) initiated before 16 weeks plus prophylactic enoxaparin (LMWH)',
-        'Low-dose aspirin (81–162 mg daily at bedtime) initiated before 16 weeks alone; LMWH is NOT recommended',
-        'Oral sildenafil 25 mg three times daily starting at 20 weeks',
-        'Prophylactic LMWH alone starting at 12 weeks',
+        'Low-dose aspirin 81–162 mg PO daily at bedtime before 16 weeks and continue to 36 weeks, without LMWH',
+        'Low-dose aspirin plus prophylactic enoxaparin 40 mg SC daily from 11 weeks until 6 weeks postpartum',
+        'Oral sildenafil 25 mg three times daily from 20 weeks with strict inpatient bed rest',
+        'Withhold aspirin until 24 weeks and start only if uterine artery Doppler shows bilateral notching',
+      ],
+      answerIndex: 0,
+      explanation:
+        'SOGC No. 442 recommends low-dose aspirin 81–162 mg at bedtime, started before 16+0 weeks and continued to 36 weeks in high-risk women (prior MVM-related FGR or preeclampsia). Routine LMWH is not recommended without confirmed APS; sildenafil (STRIDER) and bed rest are contraindicated.',
+    },
+    {
+      id: 'mcq-fgr-03',
+      stem:
+        'A 27-year-old at 25 weeks has symmetric FGR (HC, AC and FL all < 1st percentile), polyhydramnios (SDP 9.5 cm), bilateral choroid plexus cysts, clenched overlapping fingers and a small VSD. Uterine and umbilical Dopplers are normal and PlGF is 380 pg/mL. What is the most appropriate diagnostic step?',
+      options: [
+        'Diagnose isolated maternal vascular malperfusion and start twice-daily enoxaparin',
+        'Offer amniocentesis for QF-PCR and chromosomal microarray (CMA) to evaluate for aneuploidy such as Trisomy 18',
+        'Order maternal cell-free DNA (NIPT) only, as amniocentesis is contraindicated in polyhydramnios',
+        'Reassure the patient that normal umbilical artery Doppler rules out serious fetal pathology',
       ],
       answerIndex: 1,
       explanation:
-        'SOGC Guideline No. 442 strongly recommends low-dose aspirin (81–162 mg at bedtime initiated < 16 weeks until 36 weeks) to prevent recurrent placenta-mediated FGR/preeclampsia, and explicitly recommends AGAINST LMWH in the absence of confirmed antiphospholipid syndrome (APS).',
+        'Early symmetric FGR with structural anomalies, polyhydramnios, normal uterine/umbilical Dopplers and normal PlGF strongly suggests an intrinsic genetic syndrome, classically Trisomy 18. SOGC No. 442 recommends amniocentesis for QF-PCR and CMA, which adds 4–10% diagnostic yield over karyotyping. cfDNA cannot exclude microdeletions/duplications.',
     },
     {
-      id: 'pg-fgr-q5',
+      id: 'mcq-fgr-04',
       stem:
-        'A 24-week fetus is found to have severe symmetric FGR (EFW < 1st percentile), normal amniotic fluid, normal uterine artery PI, and a normal maternal serum PlGF level of 285 pg/mL. What is the most appropriate next step in evaluation?',
+        'At 31 weeks, Doppler of a free cord loop shows absent end-diastolic flow (AEDF). What percentage of the placental tertiary villous arterial bed is typically obliterated when AEDF appears, and what delivery window is recommended if the ductus venosus and cCTG remain reassuring?',
       options: [
-        'Diagnose maternal vascular malperfusion and start low-dose aspirin',
-        'Offer amniocentesis for chromosomal microarray analysis (CMA) and infectious PCR',
-        'Schedule immediate caesarean delivery',
-        'Reassure the patient that normal PlGF guarantees a constitutionally normal baby',
-      ],
-      answerIndex: 1,
-      explanation:
-        'In early/severe FGR (< 3rd percentile), a normal maternal PlGF (≥ 100 pg/mL) and normal uterine artery Doppler argue AGAINST uteroplacental vascular insufficiency (MVM) and strongly increase the probability of a fetal genetic/chromosomal abnormality (detected by CMA) or congenital infection.',
-    },
-    {
-      id: 'pg-fgr-q6',
-      stem:
-        'A 34-year-old woman at 35+2 weeks has an EFW at the 8th percentile, a fall of more than two quartiles since the 32-week scan, UA-PI at the 60th percentile, and MCA-PI below the 5th percentile with CPR below the 5th percentile. Which statement best fits SOGC No. 442?',
-      options: [
-        'This is constitutional SGA; UA-PI is normal, so no further Doppler is needed',
-        'This meets late-onset FGR criteria and warrants twice-weekly Doppler with delivery around 36+0 to 37+0 weeks',
-        'This requires immediate caesarean section at 35+2 weeks',
-        'This is early-onset FGR and should be managed with inpatient daily DV Doppler',
-      ],
-      answerIndex: 1,
-      explanation:
-        'At ≥ 32 weeks, late-onset FGR requires at least 2 of 3: EFW/AC < 10th percentile, a > 2-quartile growth drop, or CPR/MCA < 5th percentile (or UA-PI > 95th). She satisfies all three. With brain-sparing, surveillance is twice-weekly and delivery is recommended at 36+0 to 37+0 weeks, or 34+0–36+6 if severe features coexist.',
-    },
-    {
-      id: 'pg-fgr-q7',
-      stem:
-        'A 30-year-old woman at 28 weeks has an EFW below the 3rd percentile with normal UA, MCA and DV Doppler, normal blood pressure, normal urine protein and no preeclampsia risk factors. She asks whether she should start aspirin, LMWH and sildenafil to "make the baby grow". What is the correct counselling?',
-      options: [
-        'Start all three: aspirin, LMWH and sildenafil have proven benefit in established FGR',
-        'Aspirin is not automatically indicated for isolated FGR without preeclampsia/placental risk factors; LMWH is reserved for confirmed APS and sildenafil is not recommended',
-        'Start LMWH alone because FGR is a thrombotic placental disease',
-        'Start sildenafil because it improves uteroplacental blood flow and neonatal survival',
-      ],
-      answerIndex: 1,
-      explanation:
-        'Aspirin is recommended for women at increased risk of placenta-mediated complications (preeclampsia / early FGR), not automatically for isolated FGR without those risk factors. LMWH is not recommended without confirmed APS (TIPPS/EPPI/HEPEPE/FRUIT), and sildenafil failed to improve survival in STRIDER with a potential risk of neonatal pulmonary hypertension.',
-    },
-    {
-      id: 'pg-fgr-q8',
-      stem:
-        'A 31-week fetus with UA-AEDV receives betamethasone. Twenty-four hours later the umbilical artery shows a return of positive end-diastolic flow. What is the correct interpretation?',
-      options: [
-        'Placental vascular pathology has resolved; delivery can be deferred to 37 weeks',
-        'This is a transient steroid-induced fetoplacental vasodilation lasting 48–72 hours; surveillance must continue and the delivery plan is unchanged',
-        'The fetus has developed cerebral oedema and requires immediate delivery',
-        'The corticosteroids have caused fetal anaemia and the dose should be repeated',
-      ],
-      answerIndex: 1,
-      explanation:
-        'Betamethasone causes transient fetoplacental vasodilation with return of end-diastolic flow in ~60–70% of AEDV fetuses for 48–72 hours. It does not mean placental recovery. The ~30% who fail to improve have a higher risk of rapid acidemic decompensation, so intensive DV/cCTG monitoring continues for 72 hours after steroids.',
-    },
-    {
-      id: 'pg-fgr-q9',
-      stem:
-        'A 37-week induction is planned for late-onset FGR with UA-PI > 95th percentile but positive end-diastolic flow. The cervix is unfavourable. Which induction strategy is preferred by SOGC No. 442, and why?',
-      options: [
-        'Misoprostol, because it achieves the fastest cervical ripening',
-        'Dinoprostone gel, because prostaglandins are safest in FGR',
-        'Transcervical Foley balloon, because mechanical ripening avoids prostaglandin-induced tachysystole in a growth-restricted fetus',
-        'Immediate caesarean section without a trial of labour for all late FGR',
+        '10–20% villous obliteration; deliver at 38+0–39+0 weeks by vaginal induction',
+        '30–40% villous obliteration; deliver at 36+0–37+0 weeks by vaginal induction',
+        '50–70% villous obliteration; deliver at 33+0–34+0 weeks by planned caesarean section',
+        '> 90% villous obliteration; deliver immediately at 31+0 weeks without corticosteroids',
       ],
       answerIndex: 2,
       explanation:
-        'Mechanical cervical ripening with a Foley balloon is preferred over prostaglandins (misoprostol or dinoprostone) in late FGR. Growth-restricted fetuses have depleted myocardial glycogen reserves and tolerate uterine tachysystole poorly. Continuous EFM is mandatory, with a low threshold for caesarean if the trace deteriorates.',
+        'UA-PI rises above the 95th centile at 30–50% villous obliteration; AEDF occurs at 50–70%; REDF at > 70%. With AEDF, normal DV and reassuring cCTG/BPP, surveillance is 2–3 times weekly and planned caesarean delivery is recommended at 33+0–34+0 weeks.',
     },
     {
-      id: 'pg-fgr-q10',
+      id: 'mcq-fgr-05',
       stem:
-        'A placenta from a 33-week FGR delivery shows decidual arteriopathy, accelerated villous maturation, distal villous hypoplasia and infarcts. What does this histopathology imply for the next pregnancy?',
+        'A 30-year-old at 29+4 weeks is admitted with severe early-onset FGR (EFW < 1st centile) and UA reversed end-diastolic flow (REDF). She received betamethasone 12 hours ago. Doppler remains REDF, the DV a-wave is positive and cCTG STV is 4.2 ms. According to SOGC No. 442 and TRUFFLE, what is the optimal plan?',
       options: [
-        'Recurrence risk is 30–80% and aspirin is ineffective, so no prophylaxis is needed',
-        'This is maternal vascular malperfusion (MVM), with a ~10–15% recurrence risk that is reduced by aspirin 162 mg started before 16 weeks',
-        'This indicates chronic histiocytic intervillositis and requires LMWH alone',
-        'Placental histopathology does not alter recurrence counselling in FGR',
+        'Complete betamethasone, continue daily inpatient DV Doppler and cCTG, and plan elective caesarean at 30+0–32+0 weeks (or earlier if the DV a-wave becomes absent/reversed or STV falls below cutoff)',
+        'Wait until MCA-PI drops below the 5th percentile before considering delivery at 37 weeks',
+        'Perform immediate induction of labour with vaginal misoprostol today',
+        'Discharge home for fortnightly symphysis–fundal height measurements',
+      ],
+      answerIndex: 0,
+      explanation:
+        'Stage III FGR with REDF requires inpatient daily DV Doppler and cCTG STV after antenatal corticosteroids. If the DV a-wave remains positive and STV is normal, delivery by elective caesarean is planned at 30+0–32+0 weeks, with IV MgSO4 neuroprotection before delivery at < 32 weeks.',
+    },
+    {
+      id: 'mcq-fgr-06',
+      stem:
+        'A fetus with early-onset FGR at 28+2 weeks shows reversal of the ductus venosus a-wave during atrial contraction and cCTG STV of 2.1 ms with repetitive late decelerations. What does the reversed a-wave indicate and what is the immediate action?',
+      options: [
+        'Benign physiological fetal hiccups; repeat ultrasound in 2 weeks',
+        'Early cerebral vasodilation (brain-sparing); schedule induction at 36 weeks',
+        'Advanced myocardial hypoxia, right heart decompensation and imminent acidemia/demise within 48–72 hours; give IV MgSO4 (and steroids) and proceed to immediate urgent caesarean',
+        'Maternal dehydration; give 2 L IV Ringer’s lactate and discharge home',
+      ],
+      answerIndex: 2,
+      explanation:
+        'An absent/reversed DV a-wave with reduced cCTG STV (< 2.6 ms at < 29 weeks) indicates myocardial dysfunction, central venous hypertension and metabolic acidemia, with demise within 48–72 hours. At ≥ 26+0 weeks this is an absolute indication for immediate caesarean after stabilisation and IV MgSO4.',
+    },
+    {
+      id: 'mcq-fgr-07',
+      stem:
+        'Which statement accurately describes MCA Doppler and the cerebroplacental ratio (CPR) in FGR?',
+      options: [
+        'In chronic hypoxia, cerebral vasoconstriction raises both MCA-PI and CPR above the 95th percentile',
+        'In chronic hypoxia, compensatory cerebral vasodilation raises diastolic flow, so MCA-PI (< 5th) and CPR (< 5th) decrease, and this is a primary trigger in late-onset FGR (≥ 32 weeks)',
+        'Excessive transducer pressure on the fetal head artificially decreases MCA-PI',
+        'MCA-PI is the sole criterion used to time emergency delivery at 26 weeks in early-onset FGR',
       ],
       answerIndex: 1,
       explanation:
-        'These are the Amsterdam criteria for maternal vascular malperfusion (MVM). MVM-mediated FGR recurs in ~10–15% and responds to low-dose aspirin 162 mg at bedtime started before 16 weeks. Non-MVM lesions (CHIV, MPVFD/maternal floor infarction, VUE) carry a 30–80% recurrence risk and need specialist MFM protocols.',
+        'Brain-sparing vasodilation raises MCA end-diastolic velocity, lowering MCA-PI (< 5th) and CPR (< 5th or < 1.08). It is the cornerstone of diagnosis and delivery timing at 36+0–37+0 weeks in late FGR. Probe pressure artificially raises MCA-PI; early FGR is timed by DV and cCTG, not MCA.',
+    },
+    {
+      id: 'mcq-fgr-08',
+      stem:
+        'A healthy primigravida has EFW at the 6th percentile and AC at the 7th at 32, 34 and 36 weeks, maintaining parallel growth. Anatomy, amniotic fluid, UtA-PI, UA-PI, MCA-PI, CPR and PlGF (290 pg/mL) are all normal. What is the diagnosis and delivery plan?',
+      options: [
+        'Severe early-onset FGR; immediate caesarean at 36+0 weeks',
+        'Constitutional SGA; continue fortnightly growth/Doppler surveillance and plan vaginal delivery/induction at 38+0–39+0 weeks',
+        'Stage II FGR; elective caesarean at 34+0 weeks',
+        'Post-term expectancy until 42+0 weeks without fetal monitoring',
+      ],
+      answerIndex: 1,
+      explanation:
+        'EFW/AC between the 3rd and 10th percentile with normal interval growth, normal uterine/umbilical/cerebral Dopplers and normal PlGF is constitutional SGA, not pathological FGR. SOGC No. 442 recommends fortnightly surveillance and delivery at 38+0–39+0 weeks by induction of labour.',
+    },
+    {
+      id: 'mcq-fgr-09',
+      stem:
+        'A 31-year-old at 36+2 weeks has late FGR with EFW at the 2nd percentile, UA-PI at the 97th (positive end-diastolic flow) and CPR at the 3rd. DV and NST are normal; the fetus is cephalic with an unfavourable cervix (Bishop 3). What is the recommended timing and mode of delivery?',
+      options: [
+        'Expectant management until 40+0 weeks',
+        'Deliver now (36+0–37+0 weeks); mechanical transcervical Foley ripening and induction with continuous EFM can be offered, with readiness for emergency caesarean',
+        'Contraindicate trial of labour because vaginal birth is only permitted if EFW > 50th percentile',
+        'Give IV MgSO4 for neuroprotection and tocolytics until 39 weeks',
+      ],
+      answerIndex: 1,
+      explanation:
+        'Stage I FGR with EFW < 3rd and/or UA-PI > 95th or brain-sparing (CPR/MCA-PI < 5th) delivers at 36+0–37+0 weeks. With positive end-diastolic flow and a reassuring NST, trial of labour is reasonable using Foley balloon ripening (avoiding prostaglandin tachysystole) and continuous intrapartum EFM.',
+    },
+    {
+      id: 'mcq-fgr-10',
+      stem:
+        'As chronic hypoxemia progresses to metabolic acidemia, biophysical profile parameters disappear in a sequence governed by CNS maturation. Which sequence correctly lists the order of loss from FIRST to LAST?',
+      options: [
+        'Fetal tone → gross body movements → fetal breathing → FHR reactivity (NST)',
+        'FHR reactivity (NST) → fetal breathing movements → gross body movements → fetal muscle tone',
+        'Gross body movements → FHR reactivity (NST) → fetal tone → fetal breathing',
+        'Fetal breathing movements → fetal tone → gross body movements → FHR reactivity (NST)',
+      ],
+      answerIndex: 1,
+      explanation:
+        'The center that matures last is most sensitive to hypoxia and disappears first: FHR reactivity (28–32 weeks) is lost first at pH ~7.20, then breathing (~7.15), then gross body movements (~7.10), and fetal tone (matures 7.5–8.5 weeks) is lost last at pH < 7.05.',
     },
   ],
 };

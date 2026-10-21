@@ -528,7 +528,7 @@ ${SECTION_TRAP}
 - Flip the track toggle and ask again to compare NCERT depth against Williams depth — same facts, different altitude.
 - Convert whatever you already know into **three viva questions** before reading further; patches stick only where questions are asked first.
 
-*Track in focus: ${track === 'UG' ? 'NEET UG — NCERT + core concepts' : 'NEET PG / INI-CET — Williams, Shaw & guidelines'}.*`;
+*Track in focus: ${track === 'UG' ? 'NEET UG - NCERT + core concepts' : 'NEET PG - Williams, Shaw & guidelines'}.*`;
 };
 
 /* =====================================================================

@@ -6,7 +6,6 @@ import {
   ArrowRight,
   Bookmark,
   BookmarkCheck,
-  CheckCircle2,
   Clock3,
   GraduationCap,
   Layers3,
@@ -24,6 +23,7 @@ import { FlashcardDeck } from '@/components/studio/FlashcardDeck';
 import { McqRail } from '@/components/studio/McqRail';
 import { MenstrualCycleSimulator } from '@/components/studio/MenstrualCycleSimulator';
 import { PartographSimulator } from '@/components/studio/PartographSimulator';
+import { PlacentaPraeviaSimulator } from '@/components/studio/PlacentaPraeviaSimulator';
 import { ProgressRing } from '@/components/studio/StudioBits';
 import { TorchSimulator } from '@/components/studio/TorchSimulator';
 import { useStudioModules } from '@/api/useStudioModules';
@@ -32,7 +32,6 @@ import { useRecallStore } from '@/store/useRecallStore';
 import { useStudioStore } from '@/store/useStudioStore';
 import { usePrefersReducedMotion } from '@/hooks/useEnvironment';
 import { withFilterTween } from '@/lib/motion';
-import { navigate } from '@/lib/router';
 import { cn } from '@/lib/utils';
 import {
   STUDIO_TRACK_THEME,
@@ -49,7 +48,23 @@ const TABS: readonly { id: StudioTabId; label: string; short: string; emoji: str
   { id: 'flashcards', label: 'Flashcards & Rapid MCQs', short: 'Cards & MCQs', emoji: '🃏' },
 ];
 
-const PG_SEARCH_SUGGESTIONS = ['FGR', 'Doppler', 'Delphi', 'AEDV', 'REDV', 'Ductus Venosus', 'PlGF'] as const;
+const PG_SEARCH_SUGGESTIONS = [
+  'TORCH',
+  'CMV',
+  'Rubella',
+  'Syphilis',
+  'FGR',
+  'Doppler',
+  'Delphi',
+  'AEDF',
+  'REDF',
+  'Ductus Venosus',
+  'CPR',
+  'PlGF',
+  'Placenta Praevia',
+  'FIGO PAS',
+  'Lacunae',
+] as const;
 
 export interface TrackModuleDirectoryPageProps {
   trackId: TrackId;
@@ -80,6 +95,7 @@ function moduleHaystack(module: StudioModule): string {
     ...(section.pearls ?? []),
     section.trap?.title ?? '',
     section.trap?.body ?? '',
+    ...(section.diagram ?? []).flatMap((diagram) => [diagram.title, diagram.caption ?? '']),
     ...(section.table?.head ?? []),
     ...(section.table?.rows.flat() ?? []),
   ]);
@@ -114,6 +130,8 @@ function ModuleSimulator({ module, theme }: { module: StudioModule; theme: Studi
   if (module.track === 'NEET_PG') {
     if (module.id === 'pg-torch-infections') return <TorchSimulator module={module} theme={theme} />;
     if (module.id === 'pg-mod-02-fgr') return <FgrSimulator module={module} theme={theme} />;
+    if (module.id === 'pg-mod-03-placenta-praevia-pas')
+      return <PlacentaPraeviaSimulator module={module} theme={theme} />;
   } else {
     if (module.id === 'ug-menstrual-axis') return <MenstrualCycleSimulator module={module} theme={theme} />;
     if (module.id === 'ug-lactation-parturition') return <PartographSimulator module={module} theme={theme} />;
@@ -146,59 +164,52 @@ function ModuleStudyHeader({
   theme: StudioTrackTheme;
   onBack: () => void;
 }): JSX.Element {
+  const percent = Math.round(progress * 100);
+
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border-b border-slate-200/60 bg-white/80 px-4 py-3 shadow-sm backdrop-blur-xl dark:border-white/[0.08] dark:bg-slate-900/80 sm:px-6 sm:py-4">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-3 gap-y-2">
-        {/* Left — back controls */}
-        <div className="flex shrink-0 items-center gap-1">
-          <button
-            type="button"
-            onClick={onBack}
-            className="flex items-center gap-1.5 rounded-full bg-slate-100 px-3.5 py-1.5 text-xs font-medium text-slate-700 transition-all hover:bg-slate-200 dark:bg-white/[0.08] dark:text-slate-200 dark:hover:bg-white/[0.14]"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
-            Back to Modules
-          </button>
-          <span className="mx-1 hidden h-4 w-[1px] bg-slate-300 dark:bg-white/15 sm:block" aria-hidden="true" />
-          <button
-            type="button"
-            onClick={() => navigate('/')}
-            className="hidden text-xs font-medium text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white sm:inline-flex"
-          >
-            Main Hub
-          </button>
-        </div>
+    <header className="fixed inset-x-0 top-0 z-40 border-b border-slate-200/70 bg-white/85 backdrop-blur-xl dark:border-white/[0.08] dark:bg-slate-900/85">
+      <div className="mx-auto flex h-14 max-w-6xl items-center gap-2.5 px-4 sm:h-16 sm:gap-4 sm:px-6">
+        {/* Back */}
+        <button
+          type="button"
+          onClick={onBack}
+          aria-label="Back to modules"
+          className="inline-flex h-9 w-9 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-slate-900/[0.08] bg-white/70 text-slate-600 transition-colors hover:border-slate-900/[0.14] hover:bg-white hover:text-slate-900 dark:border-white/[0.1] dark:bg-white/[0.04] dark:text-slate-300 dark:hover:bg-white/[0.08] dark:hover:text-white sm:w-auto sm:px-3"
+        >
+          <ArrowLeft className="h-4 w-4" strokeWidth={2.2} aria-hidden="true" />
+          <span className="hidden text-[11px] font-medium sm:inline">Modules</span>
+        </button>
 
-        {/* Center — module heading */}
-        <div className="order-last flex min-w-0 flex-1 items-center justify-center gap-1.5 sm:order-none">
-          <h1 className="truncate text-[13px] font-semibold tracking-tight text-slate-900 dark:text-white sm:text-[15px]">
-            {number} · {module.title}
-          </h1>
-          {module.highYield ? (
-            <span className="hidden shrink-0 items-center gap-0.5 rounded-full border border-amber-500/20 bg-amber-500/[0.09] px-1.5 py-[2px] text-[9px] font-semibold text-amber-700 dark:border-amber-400/25 dark:bg-amber-400/10 dark:text-amber-300 md:inline-flex">
-              <span aria-hidden="true">🔥</span>
-              {module.weightage}
+        <span className="hidden h-6 w-px shrink-0 bg-slate-200 dark:bg-white/10 sm:block" aria-hidden="true" />
+
+        {/* Title */}
+        <div className="min-w-0 flex-1">
+          <p className="flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
+            <span className="shrink-0">Module {number}</span>
+            <span className="hidden truncate sm:inline">· {theme.eyebrow}</span>
+          </p>
+          <div className="flex min-w-0 items-baseline gap-2">
+            <h1 className="truncate text-[13.5px] font-semibold tracking-tight text-slate-900 dark:text-white sm:text-[15px]">
+              {module.title}
+            </h1>
+            <span className="hidden shrink-0 text-[10px] font-medium text-slate-400 dark:text-slate-500 md:inline">
+              {module.highYield ? `${module.weightage} · ` : ''}
+              {module.durationMinutes} min
             </span>
-          ) : null}
-          <span className="hidden shrink-0 items-center gap-0.5 rounded-full border border-slate-900/[0.06] bg-white/60 px-1.5 py-[2px] text-[9px] font-medium text-slate-500 dark:border-white/[0.07] dark:bg-white/[0.05] dark:text-slate-400 md:inline-flex">
-            <span aria-hidden="true">🕒</span>
-            {module.durationMinutes}m
-          </span>
+          </div>
         </div>
 
-        {/* Right — completion ring + save status */}
-        <div className="flex shrink-0 items-center gap-2">
-          <span
-            className="hidden items-center gap-1 rounded-full border border-emerald-500/25 bg-emerald-500/[0.08] px-2.5 py-1 text-[10px] font-semibold text-emerald-700 dark:text-emerald-300 sm:inline-flex"
-            title="Flashcard ratings, MCQ answers and notes autosave to this device"
-          >
-            <CheckCircle2 className="h-3 w-3" strokeWidth={2.2} aria-hidden="true" />
-            Save Progress
-          </span>
-          <ProgressRing value={progress} size={38} strokeWidth={3} colorClassName={theme.ring}>
-            <span className="text-[9.5px] font-bold tabular-nums">{Math.round(progress * 100)}%</span>
+        {/* Progress */}
+        <span
+          className="shrink-0"
+          title={`${percent}% complete — progress autosaves on this device`}
+          aria-label={`${percent}% of this module complete`}
+          role="img"
+        >
+          <ProgressRing value={progress} size={34} strokeWidth={3} colorClassName={theme.ring}>
+            <span className="text-[9px] font-bold tabular-nums">{percent}%</span>
           </ProgressRing>
-        </div>
+        </span>
       </div>
     </header>
   );
@@ -354,7 +365,7 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
         onBack={backToModules}
       />
 
-      <main className="relative mx-auto max-w-6xl px-4 pb-16 pt-28">
+      <main className="relative mx-auto max-w-6xl px-4 pb-16 pt-20 sm:pt-24">
         {/* Overview — summary, topic filters, Save Module Summary to ⌘K */}
         <section className="glass-card rounded-2xl p-4 sm:p-5" aria-label={`${activeModule.title} overview`}>
           <div className="flex flex-wrap items-start justify-between gap-3">

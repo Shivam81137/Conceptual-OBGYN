@@ -1,12 +1,13 @@
 import type { TrackId } from '@/types/tracks';
 import { TORCH_INFECTIONS_MODULE } from '@/data/torchInfections';
 import { FGR_GUIDELINE_442_MODULE } from '@/data/fgrGuideline442';
+import { PLACENTA_PRAEVIA_PAS_MODULE } from '@/data/placentaPraeviaPasModule';
 
 /**
  * Revision Studio curated corpus.
  * ---------------------------------------------------------------------------
  * High-yield modules powering the workspace panes — four NEET UG foundations
- * and the NEET PG & INI-CET clinical vault (Module 01: TORCH Infections;
+ * and the NEET PG clinical vault (Module 01: TORCH Infections;
  * Module 02: Fetal Growth Restriction, SOGC No. 442). The content is intentionally
  * offline-first: notes, comparison tables, examiner traps, simulators,
  * flashcards and MCQ drills ship in the bundle, and the API only reconciles
@@ -27,6 +28,38 @@ export interface StudioNoteCode {
   source: string;
 }
 
+/** Bespoke inline SVG diagram rendered inside a concept block. */
+export type StudioDiagramKind =
+  | 'tvs-distance-cutoffs'
+  | 'silver-cs-risk-chart'
+  | 'figo-pas-grades'
+  | 'scan-timeline-flowchart'
+  | 'delivery-timing-matrix'
+  | 'usg-doppler-mri-markers'
+  | 'hysterectomy-vs-triple-p'
+  | 'torch-serology-avidity-pcr'
+  | 'torch-usg-signature-map'
+  | 'toxoplasmosis-diagnosis-treatment'
+  | 'syphilis-treatment-congenital-risk'
+  | 'rubella-crs-risk-gradient'
+  | 'cmv-avidity-amniocentesis'
+  | 'hsv-perinatal-suppression'
+  | 'parvovirus-vzv-timeline'
+  | 'delphi-early-vs-late-fgr'
+  | 'mvm-plgf-aspirin-pathway'
+  | 'fgr-genetic-cmv-workup'
+  | 'ua-doppler-waveforms-aedf-redf'
+  | 'mca-cpr-ductus-venosus-cascade'
+  | 'sogc-442-delivery-timing-matrix';
+
+export interface StudioNoteDiagram {
+  kind: StudioDiagramKind;
+  title: string;
+  caption?: string;
+  /** Optional key that labels the numbered callouts in the figure. */
+  legend?: readonly string[];
+}
+
 export interface StudioNoteSection {
   id: string;
   heading: string;
@@ -36,9 +69,13 @@ export interface StudioNoteSection {
   table?: StudioNoteTable;
   /** Source algorithm (e.g. the extracted Mermaid commands) in a monospace panel. */
   code?: StudioNoteCode;
+  /** Interactive/print-safe SVG clinical diagrams rendered with the section. */
+  diagram?: readonly StudioNoteDiagram[];
   /** Golden rules rendered with a "Save Pearl to ⌘K" action. */
   pearls?: readonly string[];
   trap?: { title: string; body: string };
+  /** Additional examiner traps for blocks that carry more than one. */
+  traps?: readonly { title: string; body: string }[];
 }
 
 export interface StudioFlashcard {
@@ -108,9 +145,9 @@ export const STUDIO_TRACK_THEME: Record<TrackId, StudioTrackTheme> = {
   },
   NEET_PG: {
     slug: 'pg',
-    label: 'NEET PG & INI-CET',
+    label: 'NEET PG',
     title: 'Clinical Vault',
-    eyebrow: 'NEET PG & INI-CET',
+    eyebrow: 'NEET PG',
     subtitle: 'Congenital infections and placental insufficiency — serology, Doppler staging and delivery timing.',
     gradient: 'from-indigo-600 to-rose-500',
     gradientText: 'from-indigo-600 to-rose-500 dark:from-indigo-300 dark:to-rose-300',
@@ -661,16 +698,22 @@ export const STUDIO_MODULES: readonly StudioModule[] = [
   },
 
   /* ====================================================================== */
-  /* NEET PG & INI-CET — 1. TORCH Infections                               */
+  /* NEET PG — 1. TORCH Infections                                        */
   /* Source: Chapter 20 · Pavika Lal, Renu Gupta, Prativa Verma             */
   /* ====================================================================== */
   TORCH_INFECTIONS_MODULE,
 
   /* ====================================================================== */
-  /* NEET PG & INI-CET — 2. Fetal Growth Restriction (SOGC No. 442)         */
+  /* NEET PG — 2. Fetal Growth Restriction (SOGC No. 442)                  */
   /* Source: SOGC CPG No. 442 · J Obstet Gynaecol Can 2023;45(10):102154    */
   /* ====================================================================== */
   FGR_GUIDELINE_442_MODULE,
+
+  /* ====================================================================== */
+  /* NEET PG — 3. Placenta Praevia & Placenta Accreta Spectrum             */
+  /* Source: RCOG Green-top Guideline No. 27a · FIGO PAS Consensus          */
+  /* ====================================================================== */
+  PLACENTA_PRAEVIA_PAS_MODULE,
 ] as const;
 
 export const modulesForTrack = (track: TrackId): readonly StudioModule[] =>

@@ -50,7 +50,7 @@ import {
    System instruction — the exam persona served to Gemini on every request
    ========================================================================== */
 
-export const OBGYN_AI_SYSTEM_INSTRUCTION = `You are 'Conceptual OBGYN AI', consultant-level Obstetrics & Gynaecology faculty writing exam revision material for NEET UG, NEET PG and INI-CET.
+export const OBGYN_AI_SYSTEM_INSTRUCTION = `You are 'Conceptual OBGYN AI', consultant-level Obstetrics & Gynaecology faculty writing exam revision material for NEET UG and NEET PG.
 
 PRIME DIRECTIVE — accuracy before fluency.
 A short answer that is right beats a long answer that is nearly right. If a fact is uncertain, say so in one line instead of filling the gap. Never guess a number, dose, threshold or staging detail.
@@ -176,7 +176,7 @@ export interface ObgynAssistCapabilities {
 const DOCUMENT_CHAR_LIMIT = 150_000;
 const GEMINI_DOCUMENT_CHAR_LIMIT = 60_000;
 const MIN_USABLE_DOCUMENT_CHARS = 80;
-const TRACK_LABELS: Record<ObgynTrack, string> = { UG: 'NEET UG', PG: 'NEET PG / INI-CET' };
+const TRACK_LABELS: Record<ObgynTrack, string> = { UG: 'NEET UG', PG: 'NEET PG' };
 
 /* ============================================================================
    Structured LLM output — JSON schema for Gemini + zod re-validation
