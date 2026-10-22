@@ -1,6 +1,6 @@
 # Conceptual OBGYN
 
-**A quiet, offline-ready obstacle-free revision workspace for Obstetrics & Gynecology — NEET UG and NEET PG.**
+**A quiet, offline-ready obstacle-free revision workspace for Obstetrics & Gynecology — UG and PG.**
 
 The interface is a layered spatial-glass workspace: a living aurora mesh drifts behind true multi-layer frosted surfaces — two track portals and three revision utilities in one bento, with keyboard-first navigation and a ⌘K quick-recall palette. Backed by a modular Express API ready for spaced repetition and RAG pipelines.
 
@@ -162,7 +162,7 @@ Open **http://localhost:5173** (Vite prints the next free port if 5173 is alread
 
 | Key | Action |
 | --- | --- |
-| `1` / `2` | Spotlight the NEET UG / NEET PG portal on the landing |
+| `1` / `2` | Spotlight the UG / PG portal on the landing |
 | `⌘K` / `Ctrl+K` | Open quick recall — type or click a curated tag (`Esc` closes) |
 | `Esc` | Close quick recall |
 

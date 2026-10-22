@@ -93,8 +93,8 @@ export const ECTOPIC: ObgynTopic = {
     PG: ['PUL with a plateauing β-hCG — next step?', 'Salpingostomy vs salpingectomy — how do you choose?', 'Caesarean-scar ectopic — management options'],
   },
   sourceTag: {
-    UG: 'Synthesized for NEET UG • Dutta + NCERT aligned',
-    PG: 'Synthesized for NEET PG • Williams 26e, RCOG GTG 21 & FOGSI aligned',
+    UG: 'Synthesized for UG • Dutta + NCERT aligned',
+    PG: 'Synthesized for PG • Williams 26e, RCOG GTG 21 & FOGSI aligned',
   },
 };
 
@@ -184,8 +184,8 @@ export const SHOULDER: ObgynTopic = {
     PG: ['HELPERR step by step', 'Posterior-arm delivery — technique and risks', 'How do you document shoulder dystocia?'],
   },
   sourceTag: {
-    UG: 'Synthesized for NEET UG • Dutta + NCERT aligned',
-    PG: 'Synthesized for NEET PG • RCOG GTG 42, ACOG & Williams aligned',
+    UG: 'Synthesized for UG • Dutta + NCERT aligned',
+    PG: 'Synthesized for PG • RCOG GTG 42, ACOG & Williams aligned',
   },
 };
 
@@ -268,8 +268,8 @@ export const PCOS: ObgynTopic = {
     PG: ['Letrozole vs clomiphene — the evidence', 'How do you protect the endometrium in PCOS?', 'PCOS in pregnancy — what are the risks?'],
   },
   sourceTag: {
-    UG: 'Synthesized for NEET UG • Dutta + NCERT aligned',
-    PG: 'Synthesized for NEET PG • ESHRE 2023, Williams & Shaw aligned',
+    UG: 'Synthesized for UG • Dutta + NCERT aligned',
+    PG: 'Synthesized for PG • ESHRE 2023, Williams & Shaw aligned',
   },
 };
 
@@ -350,8 +350,8 @@ export const FIBROID: ObgynTopic = {
     PG: ['FIGO fibroid classification 0-8', 'GnRH agonist before myomectomy — benefits and limits', 'UAE vs myomectomy — how do you counsel?'],
   },
   sourceTag: {
-    UG: 'Synthesized for NEET UG • Dutta + NCERT aligned',
-    PG: 'Synthesized for NEET PG • Williams 26e, FIGO & RCOG aligned',
+    UG: 'Synthesized for UG • Dutta + NCERT aligned',
+    PG: 'Synthesized for PG • Williams 26e, FIGO & RCOG aligned',
   },
 };
 
@@ -431,8 +431,8 @@ export const GDM: ObgynTopic = {
     PG: ['IADPSG vs DIPSI — which do you use?', 'Metformin vs insulin in GDM', 'Delivery timing in GDM on insulin'],
   },
   sourceTag: {
-    UG: 'Synthesized for NEET UG • Dutta + NCERT aligned',
-    PG: 'Synthesized for NEET PG • WHO 2013, FIGO & Dutta aligned',
+    UG: 'Synthesized for UG • Dutta + NCERT aligned',
+    PG: 'Synthesized for PG • WHO 2013, FIGO & Dutta aligned',
   },
 };
 

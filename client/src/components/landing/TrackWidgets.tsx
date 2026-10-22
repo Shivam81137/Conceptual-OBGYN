@@ -48,7 +48,7 @@ const PULSE_PATH =
 const PULSE_AREA =
   'M 2 24 C 12 24, 16 24, 24 24 S 34 6, 44 6 S 54 24, 64 24 S 74 2, 84 2 S 96 20, 106 20 S 116 12, 122 12 L 122 28 L 2 28 Z';
 
-/** NEET UG — GnRH → LH surge with a live status dot, vibrant Emerald-to-Cyan gradient waveform and area fill. */
+/** UG — GnRH → LH surge with a live status dot, vibrant Emerald-to-Cyan gradient waveform and area fill. */
 export function HormonalPulseWidget({ className }: { className?: string }): JSX.Element {
   return (
     <StackedGlass className={className}>
@@ -101,7 +101,7 @@ export function HormonalPulseWidget({ className }: { className?: string }): JSX.
 const PARTOGRAPH_PATH = 'M 2 26 L 16 26 L 28 22 L 40 18 L 52 14 L 64 11 L 76 9 L 88 8 L 122 8';
 const PARTOGRAPH_AREA = 'M 2 26 L 16 26 L 28 22 L 40 18 L 52 14 L 64 11 L 76 9 L 88 8 L 122 8 L 122 28 L 2 28 Z';
 
-/** NEET PG — partograph active-phase waveform with Indigo-to-Rose gradient and area fill. */
+/** PG — partograph active-phase waveform with Indigo-to-Rose gradient and area fill. */
 export function PartographWidget({ className }: { className?: string }): JSX.Element {
   return (
     <StackedGlass className={className}>

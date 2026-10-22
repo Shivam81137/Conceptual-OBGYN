@@ -6,8 +6,8 @@ import { PLACENTA_PRAEVIA_PAS_MODULE } from '@/data/placentaPraeviaPasModule';
 /**
  * Revision Studio curated corpus.
  * ---------------------------------------------------------------------------
- * High-yield modules powering the workspace panes — four NEET UG foundations
- * and the NEET PG clinical vault (Module 01: TORCH Infections;
+ * High-yield modules powering the workspace panes — four UG foundations
+ * and the PG clinical vault (Module 01: TORCH Infections;
  * Module 02: Fetal Growth Restriction, SOGC No. 442). The content is intentionally
  * offline-first: notes, comparison tables, examiner traps, simulators,
  * flashcards and MCQ drills ship in the bundle, and the API only reconciles
@@ -130,9 +130,9 @@ export interface StudioTrackTheme {
 export const STUDIO_TRACK_THEME: Record<TrackId, StudioTrackTheme> = {
   NEET_UG: {
     slug: 'ug',
-    label: 'NEET UG',
+    label: 'UG',
     title: 'Revision Studio',
-    eyebrow: 'NEET UG',
+    eyebrow: 'UG',
     subtitle: 'NCERT physiology and embryology, distilled to causal chains.',
     gradient: 'from-emerald-500 to-teal-500',
     gradientText: 'from-emerald-600 to-teal-500 dark:from-emerald-300 dark:to-teal-300',
@@ -145,9 +145,9 @@ export const STUDIO_TRACK_THEME: Record<TrackId, StudioTrackTheme> = {
   },
   NEET_PG: {
     slug: 'pg',
-    label: 'NEET PG',
+    label: 'PG',
     title: 'Clinical Vault',
-    eyebrow: 'NEET PG',
+    eyebrow: 'PG',
     subtitle: 'Congenital infections and placental insufficiency — serology, Doppler staging and delivery timing.',
     gradient: 'from-indigo-600 to-rose-500',
     gradientText: 'from-indigo-600 to-rose-500 dark:from-indigo-300 dark:to-rose-300',
@@ -164,7 +164,7 @@ const UPDATED_AT = '2026-10-16T06:00:00.000Z';
 
 export const STUDIO_MODULES: readonly StudioModule[] = [
   /* ====================================================================== */
-  /* NEET UG — 1. Menstrual Cycle & Hormonal Axis                           */
+  /* UG — 1. Menstrual Cycle & Hormonal Axis                           */
   /* ====================================================================== */
   {
     id: 'ug-menstrual-axis',
@@ -295,7 +295,7 @@ export const STUDIO_MODULES: readonly StudioModule[] = [
   },
 
   /* ====================================================================== */
-  /* NEET UG — 2. Gametogenesis & Fertilization                             */
+  /* UG — 2. Gametogenesis & Fertilization                             */
   /* ====================================================================== */
   {
     id: 'ug-gametogenesis',
@@ -428,7 +428,7 @@ export const STUDIO_MODULES: readonly StudioModule[] = [
   },
 
   /* ====================================================================== */
-  /* NEET UG — 3. Placental Development & Functions                          */
+  /* UG — 3. Placental Development & Functions                          */
   /* ====================================================================== */
   {
     id: 'ug-placenta',
@@ -556,7 +556,7 @@ export const STUDIO_MODULES: readonly StudioModule[] = [
   },
 
   /* ====================================================================== */
-  /* NEET UG — 4. Lactation, Parturition & Contraception                    */
+  /* UG — 4. Lactation, Parturition & Contraception                    */
   /* ====================================================================== */
   {
     id: 'ug-lactation-parturition',
@@ -698,19 +698,19 @@ export const STUDIO_MODULES: readonly StudioModule[] = [
   },
 
   /* ====================================================================== */
-  /* NEET PG — 1. TORCH Infections                                        */
+  /* PG — 1. TORCH Infections                                        */
   /* Source: Chapter 20 · Pavika Lal, Renu Gupta, Prativa Verma             */
   /* ====================================================================== */
   TORCH_INFECTIONS_MODULE,
 
   /* ====================================================================== */
-  /* NEET PG — 2. Fetal Growth Restriction (SOGC No. 442)                  */
+  /* PG — 2. Fetal Growth Restriction (SOGC No. 442)                  */
   /* Source: SOGC CPG No. 442 · J Obstet Gynaecol Can 2023;45(10):102154    */
   /* ====================================================================== */
   FGR_GUIDELINE_442_MODULE,
 
   /* ====================================================================== */
-  /* NEET PG — 3. Placenta Praevia & Placenta Accreta Spectrum             */
+  /* PG — 3. Placenta Praevia & Placenta Accreta Spectrum             */
   /* Source: RCOG Green-top Guideline No. 27a · FIGO PAS Consensus          */
   /* ====================================================================== */
   PLACENTA_PRAEVIA_PAS_MODULE,

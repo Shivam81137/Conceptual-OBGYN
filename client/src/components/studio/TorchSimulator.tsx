@@ -138,7 +138,7 @@ function bandFor(week: number): WindowBand {
 }
 
 /**
- * Pane B, tab 2 (NEET PG · TORCH) — serology interpreter + gestational-week
+ * Pane B, tab 2 (PG · TORCH) — serology interpreter + gestational-week
  * severity timeline. Turns Algorithm 1 and the trimester-severity rule into a
  * live decision aid.
  */

@@ -157,7 +157,7 @@ function Segmented<T extends string>({
 }
 
 /**
- * Pane B, tab 2 (NEET PG) — partograph + Bishop score sandbox.
+ * Pane B, tab 2 (PG) — partograph + Bishop score sandbox.
  * Plot dilatation against hours since 4 cm, then read the alert/action-line
  * logic and the Bishop-based induction decision in real time.
  */

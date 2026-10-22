@@ -1,7 +1,7 @@
 import type { StudioModule } from '@/data/revisionStudio';
 
 /**
- * NEET PG · Module 01 — TORCH Infections
+ * PG · Module 01 — TORCH Infections
  * ---------------------------------------------------------------------------
  * Complete congenital-infection vault rebuilt from Chapter 20 (Pavika Lal,
  * Renu Gupta, Prativa Verma) and standard obstetric practice:

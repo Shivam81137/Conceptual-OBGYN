@@ -83,7 +83,7 @@ const dayToX = (day: number): number => CHART.left + ((day - 1) / 27) * PLOT_W;
 const valueToY = (value: number, max: number): number => CHART.top + (1 - value / max) * PLOT_H;
 
 /**
- * Pane B, tab 2 (NEET UG) — the 28-day hormonal scrubber.
+ * Pane B, tab 2 (UG) — the 28-day hormonal scrubber.
  * Every curve is normalised to its own peak for shape readability; the numeric
  * read-outs underneath carry the actual textbook units.
  */

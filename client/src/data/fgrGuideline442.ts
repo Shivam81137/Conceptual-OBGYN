@@ -1,7 +1,7 @@
 import type { StudioModule } from '@/data/revisionStudio';
 
 /**
- * NEET PG · Module 02 — Fetal Growth Restriction (SOGC No. 442)
+ * PG · Module 02 — Fetal Growth Restriction (SOGC No. 442)
  * ---------------------------------------------------------------------------
  * Complete clinical vault for SOGC Clinical Practice Guideline No. 442
  * (Kingdom et al.) and the International Gordijn Delphi Consensus:

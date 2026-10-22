@@ -51,7 +51,7 @@ export const OBGYN_PHRASES: readonly TypewriterPhrase[] = [
     gradient: 'from-blue-700 via-indigo-600 to-cyan-600 dark:from-blue-400 dark:via-indigo-300 dark:to-cyan-300',
     caretColor: '#2563eb',
     dotColor: '#2563eb',
-    subtitle: 'High-yield differential diagnoses engineered for NEET UG and NEET PG.',
+    subtitle: 'High-yield differential diagnoses engineered for the UG and PG tracks.',
   },
 ];
 

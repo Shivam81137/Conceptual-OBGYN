@@ -18,8 +18,8 @@ interface SwitcherOption {
 
 const SWITCHER: readonly SwitcherOption[] = [
   { id: null, label: 'All Tracks', mobileLabel: 'All' },
-  { id: 'NEET_UG', label: 'NEET UG', mobileLabel: 'UG' },
-  { id: 'NEET_PG', label: 'NEET PG', mobileLabel: 'PG' },
+  { id: 'NEET_UG', label: 'UG', mobileLabel: 'UG' },
+  { id: 'NEET_PG', label: 'PG', mobileLabel: 'PG' },
 ];
 
 /**

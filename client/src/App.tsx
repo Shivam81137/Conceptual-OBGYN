@@ -11,8 +11,8 @@ import { useTheme } from '@/hooks/useTheme';
 import type { TrackId } from '@/types/tracks';
 
 const ROUTES: Record<string, { trackId: TrackId; title: string }> = {
-  '/track/ug': { trackId: 'NEET_UG', title: 'NEET UG Revision Studio — Conceptual OBGYN' },
-  '/track/pg': { trackId: 'NEET_PG', title: 'NEET PG Clinical Vault — Conceptual OBGYN' },
+  '/track/ug': { trackId: 'NEET_UG', title: 'UG Revision Studio — Conceptual OBGYN' },
+  '/track/pg': { trackId: 'NEET_PG', title: 'PG Clinical Vault — Conceptual OBGYN' },
 };
 
 /** Step-3 bookmarks are rewritten to the Step-4 workspace paths. */
@@ -39,7 +39,7 @@ export default function App(): JSX.Element {
   }, [legacyTarget]);
 
   useEffect(() => {
-    document.title = route ? route.title : 'Conceptual OBGYN — NEET UG & PG Revision Workspace';
+    document.title = route ? route.title : 'Conceptual OBGYN — UG & PG Revision Workspace';
   }, [route]);
 
   return (

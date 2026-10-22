@@ -50,7 +50,7 @@ import {
    System instruction — the exam persona served to Gemini on every request
    ========================================================================== */
 
-export const OBGYN_AI_SYSTEM_INSTRUCTION = `You are 'Conceptual OBGYN AI', consultant-level Obstetrics & Gynaecology faculty writing exam revision material for NEET UG and NEET PG.
+export const OBGYN_AI_SYSTEM_INSTRUCTION = `You are 'Conceptual OBGYN AI', consultant-level Obstetrics & Gynaecology faculty writing exam revision material for the UG and PG tracks.
 
 PRIME DIRECTIVE — accuracy before fluency.
 A short answer that is right beats a long answer that is nearly right. If a fact is uncertain, say so in one line instead of filling the gap. Never guess a number, dose, threshold or staging detail.
@@ -176,7 +176,7 @@ export interface ObgynAssistCapabilities {
 const DOCUMENT_CHAR_LIMIT = 150_000;
 const GEMINI_DOCUMENT_CHAR_LIMIT = 60_000;
 const MIN_USABLE_DOCUMENT_CHARS = 80;
-const TRACK_LABELS: Record<ObgynTrack, string> = { UG: 'NEET UG', PG: 'NEET PG' };
+const TRACK_LABELS: Record<ObgynTrack, string> = { UG: 'UG', PG: 'PG' };
 
 /* ============================================================================
    Structured LLM output — JSON schema for Gemini + zod re-validation
@@ -203,7 +203,7 @@ const OBGYN_ASSIST_LLM_SCHEMA = {
     },
     sourceTag: {
       type: 'string',
-      description: 'A single badge line, e.g. "Synthesized for NEET PG • Williams 26e & FIGO Aligned".',
+      description: 'A single badge line, e.g. "Synthesized for PG • Williams 26e & FIGO Aligned".',
     },
     references: {
       type: 'array',
@@ -243,7 +243,7 @@ Return ONLY a single valid JSON object (no markdown fences, no commentary) with 
 - "answer": string — the full markdown answer following the three-section structure above.
 - "highYieldPearl": string — the 1-2 sentence golden MCQ takeaway.
 - "followUpQuestions": array of exactly 3 short strings — clickable next questions.
-- "sourceTag": string — one badge line, e.g. "Synthesized for NEET PG • Williams & FIGO aligned".
+- "sourceTag": string — one badge line, e.g. "Synthesized for PG • Williams & FIGO aligned".
 - "references": array of 2-4 short strings — each MUST start with an approved source name listed in the citation rules; never invent a guideline, edition or page number.
 Output shape: {"answer":"...","highYieldPearl":"...","followUpQuestions":["...","...","..."],"sourceTag":"...","references":["...","..."]}`;
 

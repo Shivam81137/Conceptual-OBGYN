@@ -1,7 +1,7 @@
 import type { StudioModule } from '@/data/revisionStudio';
 
 /**
- * NEET PG · Module 03 — Placenta Praevia & Placenta Accreta Spectrum
+ * PG · Module 03 — Placenta Praevia & Placenta Accreta Spectrum
  * ---------------------------------------------------------------------------
  * Complete clinical vault for RCOG Green-top Guideline No. 27a and the FIGO
  * PAS consensus: the < 20 mm low-lying cutoff, Silver's prior-caesarean

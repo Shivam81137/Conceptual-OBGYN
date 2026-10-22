@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Conceptual OBGYN PWA — Liquid Glass spatial revision surface (NEET UG / NEET PG).",
+  "description": "Conceptual OBGYN PWA — Liquid Glass spatial revision surface (UG / PG).",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

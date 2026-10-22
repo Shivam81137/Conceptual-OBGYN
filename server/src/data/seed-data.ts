@@ -33,11 +33,11 @@ export const TRACK_BLUEPRINTS: Record<TrackId, TrackBlueprint> = {
   NEET_UG: {
     id: 'NEET_UG',
     title: 'Foundational Mastery',
-    kicker: 'NEET UG',
+    kicker: 'UG',
     badge: 'UNDERGRADUATE CORE • FOUNDATION & BRIDGING',
     description:
       'Build the anatomical logic once: gametogenesis, the hormonal axis and placentation become a single causal chain you can redraw from memory.',
-    ctaLabel: 'Enter NEET UG Revision Studio',
+    ctaLabel: 'Enter UG Revision Studio',
     accent: { from: '#14B8A6', to: '#22D3EE', glow: '#0D9488' },
     metrics: [
       { id: 'flowcharts', value: '120+', label: 'Visual flowcharts' },
@@ -147,11 +147,11 @@ export const TRACK_BLUEPRINTS: Record<TrackId, TrackBlueprint> = {
   NEET_PG: {
     id: 'NEET_PG',
     title: 'Clinical Vault',
-    kicker: 'NEET PG',
-    badge: 'POSTGRADUATE CLINICAL • NEET PG',
+    kicker: 'PG',
+    badge: 'POSTGRADUATE CLINICAL • PG',
     description:
       'Convert textbook recall into bedside decisions: partograph interpretation, Robson auditing and emergency algorithms rehearsed under time pressure.',
-    ctaLabel: 'Enter NEET PG Clinical Vault',
+    ctaLabel: 'Enter PG Clinical Vault',
     accent: { from: '#6366F1', to: '#F43F5E', glow: '#4F46E5' },
     metrics: [
       { id: 'algorithms', value: '500+', label: 'Case algorithms' },

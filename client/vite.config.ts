@@ -23,7 +23,7 @@ export default defineConfig(({ mode }) => {
         name: 'Conceptual OBGYN — Revision Workspace',
         short_name: 'Conceptual OBGYN',
         description:
-          'Structured clinical concepts and recall modules for NEET UG and NEET PG Obstetrics & Gynecology. Offline-ready.',
+          'Structured clinical concepts and recall modules for UG and PG Obstetrics & Gynecology. Offline-ready.',
         lang: 'en-IN',
         dir: 'ltr',
         start_url: '/?source=pwa',
@@ -42,15 +42,15 @@ export default defineConfig(({ mode }) => {
         ],
         shortcuts: [
           {
-            name: 'NEET UG Track',
-            short_name: 'NEET UG',
+            name: 'UG Track',
+            short_name: 'UG',
             description: 'Reproductive physiology, embryology and NCERT-aligned core concepts.',
             url: '/track/ug',
             icons: [{ src: 'icons/pwa-192x192.png', sizes: '192x192' }],
           },
           {
-            name: 'NEET PG Track',
-            short_name: 'NEET PG',
+            name: 'PG Track',
+            short_name: 'PG',
             description: 'Case vignettes, labor protocols and surgical pearls.',
             url: '/track/pg',
             icons: [{ src: 'icons/pwa-192x192.png', sizes: '192x192' }],

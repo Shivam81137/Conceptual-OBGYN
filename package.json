@@ -2,7 +2,7 @@
   "name": "conceptual-obgyn",
   "version": "1.0.0",
   "private": true,
-  "description": "Conceptual OBGYN — a next-generation medical education & high-yield revision PWA for NEET UG and NEET PG aspirants.",
+  "description": "Conceptual OBGYN — a next-generation medical education & high-yield revision PWA for UG and PG aspirants.",
   "workspaces": [
     "client",
     "server"

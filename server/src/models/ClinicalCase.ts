@@ -4,7 +4,7 @@ import { DIFFICULTIES, TRACK_IDS } from '../modules/tracks/tracks.schema.js';
 /**
  * ClinicalCase — a vignette-driven question used by the AI rapid-fire mode and
  * the analytic layer. The `robsonGroup` field links the case to the caesarean
- * audit matrix shown in the NEET PG portal.
+ * audit matrix shown in the PG portal.
  */
 const optionSchema = new Schema(
   {

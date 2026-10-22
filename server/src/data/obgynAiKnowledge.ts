@@ -321,8 +321,8 @@ const CORE_OBGYN_TOPICS: readonly ObgynTopic[] = [
       PG: ['Action line crossed — augmentation vs caesarean: how do you decide?', 'Differentiate uterine inertia from obstruction at the bedside', 'WHO simplified partograph — what changed and why?'],
     },
     sourceTag: {
-      UG: 'Synthesized for NEET UG • NCERT + Dutta aligned',
-      PG: 'Synthesized for NEET PG • Williams 26e & WHO Labour Care Guide aligned',
+      UG: 'Synthesized for UG • NCERT + Dutta aligned',
+      PG: 'Synthesized for PG • Williams 26e & WHO Labour Care Guide aligned',
     },
   },
   {
@@ -347,8 +347,8 @@ const CORE_OBGYN_TOPICS: readonly ObgynTopic[] = [
       PG: ['Preeclampsia with severe features at 33 weeks — stabilise or deliver?', 'Aspirin prophylaxis: who, when, what dose?', 'HELLP vs severe preeclampsia — does the difference change management?'],
     },
     sourceTag: {
-      UG: 'Synthesized for NEET UG • NCERT + Dutta aligned',
-      PG: 'Synthesized for NEET PG • Williams 26e, RCOG GTG 21 & FOGSI aligned',
+      UG: 'Synthesized for UG • NCERT + Dutta aligned',
+      PG: 'Synthesized for PG • Williams 26e, RCOG GTG 21 & FOGSI aligned',
     },
   },
   {
@@ -373,8 +373,8 @@ const CORE_OBGYN_TOPICS: readonly ObgynTopic[] = [
       PG: ['Bakri balloon not controlling bleeding at 500 mL — next two steps?', 'Massive transfusion protocol logic in obstetric haemorrhage', 'Secondary PPH — causes and timing?'],
     },
     sourceTag: {
-      UG: 'Synthesized for NEET UG • Dutta + FOGSI PPH bundle aligned',
-      PG: 'Synthesized for NEET PG • Williams 26e, RCOG GTG 52 & WOMAN trial aligned',
+      UG: 'Synthesized for UG • Dutta + FOGSI PPH bundle aligned',
+      PG: 'Synthesized for PG • Williams 26e, RCOG GTG 52 & WOMAN trial aligned',
     },
   },
   {
@@ -399,8 +399,8 @@ const CORE_OBGYN_TOPICS: readonly ObgynTopic[] = [
       PG: ['Couvelaire uterus at caesarean — immediate steps?', 'Placenta accreta spectrum: diagnosis and delivery planning', 'Concealed abruption with fetal distress — decision sequence?'],
     },
     sourceTag: {
-      UG: 'Synthesized for NEET UG • Dutta (Basic) APH chapter aligned',
-      PG: 'Synthesized for NEET PG • Williams 26e, RCOG GTG 63 & FOGSI aligned',
+      UG: 'Synthesized for UG • Dutta (Basic) APH chapter aligned',
+      PG: 'Synthesized for PG • Williams 26e, RCOG GTG 63 & FOGSI aligned',
     },
   },
   {
@@ -425,8 +425,8 @@ const CORE_OBGYN_TOPICS: readonly ObgynTopic[] = [
       PG: ['Adjuvant therapy decisions by molecular class — the 2023 shift', 'Substantial vs focal LVSI — how is it reported?', 'Sentinel node biopsy vs full lymphadenectomy in 2023 staging?'],
     },
     sourceTag: {
-      UG: 'Synthesized for NEET UG • Dutta (Basic) oncology aligned',
-      PG: 'Synthesized for NEET PG • FIGO 2023 (Berek et al.) & Shaw 18e aligned',
+      UG: 'Synthesized for UG • Dutta (Basic) oncology aligned',
+      PG: 'Synthesized for PG • FIGO 2023 (Berek et al.) & Shaw 18e aligned',
     },
   },
   {
@@ -451,8 +451,8 @@ const CORE_OBGYN_TOPICS: readonly ObgynTopic[] = [
       PG: ['Anovulatory AUB — why does unopposed oestrogen cause hyperplasia?', 'Progesterone challenge test — what does a bleed prove?', 'Short cycles: follicular or luteal problem?'],
     },
     sourceTag: {
-      UG: 'Synthesized for NEET UG • NCERT XI Human Reproduction aligned',
-      PG: 'Synthesized for NEET PG • Williams 26e neuroendocrinology & Shaw 18e aligned',
+      UG: 'Synthesized for UG • NCERT XI Human Reproduction aligned',
+      PG: 'Synthesized for PG • Williams 26e neuroendocrinology & Shaw 18e aligned',
     },
   },
 ];
@@ -528,7 +528,7 @@ ${SECTION_TRAP}
 - Flip the track toggle and ask again to compare NCERT depth against Williams depth — same facts, different altitude.
 - Convert whatever you already know into **three viva questions** before reading further; patches stick only where questions are asked first.
 
-*Track in focus: ${track === 'UG' ? 'NEET UG - NCERT + core concepts' : 'NEET PG - Williams, Shaw & guidelines'}.*`;
+*Track in focus: ${track === 'UG' ? 'UG - NCERT + core concepts' : 'PG - Williams, Shaw & guidelines'}.*`;
 };
 
 /* =====================================================================
