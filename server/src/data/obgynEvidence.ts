@@ -24,7 +24,7 @@ import {
  */
 
 /** Bumped whenever the system instruction or evidence contract changes. */
-export const PROMPT_VERSION = 'grounded-v2.2026-10';
+export const PROMPT_VERSION = 'grounded-v2.2026-11';
 
 /**
  * Real, mainstream sources only. A generated citation must start with one of

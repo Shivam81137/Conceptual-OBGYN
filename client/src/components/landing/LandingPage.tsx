@@ -3,7 +3,6 @@ import type { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 import { Navbar } from '@/components/landing/Navbar';
-import { AppBrandLogo } from '@/components/brand/AppBrandLogo';
 import { TrackPortalCard, type TrackCardData } from '@/components/landing/TrackPortalCard';
 import {
   BioluminescentTypewriter,
@@ -114,7 +113,7 @@ export function LandingPage(): JSX.Element {
     <div className="relative flex min-h-dvh flex-col">
       <Navbar />
 
-      <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 pb-8 pt-20 sm:px-6 sm:pt-24">
+      <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 pb-8 pt-[calc(5rem_+_env(safe-area-inset-top))] sm:px-6 sm:pt-[calc(6rem_+_env(safe-area-inset-top))]">
         <div className="my-auto w-full">
           {/* ─── Flagship Bioluminescent Hero Header ──────────────────────────── */}
           <motion.header
@@ -123,30 +122,20 @@ export function LandingPage(): JSX.Element {
             transition={withFilterTween({ type: 'spring', stiffness: 260, damping: 24, delay: 0.04 })}
             className="flex flex-col items-center text-center"
           >
-            {/* ── App Brand Graphical Logo Mark ── */}
-            <div className="mb-4 flex justify-center">
-              <AppBrandLogo size="md" />
-            </div>
-
-            {/* Eyebrow Pill with live pulsating indicator dot synchronized with active typewriter phrase */}
+            {/* Eyebrow pill — the live revision workspace marker */}
             <div className="inline-flex max-w-[90vw] items-center gap-2 rounded-full border border-slate-200/80 bg-white/70 px-3 py-1 shadow-sm backdrop-blur-md sm:gap-2.5 sm:px-4 sm:py-1.5 dark:border-white/10 dark:bg-white/[0.06]">
-              <span className="relative flex h-2 w-2 shrink-0">
-                <span
-                  className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
-                  style={{ backgroundColor: activePhrase.dotColor }}
-                />
-                <span
-                  className="relative inline-flex h-2 w-2 rounded-full transition-colors duration-500"
-                  style={{ backgroundColor: activePhrase.dotColor }}
-                />
-              </span>
+              <span
+                aria-hidden="true"
+                className="h-2 w-2 shrink-0 rounded-full transition-colors duration-500"
+                style={{ backgroundColor: activePhrase.dotColor }}
+              />
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-tight sm:text-sm">
                 <span className="text-gradient font-display font-bold">Conceptual</span>
                 <span className="font-display font-bold text-slate-800 dark:text-slate-100">OBGYN</span>
               </span>
               <span className="h-3 w-px bg-slate-300 dark:bg-white/20" aria-hidden="true" />
               <span className="truncate font-mono text-[9px] font-semibold tracking-[0.14em] uppercase text-slate-500 sm:text-[10px] sm:tracking-[0.16em] dark:text-slate-400">
-                Revision
+                UG · PG Revision
               </span>
             </div>
 
@@ -163,13 +152,14 @@ export function LandingPage(): JSX.Element {
                 aria-label="Open ⌘K quick recall search"
                 className="group flex h-10 w-full max-w-md items-center justify-between rounded-full border border-slate-200/80 bg-white/75 px-4 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] backdrop-blur-md transition-all duration-200 hover:border-[#4285F4]/40 hover:bg-white/90 hover:shadow-[0_8px_28px_-6px_rgba(66,133,244,0.18)] dark:border-white/[0.12] dark:bg-white/[0.06] dark:hover:border-white/25 dark:hover:bg-white/[0.10]"
               >
-                <div className="flex items-center gap-2.5 text-slate-400 dark:text-slate-400">
-                  <Search className="h-4 w-4 text-[#4285F4] transition-transform duration-200 group-hover:scale-110" strokeWidth={2} aria-hidden="true" />
-                  <span className="text-xs text-slate-500 sm:text-sm dark:text-slate-300">
-                    Search clinical pearls, protocols & guidelines...
+                <div className="flex min-w-0 items-center gap-2.5 text-slate-400 dark:text-slate-400">
+                  <Search className="h-4 w-4 shrink-0 text-[#4285F4] transition-transform duration-200 group-hover:scale-110" strokeWidth={2} aria-hidden="true" />
+                  <span className="truncate text-xs text-slate-500 sm:text-sm dark:text-slate-300">
+                    <span className="sm:hidden">Search pearls &amp; protocols…</span>
+                    <span className="hidden sm:inline">Search clinical pearls, protocols &amp; guidelines...</span>
                   </span>
                 </div>
-                <div className="flex items-center gap-1 font-mono text-[10px] text-slate-400 dark:text-slate-400">
+                <div className="flex shrink-0 items-center gap-1 font-mono text-[10px] text-slate-400 dark:text-slate-400">
                   <kbd className="kbd px-1.5 py-0.5 text-[10px]">⌘K</kbd>
                 </div>
               </button>
@@ -191,14 +181,14 @@ export function LandingPage(): JSX.Element {
           </CascadeDiv>
 
           {/* ─── Revision utilities ──────────────────────────────────────── */}
-          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             <CascadeDiv order={4} reduceMotion={reduceMotion} className="min-w-0">
               <DailyPearlCard />
             </CascadeDiv>
             <CascadeDiv order={5} reduceMotion={reduceMotion} className="min-w-0">
               <VisualAtlasCard />
             </CascadeDiv>
-            <CascadeDiv order={6} reduceMotion={reduceMotion} className="min-w-0">
+            <CascadeDiv order={6} reduceMotion={reduceMotion} className="min-w-0 md:col-span-2 xl:col-span-1">
               <RevisionEngineCard />
             </CascadeDiv>
           </div>
@@ -209,7 +199,7 @@ export function LandingPage(): JSX.Element {
         initial={reduceMotion ? false : { opacity: 0, y: 6, filter: 'blur(4px)' }}
         animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
         transition={withFilterTween({ type: 'spring', stiffness: 260, damping: 24, delay: 0.44 })}
-        className="px-6 pb-7 text-center"
+        className="px-6 pb-[calc(1.75rem_+_env(safe-area-inset-bottom))] text-center"
       >
         <span className="inline-flex items-center gap-2 rounded-full border border-slate-200/60 bg-white/50 px-4 py-1.5 font-mono text-[10px] tracking-[0.08em] text-slate-400 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-slate-500">
           <span className="h-1.5 w-1.5 rounded-full bg-[#34A853]" aria-hidden="true" />

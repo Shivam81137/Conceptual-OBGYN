@@ -49,7 +49,10 @@ export const createAiRouter = (aiLimiter: RequestHandler): Router => {
     asyncHandler(async (req: Request, res: Response) => {
       const query = typeof req.query.q === 'string' ? req.query.q : '';
       const track = typeof req.query.track === 'string' ? req.query.track : 'NEET_PG';
-      const topK = Math.min(Number(req.query.topK ?? 5) || 5, 20);
+      /* Clamp the page size: negatives previously flowed into the vector store
+         and produced empty/incorrect result pages. */
+      const parsedTopK = Number(req.query.topK ?? 5);
+      const topK = Math.min(Math.max(Number.isFinite(parsedTopK) ? Math.floor(parsedTopK) : 5, 1), 20);
 
       if (query.trim().length < 3) {
         throw new HttpError('VALIDATION_ERROR', 'Query parameter "q" must be at least 3 characters long.');

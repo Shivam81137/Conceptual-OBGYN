@@ -6,7 +6,9 @@ services:
     container_name: conceptual-obgyn-mongo
     restart: unless-stopped
     ports:
-      - "27017:27017"
+      # Loopback only: this compose file runs MongoDB without authentication, so
+      # it must never be reachable from other machines on the network.
+      - "127.0.0.1:27017:27017"
     environment:
       MONGO_INITDB_DATABASE: conceptual_obgyn
     volumes:

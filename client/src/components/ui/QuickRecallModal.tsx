@@ -117,7 +117,7 @@ export function QuickRecallModal(): JSX.Element {
     <AnimatePresence>
       {open ? (
         <motion.div
-          className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-[16vh]"
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto px-3 pb-[max(1rem,env(safe-area-inset-bottom))] pt-[10vh] sm:px-4 sm:pt-[16vh]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -137,12 +137,12 @@ export function QuickRecallModal(): JSX.Element {
             animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
             exit={{ opacity: 0, y: 6, scale: 0.98 }}
             transition={withFilterTween({ type: 'spring', stiffness: 260, damping: 24 })}
-            className="glass-capsule relative w-full max-w-lg rounded-3xl p-2"
+            className="glass-capsule relative flex max-h-[calc(100dvh_-_2rem)] w-full max-w-lg flex-col rounded-3xl p-2"
             onKeyDown={(event) => {
               if (event.key === 'Enter' && visibleItems[0]) choose(visibleItems[0]);
             }}
           >
-            <div className="flex items-center gap-2.5 px-3 pb-2 pt-2.5">
+            <div className="flex shrink-0 items-center gap-2.5 px-3 pb-2 pt-2.5">
               <svg className="h-4 w-4 shrink-0 text-[#4285F4]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clipRule="evenodd" />
               </svg>
@@ -152,14 +152,14 @@ export function QuickRecallModal(): JSX.Element {
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search pearls, 'MgSO4 toxicity', 'FIGO'…"
                 aria-label="Search recall topics"
-                className="h-8 w-full flex-1 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400 dark:text-slate-100"
+                className="h-8 w-full flex-1 bg-transparent text-base text-slate-800 outline-none placeholder:text-slate-400 sm:text-sm dark:text-slate-100"
               />
               <kbd className="kbd">ESC</kbd>
             </div>
 
-            <div className="mx-2 h-px bg-white/70 dark:bg-white/10" />
+            <div className="mx-2 h-px shrink-0 bg-white/70 dark:bg-white/10" />
 
-            <ul className="max-h-[330px] overflow-y-auto overscroll-contain p-2">
+            <ul className="max-h-[clamp(150px,calc(100dvh_-_15rem),330px)] min-h-0 flex-1 overflow-y-auto overscroll-contain p-2">
               {visibleSaved.length > 0 ? (
                 <li aria-hidden="true" className="flex items-center gap-1.5 px-3 pb-1 pt-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">
                   <Bookmark className="h-3 w-3" strokeWidth={2} />
@@ -226,7 +226,7 @@ export function QuickRecallModal(): JSX.Element {
               ) : null}
             </ul>
 
-            <div className="flex items-center justify-between px-4 pb-2 pt-0.5 font-mono text-[10px] text-slate-400">
+            <div className="flex shrink-0 items-center justify-between px-4 pb-2 pt-0.5 font-mono text-[10px] text-slate-400">
               <span className="inline-flex items-center gap-1">
                 <CornerDownLeft className="h-3 w-3" strokeWidth={1.5} aria-hidden="true" /> open
               </span>

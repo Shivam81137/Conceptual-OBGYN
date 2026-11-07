@@ -8,8 +8,6 @@ import {
   BookmarkCheck,
   BookOpen,
   Check,
-  CheckCircle2,
-  Circle,
   Copy,
   FileText,
   FileUp,
@@ -20,7 +18,6 @@ import {
   Paperclip,
   RotateCcw,
   ShieldCheck,
-  Sparkles,
   Stethoscope,
   X,
   Zap,
@@ -89,13 +86,6 @@ const TRACK_OPTIONS: ReadonlyArray<{ id: StudioTrack; title: string; subtitle: s
   { id: 'NEET_UG', title: 'UG', subtitle: 'NCERT + Core' },
   { id: 'NEET_PG', title: 'PG', subtitle: 'Williams + Shaw + Guidelines' },
 ];
-
-/** The three-beat clinical reasoning loop shown while the studio composes. */
-const THINKING_STEPS = [
-  'Scanning Williams Obstetrics & RCOG/FOGSI Guidelines...',
-  'Cross-referencing Shaw & Dutta high-yield tables...',
-  'Synthesizing High-Yield NEET Pearls...',
-] as const;
 
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 
@@ -245,11 +235,24 @@ const answerToPlainText = (request: StudioQuery, answer: StudioAnswer): string =
   return lines.join('\n');
 };
 
+/**
+ * Live answers often repeat the pearl as a 🎯 block before the core section,
+ * but the card already shows it in the banner. Drop the repeat so nothing is
+ * read twice — the core concept stays untouched.
+ */
+const stripRepeatedPearl = (markdown: string): string => {
+  const match = markdown.match(/(\*\*)?(🧠|Core Clinical Concept)/);
+  if (!match || match.index === undefined || match.index === 0) return markdown;
+  const head = markdown.slice(0, match.index);
+  if (!/pearl|🎯/i.test(head)) return markdown;
+  return markdown.slice(match.index).trimStart();
+};
+
 const apiPayloadToPlainText = (request: StudioQuery, payload: ObgynAssistPayload): string => {
   const lines: string[] = [`Conceptual OBGYN · ${trackLabelFor(request.track)} · ${modeLabelFor(request.mode)}`];
   if (request.query) lines.push(`Q: ${request.query}`);
   if (payload.meta.document) lines.push(`Source: ${payload.meta.document.name}`);
-  lines.push('', `🎯 High-Yield Exam Pearl: ${payload.highYieldPearl}`, '', payload.answer, '');
+  lines.push('', `🎯 High-Yield Exam Pearl: ${payload.highYieldPearl}`, '', stripRepeatedPearl(payload.answer), '');
   lines.push(`Sources: ${payload.sourceTag}`);
   if (payload.references.length > 0) {
     lines.push('References:');
@@ -274,10 +277,20 @@ const recallPearlToPlainText = (pearl: SavedPearl): string => {
 
 /* ------------------------------------------------------- answer rendering */
 
-function BlockTitle({ children }: { children: ReactNode }): JSX.Element {
+/** Picks a single contextual emoji for a section heading — never decorative noise. */
+const titleEmoji = (title: string, fallback: string): string => {
+  const key = title.toLowerCase();
+  if (key.includes('trap') || key.includes('mistake') || key.includes('pitfall')) return '⚠️';
+  if (key.includes('viva') || key.includes('clinical') || key.includes('anchor') || key.includes('application')) return '🩺';
+  if (key.includes('rapid') || key.includes('recall') || key.includes('flash')) return '⚡';
+  if (key.includes(' vs ') || key.includes('compare') || key.includes('map') || key.includes('phase')) return '📊';
+  return fallback;
+};
+
+function BlockTitle({ children, icon }: { children: ReactNode; icon: string }): JSX.Element {
   return (
     <div className="mb-2.5 flex items-center gap-2">
-      <span aria-hidden="true" className="h-1 w-4 shrink-0 rounded-full bg-gradient-to-r from-blue-500 to-teal-400" />
+      <span aria-hidden="true" className="text-[13px] leading-none">{icon}</span>
       <h4 className="text-xs font-semibold tracking-wide text-slate-700 dark:text-slate-200">{children}</h4>
     </div>
   );
@@ -352,7 +365,7 @@ function AnswerBlockView({ block }: { block: AnswerBlock }): JSX.Element {
     case 'bullets':
       return (
         <div>
-          <BlockTitle>{block.title}</BlockTitle>
+          <BlockTitle icon={titleEmoji(block.title, '🧠')}>{block.title}</BlockTitle>
           <ul className="space-y-2">
             {block.items.map((item) => (
               <li key={item} className="flex gap-2.5 text-[13px] leading-relaxed text-slate-600 dark:text-slate-300">
@@ -366,7 +379,7 @@ function AnswerBlockView({ block }: { block: AnswerBlock }): JSX.Element {
     case 'steps':
       return (
         <div>
-          <BlockTitle>{block.title}</BlockTitle>
+          <BlockTitle icon="🪜">{block.title}</BlockTitle>
           <ol className="space-y-2.5">
             {block.items.map((item, index) => (
               <li key={item} className="flex gap-2.5 text-[13px] leading-relaxed text-slate-600 dark:text-slate-300">
@@ -382,67 +395,34 @@ function AnswerBlockView({ block }: { block: AnswerBlock }): JSX.Element {
     case 'table':
       return (
         <div>
-          <BlockTitle>{block.title}</BlockTitle>
+          <BlockTitle icon="📊">{block.title}</BlockTitle>
           <AnswerTable block={block} />
         </div>
       );
     case 'flashcards':
       return (
         <div>
-          <BlockTitle>{block.title}</BlockTitle>
+          <BlockTitle icon="⚡">{block.title}</BlockTitle>
           <AnswerFlashcards block={block} />
         </div>
       );
   }
 }
 
-/* ---------------------------------------------------------- thinking panel */
+/* --------------------------------------------------------- composing status */
 
-function ThinkingPanel({ step }: { step: number }): JSX.Element {
+/** One honest status line while the answer is composed — no fake source list. */
+function ThinkingPanel(): JSX.Element {
   return (
-    <div role="status" aria-live="polite" className="flex flex-col gap-5 sm:flex-row sm:items-start">
-      <div className="flex-1 space-y-3">
-        <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">
-          Clinical reasoning in progress
-        </p>
-        {THINKING_STEPS.map((label, index) => {
-          const done = index < step;
-          const active = index === step;
-          return (
-            <motion.div
-              key={label}
-              initial={false}
-              animate={{ opacity: done ? 0.72 : active ? 1 : 0.38 }}
-              className="flex items-center gap-2.5"
-            >
-              {done ? (
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" strokeWidth={1.8} aria-hidden="true" />
-              ) : active ? (
-                <Loader2 className="h-4 w-4 shrink-0 animate-spin text-[#1A73E8] dark:text-[#8AB4F8]" strokeWidth={2} aria-hidden="true" />
-              ) : (
-                <Circle className="h-4 w-4 shrink-0 text-slate-300 dark:text-slate-600" strokeWidth={1.8} aria-hidden="true" />
-              )}
-              <span
-                className={cn(
-                  'text-[12.5px] font-medium',
-                  active ? 'text-slate-700 dark:text-slate-100' : 'text-slate-500 dark:text-slate-400',
-                )}
-              >
-                {label}
-              </span>
-            </motion.div>
-          );
-        })}
-      </div>
-      <div aria-hidden="true" className="hidden w-44 space-y-2.5 self-center sm:block">
-        {[96, 84, 90, 62].map((width, index) => (
-          <div
-            key={width}
-            className="h-2.5 animate-pulse rounded-full bg-slate-200/80 dark:bg-white/10"
-            style={{ width: `${width}%`, animationDelay: `${index * 140}ms` }}
-          />
-        ))}
-      </div>
+    <div role="status" aria-live="polite" className="flex items-center gap-2.5 py-1.5">
+      <Loader2
+        className="h-4 w-4 shrink-0 animate-spin text-[#1A73E8] dark:text-[#8AB4F8]"
+        strokeWidth={2}
+        aria-hidden="true"
+      />
+      <p className="text-[12.5px] font-medium text-slate-600 dark:text-slate-300">
+        Preparing a guideline-checked answer…
+      </p>
     </div>
   );
 }
@@ -476,16 +456,18 @@ function PearlBanner({ text, label = 'High-Yield Exam Pearl' }: { text: string; 
 }
 
 /** The 1-click deep-dive loop: 3 clickable glass pills under every answer. */
+const FOLLOW_UP_EMOJI = ['💬', '🔍', '📚'] as const;
+
 function FollowUpChips({ questions, onPick }: { questions: readonly string[]; onPick: (question: string) => void }): JSX.Element | null {
   if (questions.length === 0) return null;
   return (
     <div className="mt-4 border-t border-dashed border-slate-200/70 pt-3 dark:border-white/10">
       <span className="inline-flex items-center gap-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
-        <Sparkles className="h-3 w-3" aria-hidden="true" />
+        <span aria-hidden="true" className="text-[11px] leading-none">🧭</span>
         Keep exploring
       </span>
       <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-        {questions.map((question) => (
+        {questions.map((question, index) => (
           <motion.button
             key={question}
             type="button"
@@ -493,6 +475,9 @@ function FollowUpChips({ questions, onPick }: { questions: readonly string[]; on
             onClick={() => onPick(question)}
             className="chip-glass group flex min-h-[44px] w-full touch-manipulation items-start gap-2 rounded-xl px-3 py-2.5 text-left text-[12px] font-medium text-slate-600 transition-colors duration-150 hover:text-[#1A73E8] sm:inline-flex sm:min-h-0 sm:w-auto sm:items-center sm:gap-1.5 sm:rounded-full sm:py-1.5 sm:text-[11px] dark:text-slate-300 dark:hover:text-[#8AB4F8]"
           >
+            <span aria-hidden="true" className="mt-0.5 shrink-0 text-[12px] leading-none sm:mt-0">
+              {FOLLOW_UP_EMOJI[index % FOLLOW_UP_EMOJI.length]}
+            </span>
             <span className="line-clamp-2 min-w-0 flex-1 sm:line-clamp-1 sm:flex-none">{question}</span>
             <ArrowUpRight
               className="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-400 transition-transform duration-150 group-hover:-translate-y-px group-hover:translate-x-px group-hover:text-[#1A73E8] sm:mt-0 sm:h-3 sm:w-3 dark:group-hover:text-[#8AB4F8]"
@@ -550,11 +535,13 @@ function ReferencesRow({ references }: { references: readonly string[] }): JSX.E
 }
 
 /** Professional revision caveat shown under every answer. */
-function ClinicalDisclaimer(): JSX.Element {
+function ClinicalDisclaimer({ curated }: { curated: boolean }): JSX.Element {
   return (
     <p className="mt-3 flex items-start gap-1.5 text-[11px] leading-relaxed text-slate-400 sm:text-[10.5px] dark:text-slate-500">
       <ShieldCheck className="mt-px h-3 w-3 shrink-0 text-teal-500 dark:text-teal-400" strokeWidth={2} aria-hidden="true" />
-      AI-generated for UG / PG revision. Verify every dose, cut-off and guideline against the current primary source before clinical use.
+      {curated
+        ? 'Curated from vetted textbooks and guidelines for UG / PG revision. Confirm every dose and cut-off against the current primary source before clinical use.'
+        : 'AI-assisted for UG / PG revision. Confirm every dose, cut-off and guideline against the current primary source before clinical use.'}
     </p>
   );
 }
@@ -633,6 +620,18 @@ function ResultPanel({ request, result, copied, saved, onCopy, onClear, onFollow
       ? result.pearl.query || 'Saved pearl'
       : request.query || request.attachment?.name || 'Uploaded document';
 
+  /* One short, human line — the senior-resident voice, not decoration. */
+  const coachLine =
+    result.source === 'recall'
+      ? '🔖 Revisit this pearl whenever you have a spare minute — spaced recall wins.'
+      : request.mode === 'flashcards'
+        ? '⚡ Cover each answer, say it aloud, then check — active recall beats rereading.'
+        : request.mode === 'summarize'
+          ? '📄 Skim the bold lines first; they carry most of the marks.'
+          : request.track === 'NEET_UG'
+            ? '💪 You’ve got this — lock the pearl first, then the bold numbers.'
+            : '🩺 Exam-ready — focus on the bold numbers and the classic trap.';
+
   return (
     <div aria-live="polite">
       <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
@@ -648,11 +647,15 @@ function ResultPanel({ request, result, copied, saved, onCopy, onClear, onFollow
         </span>
       </div>
 
+      <p className="mt-2.5 text-[11.5px] font-medium leading-relaxed text-slate-500 dark:text-slate-400">
+        {coachLine}
+      </p>
+
       {result.source === 'api' ? (
         <>
           <PearlBanner text={result.payload.highYieldPearl} />
           <div className="mt-4 max-h-[56dvh] overflow-y-auto overscroll-contain pr-1 sm:max-h-[440px]">
-            <StudioMarkdown markdown={result.payload.answer} />
+            <StudioMarkdown markdown={stripRepeatedPearl(result.payload.answer)} />
           </div>
           <ReferencesRow references={result.payload.references} />
           <FollowUpChips questions={result.payload.followUpQuestions} onPick={onFollowUp} />
@@ -736,7 +739,9 @@ function ResultPanel({ request, result, copied, saved, onCopy, onClear, onFollow
         </>
       )}
 
-      <ClinicalDisclaimer />
+      <ClinicalDisclaimer
+        curated={result.source !== 'api' || result.payload.meta.engine === 'curated'}
+      />
     </div>
   );
 }
@@ -749,8 +754,8 @@ function ResultPanel({ request, result, copied, saved, onCopy, onClear, onFollow
  * The flagship "Free OBGYN AI Assistant & PDF Summarizer" glass studio that
  * sits under the UG / PG portals: an omnibox composer (mode pills,
  * drag-and-drop PDF zone, auto-expanding input), one-tap clinical starter
- * prompts, and an expandable frosted answer drawer with the 3-beat thinking
- * loader, 🎯 pearl banner, markdown comparison tables, 1-click follow-up
+ * prompts, and an expandable frosted answer drawer with a compact composing
+ * status, 🎯 pearl banner, markdown comparison tables, 1-click follow-up
  * pills and Save-to-Quick-Recall.
  *
  * Answers come from POST /api/v1/ai/obgyn-assist (multipart when a PDF is
@@ -780,7 +785,6 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
   const [composerFocused, setComposerFocused] = useState(false);
   const [summarizeHint, setSummarizeHint] = useState(false);
   const [phase, setPhase] = useState<'idle' | 'thinking' | 'ready'>('idle');
-  const [thinkingStep, setThinkingStep] = useState(0);
   const [pending, setPending] = useState<StudioQuery | null>(null);
   const [result, setResult] = useState<StudioResult | null>(null);
   const [copied, setCopied] = useState(false);
@@ -827,7 +831,6 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
     setPending({ query: revealPearl.query, mode: 'ask', track: revealPearl.track, attachment: null, attachmentText: null });
     setResult({ source: 'recall', pearl: revealPearl });
     setCopied(false);
-    setThinkingStep(0);
     setPhase('ready');
     setRevealPearl(null);
   }, [revealPearl, setRevealPearl]);
@@ -856,18 +859,6 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
     return () => window.clearTimeout(timer);
   }, [summarizeHint]);
 
-  /* The staged clinical-thinking loop: 3 beats while the answer composes. */
-  useEffect(() => {
-    if (phase !== 'thinking') return undefined;
-    const stepMs = reduceMotion ? 420 : 880;
-    const timers: number[] = [];
-    THINKING_STEPS.forEach((_, index) => {
-      if (index === 0) return;
-      timers.push(window.setTimeout(() => setThinkingStep(index), index * stepMs));
-    });
-    return () => timers.forEach((timer) => window.clearTimeout(timer));
-  }, [phase, reduceMotion]);
-
   /* Nudge the drawer into view once the answer lands. */
   useEffect(() => {
     if (phase !== 'ready') return undefined;
@@ -878,8 +869,6 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
   }, [phase, reduceMotion]);
 
   const executeStudio = async (request: StudioQuery, file: File | null, runId: number, signal: AbortSignal): Promise<void> => {
-    const minMs = reduceMotion ? 420 : 1900;
-    const startedAt = Date.now();
     const apiEligible = request.query.length > 0 || file !== null;
 
     let outcome: StudioResult;
@@ -902,8 +891,6 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
       outcome = { source: 'local', answer: resolveStudioAnswer(request) };
     }
 
-    const remaining = minMs - (Date.now() - startedAt);
-    if (remaining > 0) await new Promise((resolve) => window.setTimeout(resolve, remaining));
     if (runId !== runIdRef.current) return;
 
     setResult(outcome);
@@ -942,7 +929,6 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
     setPending(request);
     setResult(null);
     setCopied(false);
-    setThinkingStep(0);
     setPhase('thinking');
 
     void executeStudio(request, file, runId, controller.signal);
@@ -956,6 +942,13 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
       return;
     }
     const kind = resolveAttachmentKind(file);
+    /* Guard the drag-and-drop path (the picker's accept=.pdf,.txt,.png,.jpg
+       only filters the dialog): anything else would be uploaded verbatim to the
+       API and then rejected by the server's 415 file filter. */
+    if (kind !== 'image' && !/\.(pdf|txt)$/i.test(file.name)) {
+      setAttachError('Attach a .pdf or .txt document — other formats are not parsed.');
+      return;
+    }
     setAttachError(null);
     setAttachment({ name: file.name, sizeBytes: file.size, kind });
     attachmentFileRef.current = file;
@@ -1317,7 +1310,7 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
                 <div ref={drawerRef} className="pt-4 sm:pt-5">
                   <div className="rounded-2xl border border-white/70 bg-white/55 p-3.5 shadow-inner backdrop-blur-xl sm:p-4 md:p-5 dark:border-white/10 dark:bg-white/[0.04]">
                     {isThinking ? (
-                      <ThinkingPanel step={thinkingStep} />
+                      <ThinkingPanel />
                     ) : result && pending ? (
                       <ResultPanel
                         request={pending}

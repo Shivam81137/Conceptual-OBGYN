@@ -4,6 +4,9 @@ import { logger } from '../utils/logger.js';
 
 const REQUEST_ID_HEADER = 'x-request-id';
 const CACHE_SAFE_METHODS = new Set(['GET', 'HEAD']);
+/** Safe header/log characters only — stops malformed or spoofed correlation ids
+ *  from breaking res.setHeader (ERR_INVALID_CHAR) or polluting log lines. */
+const REQUEST_ID_RE = /^[a-zA-Z0-9][a-zA-Z0-9_\-.]{0,63}$/;
 
 /**
  * Correlation + access logging. Every response carries `x-request-id`, which the
@@ -11,7 +14,7 @@ const CACHE_SAFE_METHODS = new Set(['GET', 'HEAD']);
  */
 export const requestContext = (): RequestHandler => (req, res, next) => {
   const inbound = req.header(REQUEST_ID_HEADER);
-  req.requestId = inbound && inbound.length <= 64 ? inbound : randomUUID();
+  req.requestId = inbound && REQUEST_ID_RE.test(inbound) ? inbound : randomUUID();
   req.startedAt = performance.now();
   res.setHeader(REQUEST_ID_HEADER, req.requestId);
   res.setHeader('X-Content-Type-Options', 'nosniff');

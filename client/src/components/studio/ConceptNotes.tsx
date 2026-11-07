@@ -104,7 +104,7 @@ function FlowSteps({ steps, theme }: { steps: readonly string[]; theme: StudioTr
 function ComparisonTable({ table }: { table: StudioNoteTable }): JSX.Element {
   return (
     <div className="mt-3 overflow-x-auto rounded-2xl border border-slate-900/[0.07] bg-white/45 dark:border-white/[0.08] dark:bg-white/[0.03]">
-      <table className="w-full border-collapse text-left">
+      <table className="w-full min-w-[440px] border-collapse text-left">
         <thead>
           <tr className="bg-slate-900/[0.035] dark:bg-white/[0.05]">
             {table.head.map((cell) => (

@@ -1,44 +1,44 @@
-import { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { RotateCw } from 'lucide-react';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { cn } from '@/lib/utils';
-
-interface Pearl {
-  text: string;
-  tag: string;
-}
-
-/** Four curated one-liners — each fits two lines at reading size. */
-const PEARLS: readonly Pearl[] = [
-  {
-    text: 'Bishop Score ≥ 8 indicates a favorable cervix with high likelihood of successful induction.',
-    tag: 'OBSTETRICS',
-  },
-  {
-    text: 'Loss of deep tendon reflexes precedes MgSO4 respiratory depression — antidote: calcium gluconate 10%.',
-    tag: 'TOXICITY',
-  },
-  {
-    text: 'Platelets < 1 lakh with rising LDH in severe preeclampsia means HELLP — stabilise, then deliver.',
-    tag: 'HIGH-RISK OB',
-  },
-  {
-    text: 'Parametrial spread in cervical carcinoma upgrades to FIGO IIB — chemoradiation, not surgery.',
-    tag: 'ONCOLOGY',
-  },
-];
+import { CLASSIC_PEARLS, PEARL_BY_ID } from '@/data/classicPearls';
+import {
+  initialiseRotation,
+  loadRotation,
+  nextPearl,
+  saveRotation,
+  type PearlRotationState,
+} from '@/lib/pearlRotation';
 
 /**
  * DailyPearlCard
  * ---------------------------------------------------------------------------
- * One high-yield line per glance. Google-style accent chip + glass refresh.
+ * One classical, exam-accurate line per glance.
+ *
+ * The bank (`data/classicPearls.ts`) is rotated with a persisted shuffle-bag
+ * (`lib/pearlRotation.ts`):
+ *   · the first pearl of each day is stable across reloads;
+ *   · the refresh button always draws an unseen line, right through the whole
+ *     bank before anything repeats;
+ *   · a pearl never appears twice in a row, and reloading no longer resets the
+ *     card to the same line.
  */
 export function DailyPearlCard({ className }: { className?: string }): JSX.Element {
-  const [index, setIndex] = useState(0);
-  const pearl = PEARLS[index];
+  const [rotation, setRotation] = useState<PearlRotationState>(() =>
+    initialiseRotation(CLASSIC_PEARLS, loadRotation(), new Date()),
+  );
 
-  const advance = (): void => setIndex((current) => (current + 1) % PEARLS.length);
+  /* Persist after render — the updater below stays pure (React StrictMode safe). */
+  useEffect(() => {
+    saveRotation(rotation);
+  }, [rotation]);
+
+  const pearl = PEARL_BY_ID.get(rotation.currentId) ?? CLASSIC_PEARLS[0];
+
+  const advance = (): void => {
+    setRotation((current) => nextPearl(CLASSIC_PEARLS, current, new Date()));
+  };
 
   return (
     <GlassCard className={cn('flex h-40 flex-col p-5', className)}>
@@ -50,8 +50,8 @@ export function DailyPearlCard({ className }: { className?: string }): JSX.Eleme
         <button
           type="button"
           onClick={advance}
-          aria-label="Next pearl"
-          className="group/next grid h-7 w-7 place-items-center rounded-full border border-slate-200/70 bg-white/70 text-slate-500 transition-all duration-150 hover:border-[#4285F4]/30 hover:bg-[#4285F4]/10 hover:text-[#1A73E8] dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-400 dark:hover:text-[#8AB4F8]"
+          aria-label="Next classical pearl"
+          className="group/next grid h-8 w-8 place-items-center rounded-full border border-slate-200/70 bg-white/70 text-slate-500 transition-all duration-150 hover:border-[#4285F4]/30 hover:bg-[#4285F4]/10 hover:text-[#1A73E8] dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-400 dark:hover:text-[#8AB4F8]"
         >
           <RotateCw
             className="h-3.5 w-3.5 transition-transform duration-500 group-hover/next:rotate-180"
@@ -61,22 +61,17 @@ export function DailyPearlCard({ className }: { className?: string }): JSX.Eleme
         </button>
       </div>
 
-      <div className="mt-2.5 flex-1">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.p
-            key={pearl.text}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="line-clamp-2 text-[13px] leading-snug text-slate-600 dark:text-slate-300"
-          >
-            {pearl.text}
-          </motion.p>
-        </AnimatePresence>
+      <div className="mt-2.5 flex-1" role="status" aria-live="polite">
+        <p
+          key={pearl.id}
+          title={pearl.text}
+          className="pearl-enter line-clamp-3 text-[12.5px] leading-snug text-slate-600 dark:text-slate-300"
+        >
+          {pearl.text}
+        </p>
       </div>
 
-      <span className="inline-flex items-center rounded-full border border-[#4285F4]/20 bg-[#4285F4]/08 px-2 py-0.5 font-mono text-[9px] tracking-[0.12em] text-[#1A73E8] dark:border-[#8AB4F8]/20 dark:text-[#8AB4F8]">
+      <span className="inline-flex w-fit items-center rounded-full border border-[#4285F4]/20 bg-[#4285F4]/08 px-2 py-0.5 font-mono text-[9px] tracking-[0.12em] text-[#1A73E8] dark:border-[#8AB4F8]/20 dark:text-[#8AB4F8]">
         {pearl.tag}
       </span>
     </GlassCard>

@@ -21,6 +21,7 @@ export const PLACENTA_PRAEVIA_PAS_MODULE: StudioModule = {
   shortTitle: 'Placenta Praevia · PAS',
   summary:
     'RCOG GTG 27a + FIGO in one vault: placenta praevia vs the < 20 mm low-lying placenta, Silver’s 3% → 67% prior-CS escalation, FIGO grades 1–3c, the lacunae/clear-zone/bridging-vessel ultrasound signature, the 18–21 → 32 → 36-week TVS protocol, steroid and delivery windows, and the NPSA 6-element bundle with caesarean hysterectomy or Triple-P.',
+  tagline: 'FIGO grading, TVS cutoffs and delivery timing.',
   highYield: true,
   weightage: 'Very High Yield',
   durationMinutes: 45,

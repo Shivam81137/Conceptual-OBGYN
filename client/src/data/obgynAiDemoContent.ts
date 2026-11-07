@@ -78,24 +78,24 @@ export interface StarterPrompt {
 export const STUDIO_STARTER_PROMPTS: readonly StarterPrompt[] = [
   {
     id: 'aph-table',
-    label: 'Previa vs Abruptio',
+    label: '🩸 Previa vs Abruptio',
     query: 'Placenta previa vs abruptio placentae comparison',
   },
   {
     id: 'menstrual-axis',
-    label: 'Menstrual Axis',
+    label: '📈 Menstrual Axis',
     query: 'Explain the menstrual hormonal axis',
     track: 'NEET_UG',
   },
   {
     id: 'pph-protocol',
-    label: 'PPH Protocol',
+    label: '🚨 PPH Protocol',
     query: 'Postpartum haemorrhage stepwise management protocol',
     track: 'NEET_PG',
   },
   {
     id: 'figo-endometrial',
-    label: 'FIGO Staging',
+    label: '🎗️ FIGO Staging',
     query: 'FIGO endometrial cancer staging summary',
   },
 ];

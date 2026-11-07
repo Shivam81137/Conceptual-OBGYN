@@ -26,6 +26,7 @@ export const TORCH_INFECTIONS_MODULE: StudioModule = {
   shortTitle: 'TORCH',
   summary:
     'The complete congenital-infection vault: serology and IgG avidity, the 18–20-week amniotic-PCR gateway, the fetal ultrasound signature, and toxoplasmosis, syphilis, rubella, CMV, HSV, parvovirus B19 and VZV — with every treatment regimen, gestational cutoff and examiner trap.',
+  tagline: 'Serology, avidity and the amniotic-PCR gateway.',
   highYield: true,
   weightage: 'Very High Yield',
   durationMinutes: 45,

@@ -67,7 +67,9 @@ export const revisionController = new RevisionController();
 export const createRevisionRouter = (readLimiter: RequestHandler): Router => {
   const router = Router();
   router.get('/modules', readLimiter, validate({ query: revisionModuleQuerySchema }), revisionController.listModules);
-  router.post('/reviews', validate({ body: scheduleReviewBodySchema }), revisionController.scheduleReview);
+  /* The SM-2 scheduler is stateless and cheap, but there is no reason for the
+     review endpoint to be the only un-throttled POST in the API. */
+  router.post('/reviews', readLimiter, validate({ body: scheduleReviewBodySchema }), revisionController.scheduleReview);
   return router;
 };
 

@@ -67,9 +67,13 @@ export async function apiRequest<TSchema extends z.ZodTypeAny>(
   const controller = new AbortController();
   const timeout = window.setTimeout(() => controller.abort('timeout'), timeoutMs);
 
+  /* Relay the caller's abort into the local controller. The listener is detached
+     again when the request settles — without this every call leaks a listener on
+     long-lived (component-scoped) signals. */
+  const relayAbort = (): void => controller.abort(signal?.reason);
   if (signal) {
     if (signal.aborted) controller.abort(signal.reason);
-    else signal.addEventListener('abort', () => controller.abort(signal.reason), { once: true });
+    else signal.addEventListener('abort', relayAbort, { once: true });
   }
 
   const url = path.startsWith('http') ? path : `${API_BASE_URL}${path.startsWith('/') ? path : `/${path}`}`;
@@ -129,5 +133,6 @@ export async function apiRequest<TSchema extends z.ZodTypeAny>(
     );
   } finally {
     window.clearTimeout(timeout);
+    signal?.removeEventListener('abort', relayAbort);
   }
 }

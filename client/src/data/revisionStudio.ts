@@ -98,6 +98,8 @@ export interface StudioModule {
   title: string;
   shortTitle: string;
   summary: string;
+  /** One-line directory tagline — shorter and sharper than the full summary. */
+  tagline?: string;
   highYield: boolean;
   weightage: string;
   durationMinutes: number;
@@ -173,6 +175,7 @@ export const STUDIO_MODULES: readonly StudioModule[] = [
     shortTitle: 'Menstrual Axis',
     summary:
       'The 28-day ovarian and endometrial loop: two-cell two-gonadotropin steroidogenesis, feedback switching, ovulation timing and the endometrial read-out.',
+    tagline: 'Two-cell steroidogenesis and ovulation timing.',
     highYield: true,
     weightage: 'High Yield',
     durationMinutes: 18,
@@ -304,6 +307,7 @@ export const STUDIO_MODULES: readonly StudioModule[] = [
     shortTitle: 'Gametogenesis',
     summary:
       'Oocyte arrest points, spermatogenesis, capacitation and the fertilisation cascade through morula, blastocyst and the implantation window.',
+    tagline: 'Oocyte arrest and the fertilisation cascade.',
     highYield: true,
     weightage: 'High Yield',
     durationMinutes: 16,
@@ -437,6 +441,7 @@ export const STUDIO_MODULES: readonly StudioModule[] = [
     shortTitle: 'Placenta',
     summary:
       'Trophoblast invasion, spiral-artery remodelling, the histiotrophic-to-haemotrophic switch, placental hormones and barrier function.',
+    tagline: 'Trophoblast invasion and spiral-artery remodelling.',
     highYield: true,
     weightage: 'High Yield',
     durationMinutes: 15,
@@ -565,6 +570,7 @@ export const STUDIO_MODULES: readonly StudioModule[] = [
     shortTitle: 'Lactation & Labour',
     summary:
       'Lactogenesis and the milk-ejection reflex, the onset of labour and Ferguson reflex, and the mechanism-first contraception ladder.',
+    tagline: 'Lactogenesis, Ferguson reflex and contraception.',
     highYield: true,
     weightage: 'High Yield',
     durationMinutes: 17,

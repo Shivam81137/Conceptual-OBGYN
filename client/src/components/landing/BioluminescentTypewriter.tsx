@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { usePrefersReducedMotion } from '@/hooks/useEnvironment';
 import { cn } from '@/lib/utils';
 
 export interface TypewriterPhrase {
@@ -11,7 +11,11 @@ export interface TypewriterPhrase {
   subtitle: string;
 }
 
-// Mobile-optimized clinical phrases: concise high-yield headings that fit cleanly on small viewports
+/**
+ * Clinical headline rotation. Every line is short enough to sit on one row at
+ * desktop width and at most two rows on a 320 px phone, so the reserved hero
+ * height never has to grow mid-cycle.
+ */
 export const OBGYN_PHRASES: readonly TypewriterPhrase[] = [
   {
     prefix: 'Decode',
@@ -53,132 +57,166 @@ export const OBGYN_PHRASES: readonly TypewriterPhrase[] = [
     dotColor: '#2563eb',
     subtitle: 'High-yield differential diagnoses engineered for the UG and PG tracks.',
   },
+  {
+    prefix: 'Read',
+    phrase: 'CTG Traces.',
+    gradient: 'from-teal-700 via-emerald-600 to-lime-600 dark:from-teal-300 dark:via-emerald-300 dark:to-lime-300',
+    caretColor: '#0d9488',
+    dotColor: '#0d9488',
+    subtitle: 'Baseline rate, variability, decelerations — and when to intervene.',
+  },
+  {
+    prefix: 'Stage',
+    phrase: 'Endometriosis.',
+    gradient: 'from-fuchsia-700 via-purple-600 to-indigo-600 dark:from-fuchsia-400 dark:via-purple-300 dark:to-indigo-300',
+    caretColor: '#c026d3',
+    dotColor: '#c026d3',
+    subtitle: 'Revised ASRM staging, pain mapping, and fertility planning.',
+  },
+  {
+    prefix: 'Recall',
+    phrase: 'Drug Doses.',
+    gradient: 'from-amber-700 via-orange-600 to-rose-600 dark:from-amber-300 dark:via-orange-300 dark:to-rose-300',
+    caretColor: '#d97706',
+    dotColor: '#d97706',
+    subtitle: 'MgSO₄, oxytocin, tranexamic acid — the exact numbers examiners ask.',
+  },
 ];
+
+/* Typing cadence — deliberately even, so the caret never stutters. */
+const TYPE_HEADLINE_MS = 46;
+const HOLD_MS = 2600;
+const ERASE_HEADLINE_MS = 18;
+const GAP_MS = 360;
+const REDUCED_HOLD_MS = 6000;
+
+type Phase = 'headline' | 'hold' | 'erase' | 'gap';
 
 interface BioluminescentTypewriterProps {
   onPhraseChange?: (phrase: TypewriterPhrase, index: number) => void;
   className?: string;
 }
 
+/**
+ * BioluminescentTypewriter
+ * ---------------------------------------------------------------------------
+ * The headline types character by character; the supporting line arrives with
+ * a blur-to-clear reveal at the very same beat, so both lines always describe
+ * the same phrase.
+ *
+ * The hero reserves its height up front (headline + two subtitle rows), so the
+ * cycle can never push the search bar or the cards below it around — the
+ * effect stays lively, the page stays still.
+ */
 export function BioluminescentTypewriter({
   onPhraseChange,
   className,
 }: BioluminescentTypewriterProps): JSX.Element {
-  const [phraseIndex, setPhraseIndex] = useState(0);
-  const [displayedText, setDisplayedText] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
+  const reduceMotion = usePrefersReducedMotion();
+  const [index, setIndex] = useState(0);
+  const [phase, setPhase] = useState<Phase>('headline');
+  const [headlineCount, setHeadlineCount] = useState(0);
 
-  const activePhrase = OBGYN_PHRASES[phraseIndex];
-
-  useEffect(() => {
-    onPhraseChange?.(activePhrase, phraseIndex);
-  }, [activePhrase, phraseIndex, onPhraseChange]);
+  const active = OBGYN_PHRASES[index];
+  const fullHeadline = `${active.prefix} ${active.phrase}`;
 
   useEffect(() => {
+    onPhraseChange?.(active, index);
+  }, [active, index, onPhraseChange]);
+
+  useEffect(() => {
+    if (reduceMotion) return undefined;
+
     let timer: ReturnType<typeof setTimeout>;
 
-    if (isPaused) {
-      timer = setTimeout(() => {
-        setIsPaused(false);
-        setIsDeleting(true);
-      }, 2400);
-      return () => clearTimeout(timer);
-    }
-
-    if (!isDeleting) {
-      if (displayedText.length < activePhrase.phrase.length) {
+    switch (phase) {
+      case 'headline':
+        if (headlineCount < fullHeadline.length) {
+          timer = setTimeout(() => setHeadlineCount((count) => count + 1), TYPE_HEADLINE_MS);
+        } else {
+          timer = setTimeout(() => setPhase('hold'), 180);
+        }
+        break;
+      case 'hold':
+        timer = setTimeout(() => setPhase('erase'), HOLD_MS);
+        break;
+      case 'erase':
+        if (headlineCount > 0) {
+          timer = setTimeout(() => setHeadlineCount((count) => count - 1), ERASE_HEADLINE_MS);
+        } else {
+          timer = setTimeout(() => setPhase('gap'), 60);
+        }
+        break;
+      case 'gap':
         timer = setTimeout(() => {
-          setDisplayedText(activePhrase.phrase.slice(0, displayedText.length + 1));
-        }, 55);
-      } else {
-        setIsPaused(true);
-      }
-    } else {
-      if (displayedText.length > 0) {
-        timer = setTimeout(() => {
-          setDisplayedText(displayedText.slice(0, -1));
-        }, 22);
-      } else {
-        setIsDeleting(false);
-        setPhraseIndex((prev) => (prev + 1) % OBGYN_PHRASES.length);
-      }
+          setIndex((current) => (current + 1) % OBGYN_PHRASES.length);
+          setPhase('headline');
+        }, GAP_MS);
+        break;
     }
 
     return () => clearTimeout(timer);
-  }, [displayedText, isDeleting, isPaused, activePhrase.phrase]);
+  }, [phase, headlineCount, fullHeadline.length, reduceMotion]);
 
-  const characters = displayedText.split('');
+  /* Reduced motion: one calm, complete phrase at a time — no character churn. */
+  useEffect(() => {
+    if (!reduceMotion) return undefined;
+    const timer = setTimeout(() => setIndex((current) => (current + 1) % OBGYN_PHRASES.length), REDUCED_HOLD_MS);
+    return () => clearTimeout(timer);
+  }, [reduceMotion, index]);
+
+  const headlineText = reduceMotion ? fullHeadline : fullHeadline.slice(0, headlineCount);
+  const prefixText = headlineText.slice(0, Math.min(headlineText.length, active.prefix.length));
+  /* Strip the leading space so spacing between prefix and phrase is controlled
+     by an explicit gap on the flex container instead of a fragile leading
+     whitespace character inside a flex item (which browsers collapse
+     inconsistently). */
+  const phraseText = headlineText.slice(active.prefix.length).replace(/^\s+/, '');
+  const isHolding = reduceMotion || phase === 'hold';
+  const isErasing = phase === 'erase' || phase === 'gap';
+  const caretVisible = reduceMotion || phase !== 'gap';
 
   return (
     <div className={cn('relative flex w-full flex-col items-center justify-center px-1 text-center sm:px-2', className)}>
-      {/* ── Main Big Display Heading (Zero layout jitter, responsive typography) ── */}
-      <h1 className="relative flex min-h-[1.3em] w-full max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-0.5 text-center font-display text-2xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
-        {/* Dynamic Contextual Action Prefix */}
-        <span className="shrink-0 text-slate-900 select-none dark:text-slate-100">
-          {activePhrase.prefix}{' '}
-        </span>
-
-        {/* Crisp typographic phrase without overflowing */}
-        <span className="relative inline-flex max-w-full items-center">
-          <span className="relative z-10 inline-flex flex-wrap items-baseline justify-center">
-            {characters.map((char, index) => {
-              const isNewlyTyped = !isDeleting && !isPaused && index === characters.length - 1;
-
-              return (
-                <motion.span
-                  key={`${phraseIndex}-${index}-${char}`}
-                  initial={
-                    isNewlyTyped
-                      ? { opacity: 0, y: 3 }
-                      : false
-                  }
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.12, ease: 'easeOut' }}
-                  className={cn(
-                    'inline-block bg-gradient-to-r bg-clip-text font-bold text-transparent',
-                    activePhrase.gradient,
-                  )}
-                >
-                  {char === ' ' ? '\u00A0' : char}
-                </motion.span>
-              );
-            })}
+      {/* Headline — height reserved for one row at every width. */}
+      <h1 className="flex min-h-[1.2em] w-full max-w-full flex-wrap items-center justify-center text-center font-display text-[clamp(1.35rem,6.2vw,3.5rem)] font-bold leading-[1.14] tracking-tight">
+        <span className="sr-only">{fullHeadline}</span>
+        <span aria-hidden="true" className="inline-flex flex-wrap items-baseline justify-center gap-x-1.5 sm:gap-x-2">
+          <span className="text-slate-900 dark:text-slate-100">{prefixText}</span>
+          <span className={cn('bg-gradient-to-r bg-clip-text text-transparent', active.gradient)}>
+            {phraseText}
           </span>
-
-          {/* Crisp, professional clinical cursor */}
-          <motion.span
-            animate={
-              isPaused
-                ? { opacity: [1, 0.15, 1] }
-                : { opacity: 1 }
-            }
-            transition={
-              isPaused
-                ? { duration: 0.9, repeat: Infinity, ease: 'easeInOut' }
-                : { duration: 0.1 }
-            }
-            className="ml-1 inline-block h-[0.8em] w-[2.5px] self-center rounded-full sm:ml-1.5 sm:w-[3.5px] md:w-[4px]"
-            style={{ backgroundColor: activePhrase.caretColor }}
+          <span
             aria-hidden="true"
+            className={cn(
+              'inline-block h-[0.78em] w-[2px] shrink-0 self-center rounded-full sm:w-[3px]',
+              isHolding && 'caret-blink',
+              !caretVisible && 'opacity-0',
+            )}
+            style={{ backgroundColor: active.caretColor }}
           />
         </span>
       </h1>
 
-      {/* ── Synchronized Professional Clinical Subtitle ── */}
-      <div className="relative mt-2.5 min-h-[2.5rem] w-full max-w-xl px-2 sm:mt-3.5">
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={activePhrase.phrase}
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.28, ease: 'easeOut' }}
-            className="text-xs font-normal leading-relaxed text-slate-600 sm:text-base md:text-lg dark:text-slate-300"
+      {/* Supporting line — blur-to-clear on the same beat as the headline. */}
+      <div className="mt-3 flex min-h-[3.4em] w-full max-w-4xl items-start justify-center px-2 sm:mt-4 sm:min-h-[1.8em]">
+        <div
+          className={cn(
+            'transition-[opacity,filter] duration-300 ease-out',
+            isErasing && !reduceMotion && 'opacity-0 blur-[6px]',
+          )}
+        >
+          <p
+            key={index}
+            className={cn(
+              'text-[clamp(0.8rem,2.4vw,1.05rem)] font-normal leading-relaxed text-slate-600 dark:text-slate-300',
+              !reduceMotion && 'subtitle-reveal',
+            )}
           >
-            {activePhrase.subtitle}
-          </motion.p>
-        </AnimatePresence>
+            <span className="sr-only">{active.subtitle}</span>
+            <span aria-hidden="true">{active.subtitle}</span>
+          </p>
+        </div>
       </div>
     </div>
   );

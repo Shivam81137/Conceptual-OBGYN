@@ -21,6 +21,7 @@ export const FGR_GUIDELINE_442_MODULE: StudioModule = {
   shortTitle: 'FGR · SOGC 442',
   summary:
     'SOGC No. 442 + Gordijn Delphi in one vault: constitutional SGA vs pathological FGR, early (< 32w) vs late (≥ 32w) criteria, PlGF < 100 pg/mL and sFlt-1/PlGF > 38–85, bedtime aspirin before 16 weeks, the UtA → UA → MCA/CPR → DV Doppler cascade, AEDF/REDF villous thresholds, TRUFFLE cCTG STV and the 30–39-week delivery ladder.',
+  tagline: 'Delphi SGA vs FGR, PlGF and the Doppler cascade.',
   highYield: true,
   weightage: 'Very High Yield',
   durationMinutes: 45,

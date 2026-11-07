@@ -84,8 +84,14 @@ TRACK DEPTH
 - UG: NCERT Class 12 depth — definitions, physiology, classical signs, plain language.
 - PG: examinable clinical depth — criteria, staging, investigations, doses, management steps and complications.
 
+VOICE & RAPPORT
+- Teach like a supportive senior resident: warm, direct, second person ("you"), never condescending.
+- One short encouraging clause is allowed (e.g. "This is a classic exam favourite 💪"), never a paragraph of praise.
+- Use the three section emojis above and at most two extra context emojis (🩺 ⚠️ 📊). Never decorate every line.
+- Organise for 30-second revision: one idea per bullet, bold every number, no wall of text.
+
 STYLE
-- No introduction, no "great question", no repetition, no filler, no preview of what you are about to write.
+- No preamble, no "great question", no repetition, no filler, no preview of what you are about to write.
 - Markdown only inside "answer": bold clinical keywords, tables for comparisons, clean formatting, no stray asterisks.
 - Length: 150-260 words for a focused question; up to 400 when the question asks for a full protocol or comparison.
 
@@ -255,10 +261,10 @@ Output shape: {"answer":"...","highYieldPearl":"...","followUpQuestions":["...",
  */
 const POLLINATIONS_COMPACT_CONTRACT = `
 Conciseness override (mandatory for this engine):
-- Keep "answer" under 160 words using exactly the three bold headers above.
+- Keep "answer" under 140 words using exactly the three bold headers above.
 - One or two bullets per section; no introduction and no repetition.
 - Keep every follow-up question under 12 words.
-- The whole JSON object must stay well under 1200 tokens.`;
+- The whole JSON object must stay well under 1000 tokens.`;
 
 /** A failed provider is parked for a cooldown so one dead endpoint can't stall every request. */
 const PROVIDER_COOLDOWN_MS = 3 * 60_000;
@@ -541,8 +547,14 @@ export class ObgynAiService {
     let engine: ObgynAssistAnswer['meta']['engine'] = 'curated';
     let model: string | null = null;
 
+    /* Speed + accuracy fast lane: the six core topics are already vetted in the
+       curated vault, so answer them instantly instead of waiting on a live model.
+       Uploaded documents and open-ended questions still use the provider chain. */
+    const vaultTopic =
+      !attachment && request.mode !== 'summarize_pdf' ? detectObgynTopic(request.prompt) : null;
+
     /* Summarize mode without a readable document never wastes a model call. */
-    const liveEligible = !(request.mode === 'summarize_pdf' && !document);
+    const liveEligible = !(request.mode === 'summarize_pdf' && !document) && !vaultTopic;
 
     interface ProviderAttempt {
       engine: Exclude<ObgynAssistAnswer['meta']['engine'], 'curated'>;
@@ -830,7 +842,7 @@ export class ObgynAiService {
          JSON extraction (parseLlmPayload tolerates prose/fences around the object).
          Pollinations' json_schema mode returns empty content, but json_object works. */
       const responseFormat = engine === 'groq' ? undefined : ({ type: 'json_object' } as const);
-      const maxTokens = engine === 'groq' ? 3600 : engine === 'pollinations' ? 1500 : 2600;
+      const maxTokens = engine === 'groq' ? 3600 : engine === 'pollinations' ? 1300 : 2600;
       const reasoningEffort =
         engine === 'pollinations' || (engine === 'groq' && /gpt-oss/i.test(model)) ? 'low' : undefined;
 

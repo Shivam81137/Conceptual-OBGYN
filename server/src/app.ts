@@ -8,6 +8,7 @@ import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { requestContext } from './middleware/requestContext.js';
 import { createApiRouter } from './routes/index.js';
 import { tracksService } from './modules/tracks/tracks.service.js';
+import { HttpError } from './utils/httpError.js';
 
 /**
  * Builds the Express application.
@@ -47,7 +48,10 @@ export const createApp = (): Application => {
     origin: (origin, callback) => {
       if (!origin) return callback(null, true); // same-origin / server-to-server / curl
       if (isOriginAllowed(origin)) return callback(null, true);
-      return callback(new Error(`Origin ${origin} is not permitted by the CORS policy.`));
+      /* A proper HttpError (403) instead of a generic Error: the previous
+         behaviour surfaced CORS denials as 500 INTERNAL_ERROR envelopes and
+         logged them as >=500 failures. */
+      return callback(new HttpError('VALIDATION_ERROR', `Origin ${origin} is not permitted by the CORS policy.`, { status: 403 }));
     },
     methods: ['GET', 'POST', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-Id'],
@@ -65,7 +69,7 @@ export const createApp = (): Application => {
   /* ----------------------------------------------------------------- health */
   app.get('/health', (_req: Request, res: Response) => {
     const database = getDatabaseStatus();
-    res.status(database.ready || !env.MONGODB_URI ? 200 : 200).json({
+    res.status(200).json({
       success: true,
       service: 'conceptual-obgyn-api',
       version: '1.0.0',

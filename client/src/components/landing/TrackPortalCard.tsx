@@ -67,7 +67,7 @@ export function TrackPortalCard({ data }: TrackPortalCardProps): JSX.Element {
       aria-label={`${data.title} track portal`}
       className={cn(
         'group relative flex h-full flex-col justify-between overflow-hidden rounded-[32px] text-left',
-        'min-h-[360px] p-8 sm:p-9 md:p-11',
+        'min-h-[320px] p-5 sm:min-h-[360px] sm:p-8 md:p-10',
         'glass-card glass-card-rigid',
       )}
     >
@@ -135,7 +135,7 @@ export function TrackPortalCard({ data }: TrackPortalCardProps): JSX.Element {
         </div>
 
         {/* ─── Middle: title + scope ───────────────────────────────────── */}
-        <h2 className="relative mt-7 font-display text-3xl font-bold tracking-tight text-slate-900 md:text-4xl dark:text-slate-100">
+        <h2 className="relative mt-6 font-display text-[clamp(1.625rem,5vw,2.25rem)] font-bold tracking-tight text-slate-900 sm:mt-7 dark:text-slate-100">
           {data.title}
         </h2>
         <p className="relative mt-2 text-base text-slate-500 dark:text-slate-400">
@@ -163,7 +163,7 @@ export function TrackPortalCard({ data }: TrackPortalCardProps): JSX.Element {
       </div>
 
       {/* ─── Footer bar ─────────────────────────────────────────────── */}
-      <div className="relative mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-slate-200/60 pt-5 dark:border-white/[0.09]">
+      <div className="relative mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200/60 pt-4 sm:mt-8 sm:gap-4 sm:pt-5 dark:border-white/[0.09]">
         <span
           className={cn(
             'inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-semibold backdrop-blur-md',
@@ -178,12 +178,12 @@ export function TrackPortalCard({ data }: TrackPortalCardProps): JSX.Element {
           {data.moduleLabel}
         </span>
 
-        <div className="flex items-center gap-2">
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
           <a
             href={data.href}
             onClick={(event) => interceptNavigation(event, data.href)}
             className={cn(
-              'inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold text-white shadow-lg transition-transform duration-150 hover:scale-105 active:scale-95',
+              'inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-semibold text-white shadow-lg transition-transform duration-150 hover:scale-105 active:scale-95 sm:px-5 sm:text-sm',
               data.studioButtonGradient,
             )}
           >
@@ -195,7 +195,7 @@ export function TrackPortalCard({ data }: TrackPortalCardProps): JSX.Element {
             href={data.href}
             onClick={(event) => interceptNavigation(event, data.href)}
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-200',
+              'inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[13px] font-semibold transition-all duration-200 sm:px-4 sm:text-sm',
               'bg-slate-900/[0.04] text-slate-700 hover:bg-slate-900/[0.08] hover:text-slate-900',
               'dark:bg-white/[0.08] dark:text-slate-200 dark:hover:bg-white/[0.14] dark:hover:text-white',
             )}
