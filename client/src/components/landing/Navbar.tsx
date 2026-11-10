@@ -63,13 +63,14 @@ export function Navbar(): JSX.Element {
       lastScrollY.current = y;
       setElevated(y > 6);
 
-      if (!primed.current) {
-        primed.current = true;
-        return;
-      }
       /* Studio views keep the bar hidden regardless of scroll direction. */
       if (isStudio) {
+        primed.current = true;
         setHidden(true);
+        return;
+      }
+      if (!primed.current) {
+        primed.current = true;
         return;
       }
       if (y <= HIDE_AFTER_PX) {

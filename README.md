@@ -190,10 +190,11 @@ conceptual-obgyn/
 │
 └── server/                   # Node + Express (strict TS, ESM)
     ├── src/
-    │   ├── modules/          # Tracks, revision (SM-2), AI (RAG)
+    │   ├── modules/          # Tracks, revision (SM-2), AI (RAG + OBGYN studio)
     │   ├── models/           # Mongoose schemas
-    │   ├── routes/           # Express route wiring
-    │   └── middleware/       # Auth, validation, rate limits, errors
+    │   ├── routes/           # Express route wiring (single API index)
+    │   ├── data/             # Curated corpus, evidence, knowledge base
+    │   └── middleware/       # Validation, rate limits, errors
     └── ...
 ```
 

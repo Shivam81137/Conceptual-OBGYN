@@ -40,3 +40,8 @@ client/public/manifest.webmanifest
 # test / coverage
 coverage/
 .nyc_output/
+
+# local agent / editor tooling
+.freebuff/
+.cache/
+.turbo/

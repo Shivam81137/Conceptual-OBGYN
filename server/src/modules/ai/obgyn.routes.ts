@@ -1,12 +1,12 @@
 import multer from 'multer';
 import { Router } from 'express';
 import type { Request, RequestHandler, Response } from 'express';
-import { env } from '../config/env.js';
-import { asyncHandler } from '../middleware/asyncHandler.js';
-import { validate, validated, type ValidationTargets } from '../middleware/validate.js';
-import { HttpError } from '../utils/httpError.js';
-import { obgynAiService, obgynAssistRequestSchema, type BufferedUpload, type ObgynAssistAnswer } from '../services/obgynAi.service.js';
-import type { SuccessEnvelope } from '../modules/tracks/tracks.schema.js';
+import { env } from '../../config/env.js';
+import { asyncHandler } from '../../middleware/asyncHandler.js';
+import { validate, validated, type ValidationTargets } from '../../middleware/validate.js';
+import { HttpError } from '../../utils/httpError.js';
+import { obgynAiService, obgynAssistRequestSchema, type BufferedUpload, type ObgynAssistAnswer } from './obgyn.service.js';
+import type { SuccessEnvelope } from '../tracks/tracks.schema.js';
 
 type ObgynAiTargets = ValidationTargets & { body: typeof obgynAssistRequestSchema };
 

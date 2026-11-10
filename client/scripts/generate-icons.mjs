@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 /**
  * PWA icon generator for Conceptual OBGYN.
- * Uses the official 'logo obygn.png' file to generate
+ * Uses the official 'brand-logo.png' file to generate
  * all standard icon formats and favicons.
  *
  * Usage: node scripts/generate-icons.mjs
@@ -16,7 +16,7 @@ const ROOT_DIR = resolve(__dirname, '..', '..');
 const OUT_DIR = resolve(__dirname, '..', 'public', 'icons');
 const PUBLIC_DIR = resolve(__dirname, '..', 'public');
 const BRAND_DIR = resolve(__dirname, '..', 'public', 'brand');
-const LOGO_SRC = resolve(ROOT_DIR, 'logo obygn.png');
+const LOGO_SRC = resolve(ROOT_DIR, 'brand-logo.png');
 
 mkdirSync(OUT_DIR, { recursive: true });
 mkdirSync(BRAND_DIR, { recursive: true });

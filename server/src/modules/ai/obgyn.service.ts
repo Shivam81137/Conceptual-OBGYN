@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { env } from '../config/env.js';
-import { logger } from '../utils/logger.js';
+import { env } from '../../config/env.js';
+import { logger } from '../../utils/logger.js';
 import {
   COMMON_OBGYN_TERMS,
   DOC_NUMERIC_GLOBAL_RE,
@@ -14,7 +14,7 @@ import {
   detectObgynTopic,
   type ObgynTopic,
   type ObgynTrack,
-} from '../data/obgynAiKnowledge.js';
+} from '../../data/obgynAiKnowledge.js';
 import {
   APPROVED_REFERENCE_PREFIXES,
   PROMPT_VERSION,
@@ -23,7 +23,7 @@ import {
   getTopicReferences,
   normaliseAnswerText,
   sanitiseReferences,
-} from '../data/obgynEvidence.js';
+} from '../../data/obgynEvidence.js';
 
 /**
  * OBGYN AI Studio engine for POST /api/v1/ai/obgyn-assist.

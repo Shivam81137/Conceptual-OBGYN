@@ -4,7 +4,7 @@ import { apiEnvelopeSchema } from '@/types/tracks';
 
 /**
  * Client contract for POST /api/v1/ai/obgyn-assist.
- * Mirrors `server/src/services/obgynAi.service.ts` — the server validates its
+ * Mirrors `server/src/modules/ai/obgyn.service.ts` — the server validates its
  * own output with zod before responding, and this copy re-validates at the
  * edge so the glass drawer can only ever render a complete answer.
  */

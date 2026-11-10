@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { createRateLimiters } from '../middleware/rateLimit.js';
 import { createAiRouter } from '../modules/ai/ai.routes.js';
+import { createObgynAiRouter } from '../modules/ai/obgyn.routes.js';
 import { createRevisionRouter } from '../modules/revision/revision.routes.js';
 import { createTracksRouter } from '../modules/tracks/tracks.routes.js';
-import { createObgynAiRouter } from './ai.routes.js';
 
 /**
  * API surface (mounted at env.API_PREFIX, default /api/v1):
@@ -26,8 +26,8 @@ export const createApiRouter = (): Router => {
   router.use('/tracks', createTracksRouter(read));
   router.use('/revision', createRevisionRouter(read));
   router.use('/ai', createAiRouter(ai));
-  /* The studio composer lives in its own layer (`routes` + `services`); the
-     RAG module above keeps `/ai/summarise` and `/ai/search` untouched. */
+  /* The OBGYN studio composer lives alongside the RAG module in `modules/ai`;
+     it keeps `/ai/summarise` and `/ai/search` untouched. */
   router.use('/ai', createObgynAiRouter(ai));
 
   return router;
