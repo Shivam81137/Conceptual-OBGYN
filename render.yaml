@@ -3,7 +3,7 @@ services:
     name: conceptual-obgyn-api
     runtime: node
     plan: free
-    buildCommand: npm install && npm run build --workspace @conceptual-obgyn/server
+    buildCommand: npm install --include=dev && npm run build --workspace @conceptual-obgyn/server
     startCommand: npm run start --workspace @conceptual-obgyn/server
     healthCheckPath: /health
     autoDeploy: true
@@ -26,4 +26,4 @@ services:
         value: openai/gpt-oss-120b
       - key: AI_UPLOAD_MAX_BYTES
         value: 10485760
-
+        
