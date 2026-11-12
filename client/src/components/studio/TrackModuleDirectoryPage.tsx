@@ -260,15 +260,23 @@ function ModuleStudyHeader({
 
         {/* Title */}
         <div className="min-w-0 flex-1">
-          <p className="flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
+          <p className="flex items-center gap-1.5 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
             <span className="shrink-0">Module {number}</span>
-            <span className="hidden truncate sm:inline">· {theme.eyebrow}</span>
+            <span
+              className={cn(
+                'inline-flex shrink-0 items-center rounded px-1.5 py-px text-[8.5px] font-bold tracking-[0.12em]',
+                theme.tint,
+                theme.text,
+              )}
+            >
+              {theme.eyebrow}
+            </span>
           </p>
           <div className="flex min-w-0 items-baseline gap-2">
-            <h1 className="truncate text-[13.5px] font-semibold tracking-tight text-slate-900 dark:text-white sm:text-[15px]">
+            <h1 className="truncate text-[14px] font-semibold tracking-tight text-slate-900 dark:text-white sm:text-[16px]">
               {module.title}
             </h1>
-            <span className="hidden shrink-0 text-[10px] font-medium text-slate-400 dark:text-slate-500 md:inline">
+            <span className="hidden shrink-0 text-[10.5px] font-medium text-slate-400 dark:text-slate-500 md:inline">
               {module.highYield ? `${module.weightage} · ` : ''}
               {module.durationMinutes} min
             </span>
@@ -464,18 +472,49 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
 
       <main className="relative mx-auto max-w-6xl px-4 pb-16 pt-[calc(5rem_+_env(safe-area-inset-top))] sm:pt-[calc(6rem_+_env(safe-area-inset-top))]">
         {/* Overview — summary, topic filters, Save Module Summary to ⌘K */}
-        <section className="glass-card rounded-2xl p-4 sm:p-5" aria-label={`${activeModule.title} overview`}>
-          <div className="flex flex-wrap items-start justify-between gap-3">
+        <section
+          className="glass-card overflow-hidden rounded-2xl p-4 sm:p-5 lg:p-6"
+          aria-label={`${activeModule.title} overview`}
+        >
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="min-w-0 flex-1">
-              <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-400">Module overview</p>
-              <p className="mt-1 text-[12px] leading-relaxed text-slate-600 dark:text-slate-300">
+              <div className="flex flex-wrap items-center gap-2">
+                <span
+                  className={cn(
+                    'inline-flex items-center rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em]',
+                    theme.tint,
+                    theme.text,
+                  )}
+                >
+                  {theme.eyebrow}
+                </span>
+                <span className="text-[9.5px] font-semibold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">
+                  Module overview
+                </span>
+              </div>
+
+              <p className="mt-2.5 max-w-3xl text-[12.5px] leading-[1.7] text-slate-600 dark:text-slate-300 sm:text-[13.5px]">
                 {activeModule.summary}
               </p>
-              <p className="mt-1.5 inline-flex items-center gap-1 text-[9.5px] text-slate-400 dark:text-slate-500">
-                <Sparkles className="h-2.5 w-2.5" strokeWidth={2} aria-hidden="true" />
-                {activeModule.sourceTag}
-              </p>
+
+              <div className="mt-3.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[10px] font-medium text-slate-500 dark:text-slate-400 sm:text-[10.5px]">
+                <span className="inline-flex min-w-0 items-center gap-1.5">
+                  <Sparkles className="h-3 w-3 shrink-0" strokeWidth={2} aria-hidden="true" />
+                  <span className="truncate">{activeModule.sourceTag}</span>
+                </span>
+                <span className="hidden h-3 w-px shrink-0 bg-slate-900/10 dark:bg-white/15 sm:block" aria-hidden="true" />
+                <span className="inline-flex items-center gap-1.5">
+                  <Signal className={cn('h-3 w-3 shrink-0', theme.text)} strokeWidth={2.2} aria-hidden="true" />
+                  {activeModule.weightage}
+                </span>
+                <span className="hidden h-3 w-px shrink-0 bg-slate-900/10 dark:bg-white/15 sm:block" aria-hidden="true" />
+                <span className="inline-flex items-center gap-1.5">
+                  <Clock3 className="h-3 w-3 shrink-0" strokeWidth={2} aria-hidden="true" />
+                  {activeModule.durationMinutes} min read
+                </span>
+              </div>
             </div>
+
             <button
               type="button"
               onClick={() => {
@@ -494,7 +533,7 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
               }}
               aria-pressed={pearls.some((pearl) => pearl.text === `${activeModule.title} — ${activeModule.summary}`)}
               className={cn(
-                'inline-flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-1 text-[9.5px] font-semibold transition-colors',
+                'inline-flex shrink-0 items-center gap-1.5 self-start rounded-full border px-3 py-1.5 text-[10px] font-semibold transition-colors sm:text-[10.5px]',
                 pearls.some((pearl) => pearl.text === `${activeModule.title} — ${activeModule.summary}`)
                   ? 'border-emerald-500/25 bg-emerald-500/10 text-emerald-700 dark:border-emerald-400/25 dark:text-emerald-300'
                   : 'border-slate-900/[0.08] bg-white/70 text-slate-600 hover:text-slate-900 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-slate-300 dark:hover:text-white',
@@ -518,40 +557,44 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
             </button>
           </div>
 
-          <div className="mt-3 flex flex-wrap items-center gap-1">
-            <span className="mr-0.5 text-[8.5px] font-semibold uppercase tracking-[0.1em] text-slate-400">Topics</span>
-            <button
-              type="button"
-              onClick={() => setTopicsByModule((previous) => ({ ...previous, [activeModule.id]: null }))}
-              aria-pressed={(topicsByModule[activeModule.id] ?? null) === null}
-              className={cn(
-                'rounded-full border px-2 py-0.5 text-[9px] font-medium transition-colors',
-                (topicsByModule[activeModule.id] ?? null) === null
-                  ? cn(theme.border, theme.tint, theme.text)
-                  : 'border-slate-900/[0.06] bg-white/55 text-slate-500 hover:text-slate-800 dark:border-white/[0.07] dark:bg-white/[0.04] dark:text-slate-400 dark:hover:text-white',
-              )}
-            >
-              All
-            </button>
-            {topicTagsFor(activeModule).map((tag) => {
-              const active = (topicsByModule[activeModule.id] ?? null)?.toLowerCase() === tag.toLowerCase();
-              return (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={() => toggleTopic(activeModule.id, tag)}
-                  aria-pressed={active}
-                  className={cn(
-                    'rounded-full border px-2 py-0.5 text-[9px] font-medium transition-colors',
-                    active
-                      ? cn(theme.border, theme.tint, theme.text)
-                      : 'border-slate-900/[0.06] bg-white/55 text-slate-500 hover:text-slate-800 dark:border-white/[0.07] dark:bg-white/[0.04] dark:text-slate-400 dark:hover:text-white',
-                  )}
-                >
-                  {tag}
-                </button>
-              );
-            })}
+          <div className="mt-4 border-t border-slate-900/[0.07] pt-3.5 dark:border-white/[0.08]">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="mr-1.5 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
+                Topics
+              </span>
+              <button
+                type="button"
+                onClick={() => setTopicsByModule((previous) => ({ ...previous, [activeModule.id]: null }))}
+                aria-pressed={(topicsByModule[activeModule.id] ?? null) === null}
+                className={cn(
+                  'rounded-full border px-2.5 py-1 text-[10px] font-medium transition-colors',
+                  (topicsByModule[activeModule.id] ?? null) === null
+                    ? cn(theme.border, theme.tint, theme.text)
+                    : 'border-slate-900/[0.06] bg-white/55 text-slate-500 hover:text-slate-800 dark:border-white/[0.07] dark:bg-white/[0.04] dark:text-slate-400 dark:hover:text-white',
+                )}
+              >
+                All
+              </button>
+              {topicTagsFor(activeModule).map((tag) => {
+                const active = (topicsByModule[activeModule.id] ?? null)?.toLowerCase() === tag.toLowerCase();
+                return (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => toggleTopic(activeModule.id, tag)}
+                    aria-pressed={active}
+                    className={cn(
+                      'rounded-full border px-2.5 py-1 text-[10px] font-medium transition-colors',
+                      active
+                        ? cn(theme.border, theme.tint, theme.text)
+                        : 'border-slate-900/[0.06] bg-white/55 text-slate-500 hover:text-slate-800 dark:border-white/[0.07] dark:bg-white/[0.04] dark:text-slate-400 dark:hover:text-white',
+                    )}
+                  >
+                    {tag}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </section>
 
@@ -560,7 +603,7 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
           role="tablist"
           aria-label={`${activeModule.title} views`}
           className={cn(
-            'relative mt-4 grid gap-0.5 rounded-2xl border border-slate-900/[0.07] bg-white/80 p-1 shadow-sm backdrop-blur-xl dark:border-white/[0.09] dark:bg-slate-950/80',
+            'relative mt-4 grid gap-0.5 rounded-2xl border border-slate-900/[0.07] bg-white/80 p-1 shadow-sm backdrop-blur-xl dark:border-white/[0.09] dark:bg-slate-950/80 sm:p-1.5',
             tabs.length === 3 ? 'grid-cols-3' : 'grid-cols-2',
           )}
         >
@@ -575,7 +618,7 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
                 aria-label={entry.label}
                 onClick={() => setTab(activeModule.id, entry.id)}
                 className={cn(
-                  'relative rounded-xl px-1.5 py-2 text-[10px] font-semibold transition-colors duration-150 sm:text-[10.5px]',
+                  'relative rounded-xl px-2 py-2.5 text-[10.5px] font-semibold transition-colors duration-150 sm:text-[11.5px]',
                   active
                     ? 'text-white'
                     : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white',
@@ -588,8 +631,8 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
                     transition={{ type: 'spring', stiffness: 430, damping: 34 }}
                   />
                 ) : null}
-                <span className="relative z-10 inline-flex items-center justify-center gap-1.5">
-                  <span className="text-[11px] leading-none" aria-hidden="true">
+                <span className="relative z-10 inline-flex items-center justify-center gap-2">
+                  <span className="text-[13px] leading-none" aria-hidden="true">
                     {entry.emoji}
                   </span>
                   <span className="hidden sm:inline">{entry.label}</span>

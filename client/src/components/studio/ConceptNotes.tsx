@@ -90,7 +90,7 @@ function FlowSteps({ steps, theme }: { steps: readonly string[]; theme: StudioTr
             >
               {index + 1}
             </span>
-            <span className="pt-0.5 text-[11.5px] leading-relaxed text-slate-600 dark:text-slate-300">
+            <span className="pt-0.5 text-[12.5px] leading-relaxed text-slate-600 dark:text-slate-300">
               <span className="font-semibold text-slate-800 dark:text-slate-100">{lead}</span>
               {rest.length > 0 ? <span className="text-slate-500 dark:text-slate-400"> · {rest.join(' · ')}</span> : null}
             </span>
@@ -111,7 +111,7 @@ function ComparisonTable({ table }: { table: StudioNoteTable }): JSX.Element {
               <th
                 key={cell}
                 scope="col"
-                className="whitespace-nowrap px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400"
+                className="whitespace-nowrap px-3 py-2 text-[10.5px] font-semibold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400"
               >
                 {cell}
               </th>
@@ -128,7 +128,7 @@ function ComparisonTable({ table }: { table: StudioNoteTable }): JSX.Element {
                 <td
                   key={`${rowIndex}-${cellIndex}`}
                   className={cn(
-                    'align-top px-3 py-2 text-[11px] leading-relaxed',
+                    'align-top px-3 py-2 text-[12px] leading-relaxed',
                     cellIndex === 0
                       ? 'whitespace-nowrap font-semibold text-slate-800 dark:text-slate-100'
                       : 'text-slate-600 dark:text-slate-300',
@@ -179,7 +179,7 @@ function CodePanel({ code }: { code: StudioNoteCode }): JSX.Element {
           {copied ? 'Copied' : 'Copy'}
         </button>
       </figcaption>
-      <pre className="overflow-x-auto px-3 py-2.5 text-[10.5px] leading-relaxed text-indigo-100/95">
+      <pre className="overflow-x-auto px-3 py-2.5 text-[11px] leading-relaxed text-indigo-100/95">
         <code>{code.source}</code>
       </pre>
     </figure>
@@ -201,7 +201,7 @@ function GoldenRule({
     <div className="group relative overflow-hidden rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-50/80 via-white/60 to-orange-50/40 px-3 py-2.5 dark:border-amber-400/20 dark:from-amber-400/[0.09] dark:via-white/[0.03] dark:to-orange-400/[0.05]">
       <div className="flex items-start gap-2.5">
         <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" strokeWidth={1.8} aria-hidden="true" />
-        <p className="flex-1 text-[11.5px] font-medium leading-relaxed text-amber-950 dark:text-amber-100">{text}</p>
+        <p className="flex-1 text-[12.5px] font-medium leading-relaxed text-amber-950 dark:text-amber-100">{text}</p>
         <button
           type="button"
           onClick={onClick}
@@ -240,7 +240,7 @@ function TrapCard({
       <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-rose-600 dark:text-rose-300">
         <span aria-hidden="true">🎯</span> {trap.title}
       </p>
-      <p className="mt-1 text-[11.5px] leading-relaxed text-rose-950/90 dark:text-rose-100/90">{trap.body}</p>
+      <p className="mt-1 text-[12.5px] leading-relaxed text-rose-950/90 dark:text-rose-100/90">{trap.body}</p>
       <button
         type="button"
         onClick={() => {
@@ -311,11 +311,11 @@ function NoteSection({
         >
           {index + 1}
         </span>
-        <h3 className="text-[13px] font-semibold tracking-tight text-slate-900 dark:text-white">{section.heading}</h3>
+        <h3 className="text-[14px] font-semibold tracking-tight text-slate-900 dark:text-white">{section.heading}</h3>
       </div>
 
       {section.intro ? (
-        <p className="mt-2 text-[11.5px] leading-relaxed text-slate-600 dark:text-slate-300">{section.intro}</p>
+        <p className="mt-2 text-[12.5px] leading-relaxed text-slate-600 dark:text-slate-300">{section.intro}</p>
       ) : null}
 
       {section.flow ? <FlowSteps steps={section.flow} theme={theme} /> : null}
@@ -327,7 +327,7 @@ function NoteSection({
       {section.bullets ? (
         <ul className="mt-2.5 space-y-1.5">
           {section.bullets.map((bullet) => (
-            <li key={bullet} className="flex items-start gap-2 text-[11.5px] leading-relaxed text-slate-600 dark:text-slate-300">
+            <li key={bullet} className="flex items-start gap-2 text-[12.5px] leading-relaxed text-slate-600 dark:text-slate-300">
               <span className={cn('mt-[6px] h-1.5 w-1.5 shrink-0 rounded-full', theme.dot)} aria-hidden="true" />
               <span>{bullet}</span>
             </li>
