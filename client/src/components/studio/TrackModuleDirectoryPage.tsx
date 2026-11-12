@@ -20,14 +20,11 @@ import {
 } from 'lucide-react';
 import { Navbar } from '@/components/landing/Navbar';
 import { ConceptNotes } from '@/components/studio/ConceptNotes';
-import { FgrSimulator } from '@/components/studio/FgrSimulator';
 import { FlashcardDeck } from '@/components/studio/FlashcardDeck';
 import { McqRail } from '@/components/studio/McqRail';
 import { MenstrualCycleSimulator } from '@/components/studio/MenstrualCycleSimulator';
 import { PartographSimulator } from '@/components/studio/PartographSimulator';
-import { PlacentaPraeviaSimulator } from '@/components/studio/PlacentaPraeviaSimulator';
 import { ProgressRing } from '@/components/studio/StudioBits';
-import { TorchSimulator } from '@/components/studio/TorchSimulator';
 import { useStudioModules } from '@/api/useStudioModules';
 import { useAppStore } from '@/store/useAppStore';
 import { useRecallStore } from '@/store/useRecallStore';
@@ -50,6 +47,15 @@ const TABS: readonly { id: StudioTabId; label: string; short: string; emoji: str
   { id: 'simulator', label: 'Interactive Clinical Simulator', short: 'Simulator', emoji: '📈' },
   { id: 'flashcards', label: 'Flashcards & Rapid MCQs', short: 'Cards & MCQs', emoji: '🃏' },
 ];
+
+/** PG clinical vaults ship notes + active recall only — no simulator tab. */
+const PG_TABS: readonly { id: StudioTabId; label: string; short: string; emoji: string }[] = TABS.filter(
+  (entry) => entry.id !== 'simulator',
+);
+
+function tabsFor(trackId: TrackId): readonly { id: StudioTabId; label: string; short: string; emoji: string }[] {
+  return trackId === 'NEET_PG' ? PG_TABS : TABS;
+}
 
 const PG_SEARCH_SUGGESTIONS = [
   'TORCH',
@@ -129,17 +135,10 @@ function topicTagsFor(module: StudioModule): readonly string[] {
   return module.tags.filter((tag) => !/yield/i.test(tag));
 }
 
-/** Picks the right bespoke simulator for the module, with an honest fallback. */
+/** Picks the right bespoke simulator for the UG modules, with an honest fallback. */
 function ModuleSimulator({ module, theme }: { module: StudioModule; theme: StudioTrackTheme }): JSX.Element {
-  if (module.track === 'NEET_PG') {
-    if (module.id === 'pg-torch-infections') return <TorchSimulator module={module} theme={theme} />;
-    if (module.id === 'pg-mod-02-fgr') return <FgrSimulator module={module} theme={theme} />;
-    if (module.id === 'pg-mod-03-placenta-praevia-pas')
-      return <PlacentaPraeviaSimulator module={module} theme={theme} />;
-  } else {
-    if (module.id === 'ug-menstrual-axis') return <MenstrualCycleSimulator module={module} theme={theme} />;
-    if (module.id === 'ug-lactation-parturition') return <PartographSimulator module={module} theme={theme} />;
-  }
+  if (module.id === 'ug-menstrual-axis') return <MenstrualCycleSimulator module={module} theme={theme} />;
+  if (module.id === 'ug-lactation-parturition') return <PartographSimulator module={module} theme={theme} />;
 
   return (
     <div className="rounded-2xl border border-slate-900/[0.07] bg-white/50 px-4 py-8 text-center dark:border-white/[0.08] dark:bg-white/[0.03]">
@@ -298,11 +297,12 @@ function ModuleStudyHeader({
  * Clean-directory-first architecture with dedicated full-screen study pages.
  * `activeModuleId === null` shows a scannable list of module header cards;
  * clicking "Explore Module" swaps in a dedicated study page (sticky glass
- * header + back navigation + 3-tab workspace) with no inline accordion. Back
+ * header + back navigation + tabbed workspace) with no inline accordion. Back
  * returns to the directory and restores the exact scroll position.
  */
 export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPageProps): JSX.Element {
   const theme = STUDIO_TRACK_THEME[trackId];
+  const tabs = tabsFor(trackId);
   const { modules, source, isFetching } = useStudioModules(trackId);
   const setSpotlightTrack = useAppStore((state) => state.setSpotlightTrack);
   const cardRatings = useStudioStore((state) => state.cardRatings);
@@ -559,9 +559,12 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
         <div
           role="tablist"
           aria-label={`${activeModule.title} views`}
-          className="relative mt-4 grid grid-cols-3 gap-0.5 rounded-2xl border border-slate-900/[0.07] bg-white/80 p-1 shadow-sm backdrop-blur-xl dark:border-white/[0.09] dark:bg-slate-950/80"
+          className={cn(
+            'relative mt-4 grid gap-0.5 rounded-2xl border border-slate-900/[0.07] bg-white/80 p-1 shadow-sm backdrop-blur-xl dark:border-white/[0.09] dark:bg-slate-950/80',
+            tabs.length === 3 ? 'grid-cols-3' : 'grid-cols-2',
+          )}
         >
-          {TABS.map((entry) => {
+          {tabs.map((entry) => {
             const active = (tabsByModule[activeModule.id] ?? 'notes') === entry.id;
             return (
               <button
