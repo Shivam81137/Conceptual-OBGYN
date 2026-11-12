@@ -50,7 +50,9 @@ export type StudioDiagramKind =
   | 'fgr-genetic-cmv-workup'
   | 'ua-doppler-waveforms-aedf-redf'
   | 'mca-cpr-ductus-venosus-cascade'
-  | 'sogc-442-delivery-timing-matrix';
+  | 'sogc-442-delivery-timing-matrix'
+  | 'fgr-master-sheet-numbers'
+  | 'fgr-bpp-loss-cascade';
 
 export interface StudioNoteDiagram {
   kind: StudioDiagramKind;

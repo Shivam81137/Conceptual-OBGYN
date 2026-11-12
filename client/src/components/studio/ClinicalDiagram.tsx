@@ -1697,6 +1697,235 @@ function SogcTimingDiagram(): JSX.Element {
   );
 }
 
+/* -------------------------------------------------------------------------- */
+/* FGR Diagram 7 — one-page master sheet: the numbers that decide management   */
+/* -------------------------------------------------------------------------- */
+
+const FGR_MASTER_CARDS: readonly {
+  tone: string;
+  value: string;
+  label: string;
+  note: readonly [string, string];
+}[] = [
+  {
+    tone: '#0F766E',
+    value: '3rd–10th',
+    label: 'Constitutional SGA band',
+    note: ['EFW/AC centile with normal growth', 'velocity, Dopplers and PlGF'],
+  },
+  {
+    tone: '#BE123C',
+    value: '< 3rd',
+    label: 'FGR · solitary criterion',
+    note: ['Standalone at any gestation,', 'even with normal Dopplers'],
+  },
+  {
+    tone: '#B45309',
+    value: '14 days',
+    label: 'Minimum biometry interval',
+    note: ['Shorter scans measure sonographic', 'error, not somatic growth'],
+  },
+  {
+    tone: '#6D28D9',
+    value: '100 pg/mL',
+    label: 'PlGF · rule-out biomarker',
+    note: ['Low PlGF = maternal vascular', 'malperfusion · normal NPV > 98%'],
+  },
+  {
+    tone: '#4338CA',
+    value: '38 / 85',
+    label: 'sFlt-1 : PlGF ratio',
+    note: ['> 38 high risk · > 85 severe', 'early-onset placental disease'],
+  },
+  {
+    tone: '#047857',
+    value: '16+0 wks',
+    label: 'Aspirin start',
+    note: ['81–162 mg at bedtime to 36 wks —', 'prevention, never rescue therapy'],
+  },
+  {
+    tone: '#0891B2',
+    value: '30–50%',
+    label: 'Villous loss · UA-PI > 95th',
+    note: ['Elevated impedance with', 'positive end-diastolic flow'],
+  },
+  {
+    tone: '#D97706',
+    value: '50–70%',
+    label: 'Villous loss · UA-AEDF',
+    note: ['Absent end-diastolic flow ·', 'deliver 33+0–34+0 weeks'],
+  },
+  {
+    tone: '#BE123C',
+    value: '> 70%',
+    label: 'Villous loss · UA-REDF',
+    note: ['Reversed end-diastolic flow ·', 'deliver 30+0–32+0 weeks'],
+  },
+  {
+    tone: '#7C3AED',
+    value: '< 5th',
+    label: 'MCA-PI / CPR',
+    note: ['Brain-sparing lowers both —', 'the late-FGR delivery trigger'],
+  },
+  {
+    tone: '#0F766E',
+    value: '2.6 / 3.0 ms',
+    label: 'cCTG STV · TRUFFLE',
+    note: ['< 29 wks / 29–32 wks · DV a-wave', 'governs early-FGR delivery'],
+  },
+  {
+    tone: '#B45309',
+    value: '< 32 wks',
+    label: 'MgSO4 neuroprotection',
+    note: ['4 g IV load ± 1 g/h when', 'delivery is imminent'],
+  },
+];
+
+function FgrMasterSheetDiagram(): JSX.Element {
+  return (
+    <Frame
+      viewBox="0 0 760 396"
+      title="Diagram 7 · FGR master sheet — the twelve numbers that decide management"
+      caption="A single-page distillation of SOGC No. 442, the Gordijn Delphi Consensus and the TRUFFLE protocol: the two centile bands, the dating and interval rules, the PlGF/sFlt-1 axis, the aspirin window, the three villous-obliteration thresholds, the cerebral and venous triggers, and the neuroprotection cut-off. Steroids before 34+6 weeks; every FGR placenta to Amsterdam histopathology."
+    >
+      {FGR_MASTER_CARDS.map((card, index) => {
+        const col = index % 4;
+        const row = Math.floor(index / 4);
+        const x = 12 + col * 186;
+        const y = 14 + row * 112;
+        return (
+          <g key={card.label}>
+            <rect x={x} y={y} width={176} height={100} rx={10} className={PANEL} strokeWidth={1} />
+            <rect x={x} y={y} width={176} height={100} rx={10} fill="none" className={PANEL_EDGE} strokeWidth={1} />
+            <rect x={x} y={y} width={4} height={100} rx={2} fill={card.tone} opacity={0.9} />
+            <text x={x + 14} y={y + 34} fontSize={15} fontWeight={800} fill={card.tone}>
+              {card.value}
+            </text>
+            <text x={x + 14} y={y + 51} fontSize={7} fontWeight={700} className={INK}>
+              {card.label}
+            </text>
+            <text x={x + 14} y={y + 68} fontSize={6.1} className={MUTED}>
+              {card.note[0]}
+            </text>
+            <text x={x + 14} y={y + 80} fontSize={6.1} className={MUTED}>
+              {card.note[1]}
+            </text>
+          </g>
+        );
+      })}
+
+      <text x={380} y={374} textAnchor="middle" fontSize={6.8} className={FAINT}>
+        Steroids before 34+6 weeks · every FGR placenta to Amsterdam histopathology · aspirin is prevention, not rescue
+      </text>
+    </Frame>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* FGR Diagram 8 — reverse-embryology loss of the biophysical profile          */
+/* -------------------------------------------------------------------------- */
+
+const FGR_BPP_ROWS: readonly {
+  order: string;
+  parameter: string;
+  maturation: string;
+  ph: string;
+  tone: string;
+}[] = [
+  {
+    order: '1st lost',
+    parameter: 'Fetal heart-rate reactivity (NST)',
+    maturation: 'matures 28–32 weeks',
+    ph: 'pH ~7.20',
+    tone: '#6D28D9',
+  },
+  {
+    order: '2nd lost',
+    parameter: 'Fetal breathing movements',
+    maturation: 'matures 20–21 weeks',
+    ph: 'pH ~7.15',
+    tone: '#0891B2',
+  },
+  {
+    order: '3rd lost',
+    parameter: 'Gross body movements',
+    maturation: 'matures ~9 weeks',
+    ph: 'pH ~7.10',
+    tone: '#D97706',
+  },
+  {
+    order: '4th lost',
+    parameter: 'Fetal muscle tone',
+    maturation: 'matures 7.5–8.5 weeks',
+    ph: 'pH < 7.05',
+    tone: '#BE123C',
+  },
+];
+
+function FgrBppLossDiagram(): JSX.Element {
+  return (
+    <Frame
+      viewBox="0 0 760 336"
+      title="Diagram 8 · Reverse-embryology loss of the biophysical profile"
+      caption="Vintzileos' rule: the biophysical centre that matures last is the most sensitive to hypoxia, so it disappears first. FHR reactivity goes first at pH ~7.20, then breathing (~7.15), then gross body movements (~7.10); fetal tone — the earliest to mature — is the last to disappear, at pH < 7.05. Oligohydramnios (SDP < 2.0 cm) tracks the same chronic renal hypoperfusion."
+    >
+      <rect x={12} y={10} width={736} height={300} rx={12} className={PANEL} strokeWidth={1} />
+      <rect x={12} y={10} width={736} height={300} rx={12} fill="none" className={PANEL_EDGE} strokeWidth={1} />
+
+      <text x={28} y={32} fontSize={8.6} fontWeight={700} className={INK}>
+        REVERSE EMBRYOLOGICAL RULE
+      </text>
+      <text x={28} y={45} fontSize={6.4} className={MUTED}>
+        The centre that matures last is the most sensitive to hypoxia — and disappears first.
+      </text>
+
+      {/* progressive acidemia arrow */}
+      <line x1={30} y1={62} x2={30} y2={292} stroke="#BE123C" strokeWidth={1.6} opacity={0.55} />
+      <path d="M 30 298 l -4 -8 l 8 0 Z" fill="#BE123C" opacity={0.7} />
+      <text
+        x={16}
+        y={177}
+        fontSize={6.2}
+        fontWeight={700}
+        fill="#BE123C"
+        textAnchor="middle"
+        transform="rotate(-90 16 177)"
+      >
+        PROGRESSIVE ACIDEMIA
+      </text>
+
+      {FGR_BPP_ROWS.map((row, index) => {
+        const y = 58 + index * 60;
+        return (
+          <g key={row.order}>
+            <rect x={48} y={y} width={684} height={52} rx={9} fill={row.tone} opacity={0.07} />
+            <rect x={48} y={y} width={684} height={52} rx={9} fill="none" stroke={row.tone} strokeWidth={0.8} opacity={0.55} />
+            <rect x={58} y={y + 14} width={58} height={24} rx={6} fill={row.tone} opacity={0.9} />
+            <text x={87} y={y + 30} textAnchor="middle" fontSize={6.8} fontWeight={700} fill="#FFFFFF">
+              {row.order}
+            </text>
+            <text x={130} y={y + 22} fontSize={9} fontWeight={700} className={INK}>
+              {row.parameter}
+            </text>
+            <text x={130} y={y + 38} fontSize={6.4} className={MUTED}>
+              {row.maturation}
+            </text>
+
+            <rect x={552} y={y + 14} width={166} height={24} rx={6} fill={row.tone} opacity={0.12} />
+            <text x={635} y={y + 30} textAnchor="middle" fontSize={7.2} fontWeight={700} fill={row.tone}>
+              lost at {row.ph}
+            </text>
+          </g>
+        );
+      })}
+
+      <text x={380} y={302} textAnchor="middle" fontSize={6.3} className={FAINT}>
+        Matures last → lost first · tone is the most resistant, the last parameter to disappear before demise
+      </text>
+    </Frame>
+  );
+}
+
 /* ========================================================================== */
 /* TORCH module — eight colour-coded diagrams                                  */
 /* ========================================================================== */
@@ -2696,6 +2925,10 @@ export function ClinicalDiagram({ diagram }: { diagram: StudioNoteDiagram }): JS
       return <McaCprDvDiagram />;
     case 'sogc-442-delivery-timing-matrix':
       return <SogcTimingDiagram />;
+    case 'fgr-master-sheet-numbers':
+      return <FgrMasterSheetDiagram />;
+    case 'fgr-bpp-loss-cascade':
+      return <FgrBppLossDiagram />;
   }
 }
 

@@ -31,7 +31,7 @@ export const FGR_GUIDELINE_442_MODULE: StudioModule = {
     'PlGF <100 pg/mL & Aspirin <16 Wks',
     'UA Doppler (AEDF / REDF) & CPR',
     'Ductus Venosus a-Wave & cCTG STV',
-    'SOGC Delivery Cutoffs (30 to 39 Wks)',
+    'SOGC Delivery Cutoffs (26 to 39 Wks)',
   ],
   sourceTag: 'SOGC Clinical Practice Guideline No. 442 • Gordijn Delphi Consensus • ISUOG / FIGO',
   updatedAtISO: '2026-10-21T06:00:00.000Z',
@@ -325,6 +325,12 @@ export const FGR_GUIDELINE_442_MODULE: StudioModule = {
           caption:
             'Left: MCA shifts from a high-resistance waveform to vasodilated brain-sparing (high diastolic flow, MCA-PI < 5th; CPR < 5th). Right: the ductus venosus triphasic S–D–a waveform progresses from a positive a-wave to an absent then reversed a-wave during atrial contraction.',
         },
+        {
+          kind: 'fgr-bpp-loss-cascade',
+          title: 'Diagram 5b · Reverse-embryology loss of the biophysical profile',
+          caption:
+            'The centre that matures last is lost first. FHR reactivity (28–32 weeks) disappears at pH ~7.20, then breathing (~7.15), then gross body movements (~7.10); fetal tone, the earliest to mature, is the last to go at pH < 7.05. Read it as a countdown of acidemia, not as a checklist.',
+        },
       ],
       pearls: [
         'Early FGR (< 32 weeks) uses ductus venosus + cCTG STV (TRUFFLE); late FGR (≥ 32 weeks) uses MCA-PI < 5th and CPR < 5th. The phenotype decides the trigger vessel.',
@@ -395,6 +401,42 @@ export const FGR_GUIDELINE_442_MODULE: StudioModule = {
         title: 'Examiner trap — do not deliver every FGR at 37 weeks',
         body:
           'The stage, not the label, sets the date. Constitutional SGA waits to 38–39 weeks, isolated EFW < 3rd delivers at 37, abnormal UA-PI/MCA/CPR at 36–37, AEDF at 33–34, REDF at 30–32 and a decompensated DV/cCTG at ≥ 26 weeks. Offering 37 weeks to a constitutionally small fetus, or 39 weeks to AEDF, are both wrong answers.',
+      },
+    },
+
+    /* ==================================================================== */
+    /* 7. Rapid revision master sheet — one-page synthesis                  */
+    /* ==================================================================== */
+    {
+      id: 'fgr-rapid-revision-master-sheet',
+      heading: 'Rapid Revision Master Sheet — The Numbers That Decide Management',
+      intro:
+        'One page to revise the night before. The Delphi centile bands make the diagnosis, PlGF and the Dopplers define the phenotype, and the delivery ladder converts the stage into a date. If you can recall this grid and the deterioration sequence below it, most FGR stems collapse into a single decision.',
+      flow: [
+        'Uteroplacental · UtA-PI > 95th with a persistent bilateral notch beyond 24 weeks',
+        'Placental · UA-PI > 95th → AEDF → REDF (30–50 → 50–70 → > 70% villous loss)',
+        'Cerebral · MCA-PI < 5th and CPR < 5th — the brain-sparing redistribution',
+        'Venous · DV-PI > 95th → absent a-wave → reversed a-wave',
+        'Cardiotocographic · cCTG STV < 2.6 / 3.0 / 3.5 ms by gestational band',
+        'Biophysical · FHR reactivity → breathing → gross movements → tone',
+        'Outcome · metabolic acidemia, with stillbirth within 48–72 hours if undelivered',
+      ],
+      diagram: [
+        {
+          kind: 'fgr-master-sheet-numbers',
+          title: 'Diagram 7 · FGR master sheet — twelve numbers, one page',
+          caption:
+            'The high-yield numbers of SOGC No. 442: the 3rd–10th centile SGA band, the standalone < 3rd criterion, the 14-day biometry rule, PlGF < 100 pg/mL and sFlt-1/PlGF > 38–85, aspirin before 16+0 weeks, the 30–50 / 50–70 / > 70% villous-loss thresholds, MCA-PI and CPR < 5th, the TRUFFLE STV cut-offs and magnesium before 32 weeks.',
+        },
+      ],
+      pearls: [
+        'The three numbers in almost every FGR stem: EFW/AC < 3rd centile is FGR at any gestation, PlGF < 100 pg/mL confirms maternal vascular malperfusion, and CPR < 5th centile times delivery in late FGR.',
+        'Delivery is staged, not labelled: constitutional SGA 38–39 weeks → isolated < 3rd at 37 → abnormal UA-PI/MCA/CPR at 36–37 → AEDF 33–34 → REDF 30–32 → decompensated DV/cCTG from 26 weeks.',
+      ],
+      trap: {
+        title: 'Examiner trap — a normal PlGF does not exclude FGR',
+        body:
+          'A normal PlGF (≥ 100 pg/mL) has a > 98% negative predictive value for delivery within 14 days, but it does not exclude a constitutionally small or aneuploid fetus. PlGF dates placental dysfunction; it never replaces biometry, Dopplers or genetic testing.',
       },
     },
   ],
