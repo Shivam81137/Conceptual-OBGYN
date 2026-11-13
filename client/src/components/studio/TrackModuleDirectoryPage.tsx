@@ -73,6 +73,14 @@ const PG_SEARCH_SUGGESTIONS = [
   'Placenta Praevia',
   'FIGO PAS',
   'Lacunae',
+  'Endometrial Cancer',
+  'PMB',
+  'POLEmut',
+  'MMRd',
+  'p53abn',
+  'SLN Mapping',
+  'PORTEC',
+  'Lynch',
 ] as const;
 
 export interface TrackModuleDirectoryPageProps {

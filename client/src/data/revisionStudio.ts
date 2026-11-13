@@ -2,13 +2,16 @@ import type { TrackId } from '@/types/tracks';
 import { TORCH_INFECTIONS_MODULE } from '@/data/torchInfections';
 import { FGR_GUIDELINE_442_MODULE } from '@/data/fgrGuideline442';
 import { PLACENTA_PRAEVIA_PAS_MODULE } from '@/data/placentaPraeviaPasModule';
+import { ENDOMETRIAL_UTERINE_CANCER_MODULE } from '@/data/endometrialCancerModule';
 
 /**
  * Revision Studio curated corpus.
  * ---------------------------------------------------------------------------
  * High-yield modules powering the workspace panes — four UG foundations
  * and the PG clinical vault (Module 01: TORCH Infections;
- * Module 02: Fetal Growth Restriction, SOGC No. 442). The content is intentionally
+ * Module 02: Fetal Growth Restriction, SOGC No. 442;
+ * Module 03: Placenta Praevia & Placenta Accreta Spectrum;
+ * Module 04: Endometrial / Uterine Cancer). The content is intentionally
  * offline-first: notes, comparison tables, examiner traps, simulators,
  * flashcards and MCQ drills ship in the bundle, and the API only reconciles
  * the module index (`/tracks/:track/modules`).
@@ -722,6 +725,12 @@ export const STUDIO_MODULES: readonly StudioModule[] = [
   /* Source: RCOG Green-top Guideline No. 27a · FIGO PAS Consensus          */
   /* ====================================================================== */
   PLACENTA_PRAEVIA_PAS_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 4. Endometrial / Uterine Cancer                                   */
+  /* Source: Koskas et al. 2025 FIGO/IJGO update • ESGO–ESTRO–ESP 2025      */
+  /* ====================================================================== */
+  ENDOMETRIAL_UTERINE_CANCER_MODULE,
 ] as const;
 
 export const modulesForTrack = (track: TrackId): readonly StudioModule[] =>
