@@ -3,6 +3,20 @@ import { TORCH_INFECTIONS_MODULE } from '@/data/torchInfections';
 import { FGR_GUIDELINE_442_MODULE } from '@/data/fgrGuideline442';
 import { PLACENTA_PRAEVIA_PAS_MODULE } from '@/data/placentaPraeviaPasModule';
 import { ENDOMETRIAL_UTERINE_CANCER_MODULE } from '@/data/endometrialCancerModule';
+import { MODULAR_MOLECULAR_ECA_ADJUVANT_EH_MODULE } from '@/data/module05-molecular-eca-adjuvant-eh';
+import { CERVICAL_PRECANCER_CIN_EPIGENETICS_MODULE } from '@/data/module06-cervical-precancer-cin-epigenetics';
+import { TRANSFORMATION_ZONE_COLPOSCOPY_MODULE } from '@/data/module07-transformation-zone-colposcopy';
+import { HPV_VIROLOGY_VACCINATION_MODULE } from '@/data/module08-hpv-virology-vaccination';
+import { PRIMARY_HPV_SCREENING_AIS_MODULE } from '@/data/module09-primary-hpv-screening-ais';
+import { CIN_TREATMENT_MODALITIES_MODULE } from '@/data/module10-cin-treatment-modalities';
+import { SYMPTOM_RELIEF_PALLIATIVE_CARE_MODULE } from '@/data/module11-symptom-relief-palliative-care';
+import { PIFU_MIRNA_IMAGING_SLN_MODULE } from '@/data/module12-pifu-mirna-imaging-sln';
+import { POSTMENOPAUSAL_OVARIAN_CYSTS_MODULE } from '@/data/module13-postmenopausal-ovarian-cysts';
+import { OHSS_RCOG_GTG5_MODULE } from '@/data/module14-ohss-rcog-gtg5';
+import { UMBILICAL_CORD_PROLAPSE_MODULE } from '@/data/module15-umbilical-cord-prolapse';
+import { ANTENATAL_CORTICOSTEROIDS_MODULE } from '@/data/module16-antenatal-corticosteroids';
+import { NEONATAL_GBS_MODULE } from '@/data/module17-prevention-early-onset-neonatal-gbs';
+import { AVB_OASIS_MODULE } from '@/data/module18-assisted-vaginal-birth-oasis';
 
 /**
  * Revision Studio curated corpus.
@@ -80,7 +94,7 @@ export interface StudioNoteSection {
   pearls?: readonly string[];
   trap?: { title: string; body: string };
   /** Additional examiner traps for blocks that carry more than one. */
-  traps?: readonly { title: string; body: string }[];
+  traps?: readonly { title: string; body?: string }[];
 }
 
 export interface StudioFlashcard {
@@ -731,6 +745,101 @@ export const STUDIO_MODULES: readonly StudioModule[] = [
   /* Source: Koskas et al. 2025 FIGO/IJGO update • ESGO–ESTRO–ESP 2025      */
   /* ====================================================================== */
   ENDOMETRIAL_UTERINE_CANCER_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 5. Molecular ECA Adjuvant Therapy & Endometrial Hyperplasia       */
+  /* Source: Handwritten clinical revision • 2025 ESGO–ESTRO–ESP • RCOG 67  */
+  /* ====================================================================== */
+  MODULAR_MOLECULAR_ECA_ADJUVANT_EH_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 6. Cervical Precancer (CIN), Epigenetics & HPV-Associated Lesions  */
+  /* Source: Handwritten clinical revision • 2012 LAST • WHO 2026 HPV DNA   */
+  /*         genotyping guideline • Bhatla et al. 2025 FIGO update           */
+  /* ====================================================================== */
+  CERVICAL_PRECANCER_CIN_EPIGENETICS_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 7. Transformation Zone Anatomy & Diagnostic Colposcopy             */
+  /* Source: Handwritten clinical revision • IFCPC/IARC • ASCCP 2019/2023   */
+  /*         • WHO 2026 HPV DNA genotyping guideline • Bhatla et al. 2025    */
+  /* ====================================================================== */
+  TRANSFORMATION_ZONE_COLPOSCOPY_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 8. HPV Virology (E6/E7) & Prophylactic Vaccination                 */
+  /* Source: Handwritten clinical revision • Bhatla et al. 2025 FIGO        */
+  /*         • WHO 2022 position paper • WHO SAGE October 2026              */
+  /* ====================================================================== */
+  HPV_VIROLOGY_VACCINATION_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 9. Primary HPV Screening, LSIL/HSIL & Glandular AIS                */
+  /* Source: Handwritten clinical revision • WHO 2021 screening             */
+  /*         • WHO 2026 HPV DNA genotyping • Bhatla 2025 • BHIVA 2025/2026   */
+  /* ====================================================================== */
+  PRIMARY_HPV_SCREENING_AIS_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 10. CIN Treatment Modalities: Ablation, LEEP & Conization          */
+  /* Source: Handwritten clinical revision • WHO 2014/2019/2021             */
+  /*         • WHO 2026 treatment algorithm • Bhatla et al. 2025            */
+  /* ====================================================================== */
+  CIN_TREATMENT_MODALITIES_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 11. Symptom Relief, Cancer Pain Ladder & Palliative Care           */
+  /* Source: Handwritten clinical revision • ESGO/ESTRO/ESP cervical cancer  */
+  /*         • ESGO resource-stratified 2025 • ASCO/ESMO cancer pain         */
+  /* ====================================================================== */
+  SYMPTOM_RELIEF_PALLIATIVE_CARE_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 12. ESGO Follow-Up (PIFU), HPV miRNAs & Oncological Imaging / SLN  */
+  /* Source: Handwritten clinical revision • ESGO 2025 follow-up             */
+  /*         • Renz et al. 2025 ovarian review • IETA • IOTA                 */
+  /* ====================================================================== */
+  PIFU_MIRNA_IMAGING_SLN_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 13. Ovarian Cysts in Postmenopausal Women: RCOG GTG 34             */
+  /* Source: Handwritten clinical revision • RCOG GTG 34, amended Dec 2025   */
+  /*         • Renz et al. 2025 ovarian review                               */
+  /* ====================================================================== */
+  POSTMENOPAUSAL_OVARIAN_CYSTS_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 14. Ovarian Hyperstimulation Syndrome: RCOG GTG 5                  */
+  /* Source: Handwritten clinical revision • RCOG GTG 5, 2026               */
+  /*         • ASRM 2023 prevention guidance                                */
+  /* ====================================================================== */
+  OHSS_RCOG_GTG5_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 15. Umbilical Cord Prolapse: RCOG GTG 50                           */
+  /* Source: Handwritten clinical revision • RCOG GTG 50                    */
+  /* ====================================================================== */
+  UMBILICAL_CORD_PROLAPSE_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 16. Antenatal Corticosteroids: RCOG GTG 74                         */
+  /* Source: Handwritten clinical revision • RCOG GTG 74, reviewed 2025     */
+  /* ====================================================================== */
+  ANTENATAL_CORTICOSTEROIDS_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 17. Prevention of Early-Onset Neonatal GBS Disease: RCOG GTG 36   */
+  /* Source: Handwritten clinical revision • RCOG GTG 36, 2017              */
+  /*         • ACOG Committee Opinion No. 797                               */
+  /* ====================================================================== */
+  NEONATAL_GBS_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 18. Assisted Vaginal Birth & OASIS: RCOG GTG 26 & 29              */
+  /* Source: Handwritten clinical revision • RCOG GTG 26 (2020)             */
+  /*         • RCOG GTG 29 • FIGO 2025 • IUGA 2026                          */
+  /* ====================================================================== */
+  AVB_OASIS_MODULE,
 ] as const;
 
 export const modulesForTrack = (track: TrackId): readonly StudioModule[] =>

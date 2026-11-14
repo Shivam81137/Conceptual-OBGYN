@@ -226,13 +226,13 @@ function TrapCard({
   trap,
   module,
 }: {
-  trap: { title: string; body: string };
+  trap: { title: string; body?: string };
   module: StudioModule;
 }): JSX.Element {
   const pearls = useRecallStore((state) => state.pearls);
   const savePearl = useRecallStore((state) => state.savePearl);
   const removePearl = useRecallStore((state) => state.removePearl);
-  const trapText = `${trap.title}: ${trap.body}`;
+  const trapText = trap.body ? `${trap.title}: ${trap.body}` : trap.title;
   const saved = pearls.find((entry) => entry.text === trapText) ?? null;
 
   return (
@@ -240,7 +240,9 @@ function TrapCard({
       <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-rose-600 dark:text-rose-300">
         <span aria-hidden="true">🎯</span> {trap.title}
       </p>
-      <p className="mt-1 text-[12.5px] leading-relaxed text-rose-950/90 dark:text-rose-100/90">{trap.body}</p>
+      {trap.body ? (
+        <p className="mt-1 text-[12.5px] leading-relaxed text-rose-950/90 dark:text-rose-100/90">{trap.body}</p>
+      ) : null}
       <button
         type="button"
         onClick={() => {
