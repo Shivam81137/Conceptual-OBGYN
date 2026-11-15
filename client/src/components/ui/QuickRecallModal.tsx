@@ -163,7 +163,7 @@ export function QuickRecallModal(): JSX.Element {
               {visibleSaved.length > 0 ? (
                 <li aria-hidden="true" className="flex items-center gap-1.5 px-3 pb-1 pt-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">
                   <Bookmark className="h-3 w-3" strokeWidth={2} />
-                  Saved pearls
+                  Offline Vault · {visibleSaved.length}
                 </li>
               ) : null}
               {visibleSaved.map((pearl) => (

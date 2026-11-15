@@ -82,11 +82,6 @@ const STUDIO_MODES: readonly ModeConfig[] = [
   },
 ];
 
-const TRACK_OPTIONS: ReadonlyArray<{ id: StudioTrack; title: string; subtitle: string }> = [
-  { id: 'NEET_UG', title: 'UG', subtitle: 'NCERT + Core' },
-  { id: 'NEET_PG', title: 'PG', subtitle: 'Williams + Shaw + Guidelines' },
-];
-
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 
 const ATTACHMENT_BADGES: Record<AttachmentKind, { label: string; className: string }> = {
@@ -268,7 +263,7 @@ const apiPayloadToPlainText = (request: StudioQuery, payload: ObgynAssistPayload
 };
 
 const recallPearlToPlainText = (pearl: SavedPearl): string => {
-  const lines: string[] = [`Conceptual OBGYN · ${trackLabelFor(pearl.track)} · Quick Recall`, ''];
+  const lines: string[] = [`Conceptual OBGYN · ${trackLabelFor(pearl.track)} · Offline Vault`, ''];
   if (pearl.query) lines.push(`Q: ${pearl.query}`, '');
   lines.push(`🎯 High-Yield Exam Pearl: ${pearl.text}`);
   if (pearl.sourceTag) lines.push('', `Sources: ${pearl.sourceTag}`);
@@ -574,7 +569,7 @@ function ActionBar({ copied, saved, onCopy, onClear, onToggleSave }: ActionBarPr
           <Bookmark className="h-3.5 w-3.5 shrink-0" strokeWidth={1.8} aria-hidden="true" />
         )}
         <span className="sm:hidden">{saved ? 'Saved' : 'Save'}</span>
-        <span className="hidden sm:inline">{saved ? 'Saved to Quick Recall ✓' : 'Save to Quick Recall (⌘K)'}</span>
+        <span className="hidden sm:inline">{saved ? 'Saved to Vault ✓' : 'Save to Vault (⌘K)'}</span>
       </button>
       <button
         type="button"
@@ -640,7 +635,7 @@ function ResultPanel({ request, result, copied, saved, onCopy, onClear, onFollow
           {trackLabelFor(request.track)}
         </span>
         <span className="rounded-full border border-slate-200/80 bg-white/60 px-2.5 py-1 font-mono text-[9.5px] font-semibold uppercase tracking-[0.1em] text-slate-500 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-400">
-          {result.source === 'recall' ? 'Quick Recall' : modeLabelFor(request.mode)}
+          {result.source === 'recall' ? 'Offline Vault' : modeLabelFor(request.mode)}
         </span>
         <span className="w-full min-w-0 text-[11.5px] leading-snug text-slate-500 sm:w-auto sm:flex-1 sm:truncate sm:text-xs dark:text-slate-400">
           “{heading}”
@@ -712,7 +707,7 @@ function ResultPanel({ request, result, copied, saved, onCopy, onClear, onFollow
         </>
       ) : (
         <>
-          <PearlBanner text={result.pearl.text} label="Saved in Quick Recall" />
+          <PearlBanner text={result.pearl.text} label="Saved in Offline Vault" />
           <div className="mt-3.5 flex flex-wrap items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400">
             <span>Saved {formatSavedAt(result.pearl.savedAtISO)}</span>
             {result.pearl.sourceTag ? (
@@ -975,7 +970,7 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
     textareaRef.current?.focus();
   };
 
-  /* The pearl currently on screen → the entry Quick Recall saves. */
+  /* The pearl currently on screen → the entry the Offline Vault saves. */
   const activePearl = useMemo(() => {
     if (!result) return null;
     if (result.source === 'api') return { text: result.payload.highYieldPearl, sourceTag: result.payload.sourceTag };
@@ -991,7 +986,13 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
       removePearl(savedPearl.id);
       return;
     }
-    savePearl({ text: activePearl.text, query: pending.query, track: pending.track, sourceTag: activePearl.sourceTag });
+    savePearl({
+      text: activePearl.text,
+      query: pending.query,
+      track: pending.track,
+      sourceTag: activePearl.sourceTag,
+      kind: 'ai',
+    });
   };
 
   const handleCopy = async (): Promise<void> => {
@@ -1085,43 +1086,6 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
               <span className="shrink-0 rounded-full bg-teal-500/10 px-2 py-0.5 text-[10px] font-medium text-teal-700 sm:px-2.5 sm:text-[11px] dark:bg-teal-500/20 dark:text-teal-300">
                 AI Studio
               </span>
-            </div>
-
-            {/* ─── Track context switcher · full-width segmented on mobile ──────── */}
-            <div
-              role="tablist"
-              aria-label="Clinical depth"
-              className="grid w-full shrink-0 grid-cols-2 gap-1 rounded-xl border border-slate-200/60 bg-slate-900/5 p-1 backdrop-blur-md sm:inline-flex sm:h-8 sm:w-auto sm:items-center sm:gap-0.5 sm:rounded-full sm:p-0.5 dark:border-white/10 dark:bg-white/[0.06]"
-            >
-              {TRACK_OPTIONS.map((option) => {
-                const isActive = track === option.id;
-                return (
-                  <button
-                    key={option.id}
-                    role="tab"
-                    type="button"
-                    aria-selected={isActive}
-                    onClick={() => setTrack(option.id)}
-                    className={cn(
-                      'relative flex h-9 touch-manipulation items-center justify-center rounded-lg px-3 text-xs font-medium transition-colors duration-150 sm:h-auto sm:rounded-full sm:py-1',
-                      isActive
-                        ? 'text-slate-900 dark:text-white'
-                        : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200',
-                    )}
-                  >
-                    {isActive ? (
-                      <motion.span
-                        layoutId="aiTrackPill"
-                        className="absolute inset-0 rounded-lg bg-white shadow-sm sm:rounded-full dark:bg-white/[0.15]"
-                        transition={{ type: 'spring', stiffness: 440, damping: 36 }}
-                      />
-                    ) : null}
-                    <span className="relative z-10 block whitespace-nowrap text-xs font-semibold">
-                      {option.title}
-                    </span>
-                  </button>
-                );
-              })}
             </div>
           </div>
 

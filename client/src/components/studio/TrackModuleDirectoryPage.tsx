@@ -6,11 +6,10 @@ import {
   ArrowRight,
   Bookmark,
   BookmarkCheck,
+  BookOpen,
   Check,
   Clock3,
   GraduationCap,
-  Layers3,
-  RefreshCw,
   Search,
   Signal,
   Sparkles,
@@ -22,8 +21,6 @@ import { Navbar } from '@/components/landing/Navbar';
 import { ConceptNotes } from '@/components/studio/ConceptNotes';
 import { FlashcardDeck } from '@/components/studio/FlashcardDeck';
 import { McqRail } from '@/components/studio/McqRail';
-import { MenstrualCycleSimulator } from '@/components/studio/MenstrualCycleSimulator';
-import { PartographSimulator } from '@/components/studio/PartographSimulator';
 import { ProgressRing } from '@/components/studio/StudioBits';
 import { useStudioModules } from '@/api/useStudioModules';
 import { useAppStore } from '@/store/useAppStore';
@@ -56,32 +53,6 @@ const PG_TABS: readonly { id: StudioTabId; label: string; short: string; emoji: 
 function tabsFor(trackId: TrackId): readonly { id: StudioTabId; label: string; short: string; emoji: string }[] {
   return trackId === 'NEET_PG' ? PG_TABS : TABS;
 }
-
-const PG_SEARCH_SUGGESTIONS = [
-  'TORCH',
-  'CMV',
-  'Rubella',
-  'Syphilis',
-  'FGR',
-  'Doppler',
-  'Delphi',
-  'AEDF',
-  'REDF',
-  'Ductus Venosus',
-  'CPR',
-  'PlGF',
-  'Placenta Praevia',
-  'FIGO PAS',
-  'Lacunae',
-  'Endometrial Cancer',
-  'PMB',
-  'POLEmut',
-  'MMRd',
-  'p53abn',
-  'SLN Mapping',
-  'PORTEC',
-  'Lynch',
-] as const;
 
 export interface TrackModuleDirectoryPageProps {
   trackId: TrackId;
@@ -143,11 +114,8 @@ function topicTagsFor(module: StudioModule): readonly string[] {
   return module.tags.filter((tag) => !/yield/i.test(tag));
 }
 
-/** Picks the right bespoke simulator for the UG modules, with an honest fallback. */
+/** Picks the right bespoke simulator for a module, with an honest fallback. */
 function ModuleSimulator({ module, theme }: { module: StudioModule; theme: StudioTrackTheme }): JSX.Element {
-  if (module.id === 'ug-menstrual-axis') return <MenstrualCycleSimulator module={module} theme={theme} />;
-  if (module.id === 'ug-lactation-parturition') return <PartographSimulator module={module} theme={theme} />;
-
   return (
     <div className="rounded-2xl border border-slate-900/[0.07] bg-white/50 px-4 py-8 text-center dark:border-white/[0.08] dark:bg-white/[0.03]">
       <Activity className={cn('mx-auto h-5 w-5', theme.text)} strokeWidth={2} aria-hidden="true" />
@@ -161,75 +129,25 @@ function ModuleSimulator({ module, theme }: { module: StudioModule; theme: Studi
   );
 }
 
-/**
- * Honest index status. The curated corpus renders instantly, so the only real
- * wait is the background reconciliation with `/tracks/:track/modules` — this
- * pill reports exactly that, with a spinner while the request is in flight.
- */
-function IndexStatus({
-  isFetching,
-  source,
-}: {
-  isFetching: boolean;
-  source: 'live' | 'curated';
-}): JSX.Element {
-  if (isFetching) {
-    return (
-      <span
-        role="status"
-        aria-live="polite"
-        className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/25 bg-sky-500/[0.07] px-2.5 py-[3px] text-[9.5px] font-semibold text-sky-700 dark:border-sky-400/25 dark:bg-sky-400/[0.08] dark:text-sky-300"
-      >
-        <RefreshCw className="h-2.5 w-2.5 animate-spin motion-reduce:animate-none" strokeWidth={2.4} aria-hidden="true" />
-        Syncing index
+/** Calm empty state for a track whose module list has been cleared. */
+function DirectoryEmpty({ trackId }: { trackId: TrackId }): JSX.Element {
+  return (
+    <div className="px-4 py-12 text-center sm:py-14">
+      <span className="mx-auto grid h-11 w-11 place-items-center rounded-2xl border border-slate-900/[0.07] bg-white/70 text-slate-400 dark:border-white/[0.08] dark:bg-white/[0.05] dark:text-slate-500">
+        <BookOpen className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
       </span>
-    );
-  }
-
-  return (
-    <span
-      className={cn(
-        'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-[3px] text-[9.5px] font-semibold',
-        source === 'live'
-          ? 'border-emerald-500/25 bg-emerald-500/[0.07] text-emerald-700 dark:border-emerald-400/25 dark:bg-emerald-400/[0.08] dark:text-emerald-300'
-          : 'border-amber-500/25 bg-amber-500/[0.07] text-amber-700 dark:border-amber-400/25 dark:bg-amber-400/[0.08] dark:text-amber-300',
-      )}
-    >
-      {source === 'live' ? (
-        <Check className="h-2.5 w-2.5" strokeWidth={2.8} aria-hidden="true" />
-      ) : (
-        <Signal className="h-2.5 w-2.5" strokeWidth={2.2} aria-hidden="true" />
-      )}
-      {source === 'live' ? 'Index synced' : 'Offline ready'}
-    </span>
-  );
-}
-
-/** Cold-load placeholder. Only shown when the corpus itself is genuinely absent. */
-function DirectorySkeleton(): JSX.Element {
-  return (
-    <div className="space-y-2 p-2.5 sm:space-y-2.5 sm:p-3.5" aria-hidden="true">
-      {[0, 1, 2].map((row) => (
-        <div
-          key={row}
-          className="rounded-2xl border border-slate-900/[0.06] bg-white/40 p-3.5 dark:border-white/[0.07] dark:bg-white/[0.025] sm:p-4"
-        >
-          <div className="flex items-start gap-3 sm:gap-4">
-            <span className="skeleton h-10 w-10 shrink-0 rounded-xl" />
-            <div className="min-w-0 flex-1 space-y-2">
-              <span className="skeleton block h-3 w-2/3 rounded-full" />
-              <span className="skeleton block h-2.5 w-full rounded-full" />
-              <span className="skeleton block h-2.5 w-4/5 rounded-full" />
-              <div className="flex gap-1.5 pt-0.5">
-                <span className="skeleton h-4 w-16 rounded-md" />
-                <span className="skeleton h-4 w-14 rounded-md" />
-                <span className="skeleton h-4 w-14 rounded-md" />
-              </div>
-            </div>
-            <span className="skeleton hidden h-8 w-20 shrink-0 rounded-full sm:block" />
-          </div>
-        </div>
-      ))}
+      <p className="mt-3 text-[13px] font-semibold text-slate-700 dark:text-slate-200">No modules yet</p>
+      <p className="mx-auto mt-1 max-w-xs text-[11px] leading-relaxed text-slate-400 dark:text-slate-500">
+        The {trackId === 'NEET_UG' ? 'UG' : 'PG'} curriculum is being rebuilt. New modules will appear here as they are published.
+      </p>
+      <button
+        type="button"
+        onClick={() => navigate('/')}
+        className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-slate-900/[0.08] bg-white/70 px-3 py-1.5 text-[10.5px] font-semibold text-slate-600 transition-colors hover:text-slate-900 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-slate-300 dark:hover:text-white"
+      >
+        <ArrowLeft className="h-3 w-3" strokeWidth={2.2} aria-hidden="true" />
+        Back to hub
+      </button>
     </div>
   );
 }
@@ -319,7 +237,7 @@ function ModuleStudyHeader({
 export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPageProps): JSX.Element {
   const theme = STUDIO_TRACK_THEME[trackId];
   const tabs = tabsFor(trackId);
-  const { modules, source, isFetching } = useStudioModules(trackId);
+  const { modules, isFetching } = useStudioModules(trackId);
   const setSpotlightTrack = useAppStore((state) => state.setSpotlightTrack);
   const cardRatings = useStudioStore((state) => state.cardRatings);
   const mcqAnswers = useStudioStore((state) => state.mcqAnswers);
@@ -329,8 +247,12 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
   const removePearl = useRecallStore((state) => state.removePearl);
   const reduceMotion = usePrefersReducedMotion();
 
-  /* Directory ↔ dedicated study page routing. */
-  const [activeModuleId, setActiveModuleId] = useState<string | null>(null);
+  /* Directory ↔ dedicated study page routing. A vault deep link
+     (`/track/pg?module=<id>`) opens the module that saved the item. */
+  const [activeModuleId, setActiveModuleId] = useState<string | null>(() => {
+    if (typeof window === 'undefined') return null;
+    return new URLSearchParams(window.location.search).get('module');
+  });
   const [tabsByModule, setTabsByModule] = useState<Record<string, StudioTabId>>({});
   const [topicsByModule, setTopicsByModule] = useState<Record<string, string | null>>({});
   const [search, setSearch] = useState('');
@@ -408,27 +330,12 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
 
   const totalCards = modules.reduce((total, module) => total + module.flashcards.length, 0);
   const totalMcqs = modules.reduce((total, module) => total + module.mcqs.length, 0);
-  const totalMinutes = modules.reduce((total, module) => total + module.durationMinutes, 0);
 
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
     if (!term) return modules;
     return modules.filter((module) => moduleHaystack(module).includes(term));
   }, [modules, search]);
-
-  const searchSuggestions = useMemo<readonly string[]>(() => {
-    if (trackId === 'NEET_PG') return PG_SEARCH_SUGGESTIONS;
-    const seen = new Set<string>();
-    const derived: string[] = [];
-    modules.forEach((module) =>
-      module.tags.forEach((tag) => {
-        if (/yield/i.test(tag) || seen.has(tag)) return;
-        seen.add(tag);
-        derived.push(tag);
-      }),
-    );
-    return derived.slice(0, 6);
-  }, [trackId, modules]);
 
   const openStudy = (moduleId: string): void => {
     directoryScrollRef.current = window.scrollY;
@@ -457,12 +364,6 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
     }));
   };
 
-  const pickSuggestion = (term: string): void => {
-    setSearch(term);
-    const matches = modules.filter((module) => moduleHaystack(module).includes(term.toLowerCase()));
-    if (matches.length === 1) openStudy(matches[0].id);
-  };
-
   return activeModule ? (
     <motion.div
       key={`study-${activeModule.id}`}
@@ -479,7 +380,7 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
       />
 
       <main className="relative mx-auto max-w-6xl px-4 pb-16 pt-[calc(5rem_+_env(safe-area-inset-top))] sm:pt-[calc(6rem_+_env(safe-area-inset-top))]">
-        {/* Overview — summary, topic filters, Save Module Summary to ⌘K */}
+        {/* Overview — summary, topic filters, Save Summary to Vault */}
         <section
           className="glass-card overflow-hidden rounded-2xl p-4 sm:p-5 lg:p-6"
           aria-label={`${activeModule.title} overview`}
@@ -537,6 +438,8 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
                   query: `${activeModule.title} — module summary`,
                   track: activeModule.track,
                   sourceTag: `${activeModule.sourceTag} · Module summary`,
+                  kind: 'summary',
+                  moduleId: activeModule.id,
                 });
               }}
               aria-pressed={pearls.some((pearl) => pearl.text === `${activeModule.title} — ${activeModule.summary}`)}
@@ -554,8 +457,8 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
               )}
               <span className="hidden sm:inline">
                 {pearls.some((pearl) => pearl.text === `${activeModule.title} — ${activeModule.summary}`)
-                  ? 'Saved to ⌘K'
-                  : 'Save Module Summary to ⌘K'}
+                  ? 'Saved to Vault'
+                  : 'Save Summary to Vault'}
               </span>
               <span className="sm:hidden">
                 {pearls.some((pearl) => pearl.text === `${activeModule.title} — ${activeModule.summary}`)
@@ -751,7 +654,7 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
       transition={{ duration: 0.2, ease: 'easeOut' }}
     >
       <Navbar />
-      <main className="relative mx-auto max-w-6xl px-3 pb-14 pt-[calc(6rem_+_env(safe-area-inset-top))] sm:px-5 sm:pt-[calc(7rem_+_env(safe-area-inset-top))] lg:px-8">
+      <main className="relative mx-auto max-w-6xl px-3 pb-14 pt-[calc(1.25rem_+_env(safe-area-inset-top))] sm:px-5 sm:pt-[calc(1.75rem_+_env(safe-area-inset-top))] lg:px-8">
         <motion.header
           initial={reduceMotion ? false : { opacity: 0, y: 12, filter: 'blur(6px)' }}
           animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
@@ -763,9 +666,17 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
               type="button"
               onClick={() => navigate('/')}
               aria-label="Back to hub"
-              className="inline-flex items-center gap-1.5 rounded-full border border-slate-900/[0.07] bg-white/60 px-2.5 py-1 text-[10px] font-medium text-slate-600 shadow-sm transition-all duration-150 hover:border-slate-300 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4285F4]/40 dark:border-white/[0.10] dark:bg-white/[0.04] dark:text-slate-300 dark:hover:border-white/25 dark:hover:text-white"
+              className="group/back inline-flex h-9 items-center gap-1.5 rounded-full border border-slate-900/[0.08] bg-white/70 pl-1 pr-3 text-[11px] font-semibold text-slate-600 shadow-[0_1px_2px_rgba(15,23,42,0.06)] backdrop-blur-md transition-all duration-200 hover:border-slate-900/[0.14] hover:bg-white hover:text-slate-900 hover:shadow-[0_8px_18px_-10px_rgba(15,23,42,0.45)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4285F4]/40 motion-reduce:transition-none dark:border-white/[0.10] dark:bg-white/[0.05] dark:text-slate-300 dark:hover:bg-white/[0.10] dark:hover:text-white"
             >
-              <ArrowLeft className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
+              <span
+                className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-slate-900/[0.05] transition-colors duration-200 group-hover/back:bg-slate-900/[0.09] dark:bg-white/[0.08] dark:group-hover/back:bg-white/[0.16]"
+                aria-hidden="true"
+              >
+                <ArrowLeft
+                  className="h-3 w-3 transition-transform duration-200 ease-out-expo group-hover/back:-translate-x-0.5 motion-reduce:transition-none"
+                  strokeWidth={2.4}
+                />
+              </span>
               <span className="hidden sm:inline">Back to Hub</span>
               <span className="sm:hidden">Hub</span>
             </button>
@@ -784,7 +695,6 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
               )}
               {theme.eyebrow}
             </span>
-            <IndexStatus isFetching={isFetching} source={source} />
           </div>
 
           <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between lg:gap-8">
@@ -804,7 +714,8 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
               </p>
             </div>
 
-            <div className="w-full shrink-0 rounded-2xl border border-slate-900/[0.07] bg-white/60 p-3.5 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04] lg:w-[300px]">
+            {modules.length > 0 ? (
+              <div className="w-full shrink-0 rounded-2xl border border-slate-900/[0.07] bg-white/60 p-3.5 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04] lg:w-[300px]">
               <div className="flex items-center justify-between gap-2">
                 <p className="text-[8.5px] font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
                   Track completion
@@ -841,10 +752,8 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
                   </div>
                 ))}
               </dl>
-              <p className="mt-2.5 text-[9px] font-medium text-slate-400 dark:text-slate-500">
-                {totalMinutes} study minutes · autosaves on this device
-              </p>
-            </div>
+              </div>
+            ) : null}
           </div>
         </motion.header>
 
@@ -863,13 +772,26 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
               <div className="flex min-w-0 items-start gap-3">
                 <span
                   className={cn(
-                    'grid h-10 w-10 shrink-0 place-items-center rounded-xl border bg-gradient-to-br text-white shadow-sm',
+                    'relative grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-[14px] border bg-gradient-to-br text-white shadow-[0_10px_22px_-12px_rgba(15,23,42,0.65)]',
                     theme.border,
                     theme.gradient,
                   )}
                   aria-hidden="true"
                 >
-                  <Layers3 className="h-4 w-4" strokeWidth={2} />
+                  <span className="absolute inset-0 bg-gradient-to-b from-white/35 via-white/5 to-transparent" />
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="relative h-[18px] w-[18px]"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.9"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M12 3.5 20 8l-8 4.5L4 8l8-4.5Z" fill="currentColor" fillOpacity="0.28" />
+                    <path d="m4 12.2 8 4.5 8-4.5" strokeOpacity="0.85" />
+                    <path d="m4 16.4 8 4.5 8-4.5" strokeOpacity="0.5" />
+                  </svg>
                 </span>
                 <div className="min-w-0">
                   <p className="eyebrow text-[9.5px] tracking-[0.2em]">Module Directory</p>
@@ -883,79 +805,44 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
                   </p>
                 </div>
               </div>
-
-              <span
-                aria-live="polite"
-                aria-atomic="true"
-                className="inline-flex items-center gap-1 rounded-full border border-slate-900/[0.07] bg-white/70 px-2.5 py-1 text-[9.5px] font-semibold text-slate-500 dark:border-white/[0.08] dark:bg-white/[0.05] dark:text-slate-300"
-              >
-                <span className="tabular-nums text-slate-900 dark:text-white">{filtered.length}</span>
-                <span className="text-slate-400" aria-hidden="true">
-                  /
-                </span>
-                <span className="tabular-nums">{modules.length}</span>
-                <span className="ml-0.5 font-medium text-slate-400">shown</span>
-              </span>
             </div>
 
-            <div className="relative mt-4">
-              <Search
-                className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400"
-                strokeWidth={1.8}
-                aria-hidden="true"
-              />
-              <input
-                ref={searchInputRef}
-                type="search"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search modules, topics, guidelines…"
-                aria-label="Filter modules"
-                className="h-10 w-full rounded-xl border border-slate-900/[0.07] bg-white/70 pl-9 pr-24 text-base text-slate-700 placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/[0.04] sm:text-[12.5px] dark:border-white/[0.08] dark:bg-white/[0.05] dark:text-slate-200 dark:placeholder:text-slate-500 dark:focus:border-white/20 dark:focus:bg-white/[0.08] dark:focus:ring-white/[0.06]"
-              />
-              {search.trim() ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSearch('');
-                    searchInputRef.current?.focus();
-                  }}
-                  className="absolute right-2 top-1/2 inline-flex -translate-y-1/2 items-center gap-1 rounded-lg border border-slate-900/[0.06] bg-white/80 px-2 py-1 text-[9.5px] font-semibold text-slate-500 transition-colors hover:text-slate-900 dark:border-white/[0.08] dark:bg-white/[0.06] dark:text-slate-400 dark:hover:text-white"
-                >
-                  <X className="h-2.5 w-2.5" strokeWidth={2.4} aria-hidden="true" />
-                  Clear
-                </button>
-              ) : (
-                <span className="pointer-events-none absolute right-2.5 top-1/2 hidden -translate-y-1/2 items-center gap-1 sm:inline-flex">
-                  <kbd className="kbd">/</kbd>
-                  <span className="text-[9px] font-medium text-slate-400 dark:text-slate-500">to filter</span>
-                </span>
-              )}
-            </div>
-
-            <div className="mt-2.5 flex items-center gap-2">
-              <span className="shrink-0 text-[8.5px] font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">
-                Suggested
-              </span>
-              <div className="no-scrollbar -mx-0.5 flex flex-1 gap-1.5 overflow-x-auto px-0.5 py-0.5 sm:flex-wrap sm:overflow-visible">
-                {searchSuggestions.map((term) => (
+            {modules.length > 0 ? (
+              <div className="relative mt-4">
+                <Search
+                  className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400"
+                  strokeWidth={1.8}
+                  aria-hidden="true"
+                />
+                <input
+                  ref={searchInputRef}
+                  type="search"
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="Search modules, topics, guidelines…"
+                  aria-label="Filter modules"
+                  className="h-10 w-full rounded-xl border border-slate-900/[0.07] bg-white/70 pl-9 pr-24 text-base text-slate-700 placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/[0.04] sm:text-[12.5px] dark:border-white/[0.08] dark:bg-white/[0.05] dark:text-slate-200 dark:placeholder:text-slate-500 dark:focus:border-white/20 dark:focus:bg-white/[0.08] dark:focus:ring-white/[0.06]"
+                />
+                {search.trim() ? (
                   <button
-                    key={term}
                     type="button"
-                    onClick={() => pickSuggestion(term)}
-                    aria-pressed={search.toLowerCase() === term.toLowerCase()}
-                    className={cn(
-                      'shrink-0 rounded-full border px-2 py-0.5 text-[9px] font-medium transition-colors',
-                      search.toLowerCase() === term.toLowerCase()
-                        ? cn(theme.border, theme.tint, theme.text)
-                        : 'border-slate-900/[0.06] bg-white/55 text-slate-500 hover:border-slate-900/[0.12] hover:text-slate-800 dark:border-white/[0.07] dark:bg-white/[0.04] dark:text-slate-400 dark:hover:text-white',
-                    )}
+                    onClick={() => {
+                      setSearch('');
+                      searchInputRef.current?.focus();
+                    }}
+                    className="absolute right-2 top-1/2 inline-flex -translate-y-1/2 items-center gap-1 rounded-lg border border-slate-900/[0.06] bg-white/80 px-2 py-1 text-[9.5px] font-semibold text-slate-500 transition-colors hover:text-slate-900 dark:border-white/[0.08] dark:bg-white/[0.06] dark:text-slate-400 dark:hover:text-white"
                   >
-                    {term}
+                    <X className="h-2.5 w-2.5" strokeWidth={2.4} aria-hidden="true" />
+                    Clear
                   </button>
-                ))}
+                ) : (
+                  <span className="pointer-events-none absolute right-2.5 top-1/2 hidden -translate-y-1/2 items-center gap-1 sm:inline-flex">
+                    <kbd className="kbd">/</kbd>
+                    <span className="text-[9px] font-medium text-slate-400 dark:text-slate-500">to filter</span>
+                  </span>
+                )}
               </div>
-            </div>
+            ) : null}
           </div>
 
           {/* Honest background-sync line — only while the request is in flight. */}
@@ -970,7 +857,7 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
           ) : null}
 
           {modules.length === 0 ? (
-            <DirectorySkeleton />
+            <DirectoryEmpty trackId={trackId} />
           ) : filtered.length === 0 ? (
             <div className="px-4 py-12 text-center">
               <span className="mx-auto grid h-10 w-10 place-items-center rounded-full border border-slate-900/[0.07] bg-white/60 text-slate-400 dark:border-white/[0.08] dark:bg-white/[0.05] dark:text-slate-500">
@@ -996,7 +883,6 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
                 const progress = progressFor(module);
                 const percent = Math.round(progress * 100);
                 const number = moduleNumberOf(modules, module.id);
-                const topicTags = topicTagsFor(module);
                 return (
                   <article
                     key={module.id}
@@ -1033,11 +919,6 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
                               <Highlight text={module.title} term={search} />
                             </span>
                           </h3>
-                          {module.highYield ? (
-                            <span className="inline-flex items-center gap-1 rounded-full border border-amber-200/60 bg-amber-50 px-2 py-[1px] text-[9px] font-semibold uppercase tracking-[0.04em] text-amber-700 dark:border-amber-900/20 dark:bg-amber-900/10 dark:text-amber-400">
-                              {module.weightage}
-                            </span>
-                          ) : null}
                           {percent >= 100 ? (
                             <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200/60 bg-emerald-50 px-2 py-[1px] text-[9px] font-semibold uppercase tracking-[0.04em] text-emerald-700 dark:border-emerald-900/20 dark:bg-emerald-900/10 dark:text-emerald-400">
                               <Check className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" />
@@ -1054,29 +935,6 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
                         <p className="mt-2 line-clamp-2 sm:line-clamp-1 text-[11.5px] leading-snug text-slate-500 dark:text-slate-400">
                           <Highlight text={module.tagline ?? module.summary} term={search} />
                         </p>
-
-                        {topicTags.length > 0 && (
-                          <div className="mt-2.5 flex flex-wrap gap-1 sm:flex">
-                            {topicTags
-                              .slice(0, 3)
-                              .map((tag, tagIndex) => (
-                                <span
-                                  key={tag}
-                                  className={cn(
-                                    'rounded-full border border-slate-200/50 bg-white px-2 py-[1.5px] text-[8.5px] font-medium text-slate-600 shadow-sm dark:border-white/10 dark:bg-slate-900/40 dark:text-slate-300',
-                                    tagIndex === 0 && cn(theme.border, theme.text),
-                                  )}
-                                >
-                                  <Highlight text={tag} term={search} />
-                                </span>
-                              ))}
-                            {topicTags.length > 3 && (
-                              <span className="rounded-full border border-slate-200/50 bg-white px-2 py-[1.5px] text-[8.5px] font-medium text-slate-600 shadow-sm dark:border-white/10 dark:bg-slate-900/40 dark:text-slate-300">
-                                +{topicTags.length - 3}
-                              </span>
-                            )}
-                          </div>
-                        )}
 
                         <div className="mt-3 flex items-center justify-between gap-3 min-w-0">
                           <div className="flex flex-1 items-center gap-2 min-w-0">
@@ -1141,25 +999,6 @@ export function TrackModuleDirectoryPage({ trackId }: TrackModuleDirectoryPagePr
               })}
             </div>
           )}
-
-          <div className="border-t border-slate-900/[0.06] bg-white/30 px-4 py-3 dark:border-white/[0.06] dark:bg-white/[0.02] sm:px-6">
-            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1.5">
-              <p className="inline-flex items-center gap-1.5 text-[9.5px] font-semibold text-slate-500 dark:text-slate-400">
-                <span
-                  className={cn('h-1.5 w-1.5 rounded-full', source === 'live' ? 'bg-emerald-500' : 'bg-amber-500')}
-                  aria-hidden="true"
-                />
-                {source === 'live' ? 'Live index synced' : 'Curated · offline ready'}
-              </p>
-              <p className="text-[9.5px] font-medium tabular-nums text-slate-400 dark:text-slate-500">
-                {modules.length} {modules.length === 1 ? 'module' : 'modules'} · {totalCards} flashcards ·{' '}
-                {totalMcqs} MCQs · {totalMinutes} study min
-              </p>
-            </div>
-            <p className="mt-1 text-[9px] text-slate-400 dark:text-slate-500">
-              Progress autosaves on this device — pick up exactly where you stopped.
-            </p>
-          </div>
         </motion.section>
       </main>
     </motion.div>

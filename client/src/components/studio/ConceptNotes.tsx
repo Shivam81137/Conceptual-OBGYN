@@ -206,7 +206,7 @@ function GoldenRule({
           type="button"
           onClick={onClick}
           aria-pressed={saved}
-          aria-label={saved ? `Remove pearl from Quick Recall: ${module.title} — ${text}` : `Save pearl to Quick Recall: ${module.title} — ${text}`}
+          aria-label={saved ? `Remove pearl from Offline Vault: ${module.title} — ${text}` : `Save pearl to Offline Vault: ${module.title} — ${text}`}
           className={cn(
             'inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-1 text-[9.5px] font-semibold transition-all duration-150',
             saved
@@ -215,7 +215,7 @@ function GoldenRule({
           )}
         >
           {saved ? <BookmarkCheck className="h-3 w-3" strokeWidth={2} aria-hidden="true" /> : <Bookmark className="h-3 w-3" strokeWidth={2} aria-hidden="true" />}
-          <span>{saved ? 'Saved to ⌘K' : 'Save Pearl to ⌘K'}</span>
+          <span>{saved ? 'Saved to Vault' : 'Save Pearl to Vault'}</span>
         </button>
       </div>
     </div>
@@ -255,13 +255,15 @@ function TrapCard({
             query: `${module.title} — examiner trap`,
             track: module.track,
             sourceTag: `${module.sourceTag} · Revision Studio`,
+            kind: 'trap',
+            moduleId: module.id,
           });
         }}
         aria-pressed={saved !== null}
         aria-label={
           saved
-            ? `Remove examiner trap from Quick Recall: ${module.title} — ${trap.title}`
-            : `Save examiner trap to Quick Recall: ${module.title} — ${trap.title}`
+            ? `Remove examiner trap from Offline Vault: ${module.title} — ${trap.title}`
+            : `Save examiner trap to Offline Vault: ${module.title} — ${trap.title}`
         }
         className={cn(
           'mt-1.5 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-semibold transition-colors',
@@ -275,7 +277,7 @@ function TrapCard({
         ) : (
           <Bookmark className="h-2.5 w-2.5" strokeWidth={2} aria-hidden="true" />
         )}
-        {saved ? 'Saved to ⌘K' : 'Save trap to ⌘K'}
+        {saved ? 'Saved to Vault' : 'Save trap to Vault'}
       </button>
     </div>
   );
@@ -365,6 +367,8 @@ function NoteSection({
                     query: `${module.title} — revision pearl`,
                     track: module.track,
                     sourceTag: `${module.sourceTag} · Revision Studio`,
+                    kind: 'pearl',
+                    moduleId: module.id,
                   });
                 }}
               />
@@ -381,7 +385,7 @@ function NoteSection({
  * A numbered jump bar anchors every concept block, while Layer-A topic pills
  * filter the list down to the blocks that mention a given topic. Causal flows,
  * comparison tables, examiner traps and golden rules can be filed straight
- * into the ⌘K vault without leaving the module.
+ * into the Offline Vault without leaving the module.
  */
 export function ConceptNotes({ module, theme, topicFilter = null, onClearTopic }: ConceptNotesProps): JSX.Element {
   const filter = topicFilter?.trim() ?? '';
@@ -403,7 +407,7 @@ export function ConceptNotes({ module, theme, topicFilter = null, onClearTopic }
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="inline-flex items-center gap-1.5 text-[10.5px] font-medium text-slate-500 dark:text-slate-400">
           <Sparkles className={cn('h-3 w-3', theme.text)} strokeWidth={2} aria-hidden="true" />
-          Mechanism-first notes · every golden rule saves to ⌘K
+          Mechanism-first notes · every golden rule saves to your Offline Vault
         </p>
         <span className="rounded-full border border-slate-900/[0.06] bg-white/60 px-2 py-0.5 text-[9.5px] font-medium text-slate-500 dark:border-white/[0.08] dark:bg-white/[0.05] dark:text-slate-400">
           {filter

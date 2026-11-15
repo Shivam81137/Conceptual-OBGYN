@@ -3,6 +3,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { AuroraGlassCanvas } from '@/components/canvas/AuroraGlassCanvas';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { QuickRecallModal } from '@/components/ui/QuickRecallModal';
+import { OfflineVaultModal } from '@/components/ui/OfflineVaultModal';
 import { LandingPage } from '@/components/landing/LandingPage';
 import { TrackModuleDirectoryPage } from '@/components/studio/TrackModuleDirectoryPage';
 import { createQueryClient } from '@/lib/queryClient';
@@ -53,6 +54,7 @@ export default function App(): JSX.Element {
             <LandingPage />
           )}
           <QuickRecallModal />
+          <OfflineVaultModal />
         </QueryClientProvider>
       </ErrorBoundary>
     </>

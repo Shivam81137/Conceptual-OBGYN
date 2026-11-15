@@ -19,12 +19,15 @@ export interface AppState {
   spotlightNonce: number;
   /** ⌘K quick recall modal. */
   commandOpen: boolean;
+  /** Full Offline Vault modal opened from the Revision Engine card. */
+  vaultOpen: boolean;
   /** A question handed from a studio MCQ (“Ask AI Why →”) to the landing card. */
   aiPrefill: AiStudioPrefill | null;
   setTheme: (theme: ThemeMode) => void;
   toggleTheme: () => void;
   setSpotlightTrack: (track: TrackId | null) => void;
   setCommandOpen: (open: boolean) => void;
+  setVaultOpen: (open: boolean) => void;
   prefillAiStudio: (query: string, track: TrackId) => void;
   consumeAiPrefill: () => void;
 }
@@ -42,12 +45,14 @@ export const useAppStore = create<AppState>()(
       spotlightTrack: null,
       spotlightNonce: 0,
       commandOpen: false,
+      vaultOpen: false,
       aiPrefill: null,
       setTheme: (theme) => set({ theme }),
       toggleTheme: () => set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
       setSpotlightTrack: (track) =>
         set((state) => ({ spotlightTrack: track, spotlightNonce: state.spotlightNonce + 1 })),
       setCommandOpen: (open) => set({ commandOpen: open }),
+      setVaultOpen: (open) => set({ vaultOpen: open }),
       prefillAiStudio: (query, track) =>
         set((state) => ({
           spotlightTrack: track,

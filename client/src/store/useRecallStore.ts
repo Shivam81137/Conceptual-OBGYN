@@ -3,29 +3,44 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import type { TrackId } from '@/types/tracks';
 
 /**
- * Quick Recall vault — the persisted side of the ⌘K palette.
+ * Offline Vault + Quick Recall — the persisted study-memory store.
  * ---------------------------------------------------------------------------
- * Pearls saved from the AI studio are written here (localStorage, survives
- * reloads) so they become instantly searchable inside the navbar's ⌘K modal.
- * `revealPearl` is session-only: the palette hands a saved pearl to the studio
- * card, which expands it in the glass drawer, then the card consumes it.
+ * Every pearl, examiner trap, module summary and AI answer saved anywhere in
+ * the app is written here (localStorage, survives reloads). The Revision Engine
+ * card surfaces the newest item, the full vault modal lists everything, and the
+ * navbar's ⌘K palette searches the same collection. `revealPearl` is session-
+ * only: the palette hands a saved pearl to the studio card, which expands it in
+ * the glass drawer, then the card consumes it.
  */
+
+export type SavedPearlKind = 'pearl' | 'trap' | 'summary' | 'ai';
 
 export interface SavedPearl {
   id: string;
   /** The 🎯 high-yield pearl sentence itself. */
   text: string;
-  /** The student question that produced it. */
+  /** The student question or module context that produced it. */
   query: string;
   track: TrackId;
   sourceTag: string | null;
   savedAtISO: string;
+  /** What was saved — drives the vault icon and label. */
+  kind?: SavedPearlKind;
+  /** Source module, when the item came from a Revision Studio note. */
+  moduleId?: string | null;
 }
 
 interface RecallState {
   pearls: SavedPearl[];
   revealPearl: SavedPearl | null;
-  savePearl: (input: { text: string; query: string; track: TrackId; sourceTag: string | null }) => void;
+  savePearl: (input: {
+    text: string;
+    query: string;
+    track: TrackId;
+    sourceTag: string | null;
+    kind?: SavedPearlKind;
+    moduleId?: string | null;
+  }) => void;
   removePearl: (id: string) => void;
   setRevealPearl: (pearl: SavedPearl | null) => void;
 }
@@ -51,6 +66,8 @@ export const useRecallStore = create<RecallState>()(
             track: input.track,
             sourceTag: input.sourceTag,
             savedAtISO: new Date().toISOString(),
+            kind: input.kind ?? existing?.kind ?? 'pearl',
+            moduleId: input.moduleId ?? existing?.moduleId ?? null,
           };
           return { pearls: [entry, ...state.pearls.filter((pearl) => pearl.id !== entry.id)].slice(0, MAX_SAVED_PEARLS) };
         }),

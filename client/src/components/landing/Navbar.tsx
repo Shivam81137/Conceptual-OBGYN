@@ -29,7 +29,7 @@ export function Navbar(): JSX.Element {
   const { canInstall, promptInstall } = usePwaInstall();
   const reduceMotion = usePrefersReducedMotion();
   const [noteOpen, setNoteOpen] = useState(false);
-  const [hidden, setHidden] = useState(false);
+  const [hidden, setHidden] = useState(() => pathname.startsWith('/track/'));
   const [elevated, setElevated] = useState(false);
   const actionsRef = useRef<HTMLDivElement | null>(null);
   const lastScrollY = useRef(0);
