@@ -8,7 +8,7 @@ import type { ErrorEnvelope } from './errorHandler.js';
  * and heavily cached by Workbox) and a tight limiter for the AI pipeline, which
  * is the only endpoint with real compute cost behind it.
  */
-export const createRateLimiters = (): { read: RequestHandler; ai: RequestHandler } => {
+export const createRateLimiters = (): { read: RequestHandler; ai: RequestHandler; auth: RequestHandler } => {
   const read: RateLimitRequestHandler = rateLimit({
     windowMs: env.RATE_LIMIT_WINDOW_MS,
     limit: env.RATE_LIMIT_MAX,
@@ -44,5 +44,22 @@ export const createRateLimiters = (): { read: RequestHandler; ai: RequestHandler
     },
   });
 
-  return { read, ai };
+  /* Credential endpoints: tight window to blunt brute-force and signup spam. */
+  const auth: RateLimitRequestHandler = rateLimit({
+    windowMs: 15 * 60_000,
+    limit: 30,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+    skip: () => env.NODE_ENV === 'test',
+    handler: (req, res) => {
+      const envelope: ErrorEnvelope = {
+        success: false,
+        requestId: req.requestId ?? 'unknown',
+        error: { code: 'RATE_LIMITED', message: 'Too many sign-in attempts. Please wait a few minutes and try again.' },
+      };
+      res.status(429).json(envelope);
+    },
+  });
+
+  return { read, ai, auth };
 };

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { VisualAtlasDialog } from '@/components/landing/VisualAtlasDialog';
-import { ATLAS_DIAGRAMS } from '@/data/visualAtlas';
+import { ATLAS_DIAGRAMS } from '@/data/content/visualAtlas';
 import { cn } from '@/lib/utils';
 
 interface AtlasThumb {

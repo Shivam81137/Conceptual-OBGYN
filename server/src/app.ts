@@ -90,6 +90,10 @@ export const createApp = (): Application => {
         service: 'Conceptual OBGYN intelligence API',
         apiPrefix: env.API_PREFIX,
         endpoints: [
+          `${env.API_PREFIX}/auth/signup`,
+          `${env.API_PREFIX}/auth/login`,
+          `${env.API_PREFIX}/auth/me`,
+          `${env.API_PREFIX}/history`,
           `${env.API_PREFIX}/tracks/summary`,
           `${env.API_PREFIX}/tracks/health`,
           `${env.API_PREFIX}/revision/modules`,

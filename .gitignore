@@ -45,3 +45,6 @@ coverage/
 .freebuff/
 .cache/
 .turbo/
+
+# Student accounts when MongoDB is not configured (local dev fallback)
+.data/

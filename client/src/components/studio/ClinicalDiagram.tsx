@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { ScanLine } from 'lucide-react';
-import type { StudioNoteDiagram } from '@/data/revisionStudio';
+import type { StudioNoteDiagram } from '@/data/studio';
 
 /**
  * Bespoke clinical SVG diagrams for the Placenta Praevia / PAS module.

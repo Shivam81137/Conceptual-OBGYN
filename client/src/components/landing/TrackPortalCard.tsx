@@ -4,7 +4,7 @@ import { motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-mot
 import { ArrowRight } from 'lucide-react';
 import { SheenSweep } from '@/components/ui/GlassCard';
 import { HormonalPulseWidget, PartographWidget } from '@/components/landing/TrackWidgets';
-import { modulesForTrack } from '@/data/revisionStudio';
+import { modulesForTrack } from '@/data/studio';
 import { usePrefersReducedMotion, useMediaQuery } from '@/hooks/useEnvironment';
 import { cn } from '@/lib/utils';
 import { interceptNavigation } from '@/lib/router';

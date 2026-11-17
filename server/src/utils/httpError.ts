@@ -3,6 +3,8 @@ import { z } from 'zod';
 export type HttpErrorCode =
   | 'VALIDATION_ERROR'
   | 'NOT_FOUND'
+  | 'UNAUTHORIZED'
+  | 'CONFLICT'
   | 'RATE_LIMITED'
   | 'DATABASE_UNAVAILABLE'
   | 'AI_PIPELINE_ERROR'
@@ -11,6 +13,8 @@ export type HttpErrorCode =
 const STATUS_BY_CODE: Record<HttpErrorCode, number> = {
   VALIDATION_ERROR: 422,
   NOT_FOUND: 404,
+  UNAUTHORIZED: 401,
+  CONFLICT: 409,
   RATE_LIMITED: 429,
   DATABASE_UNAVAILABLE: 503,
   AI_PIPELINE_ERROR: 502,

@@ -181,7 +181,8 @@ conceptual-obgyn/
 ├── client/                   # React 18 + TS + Vite PWA
 │   ├── src/
 │   │   ├── components/       # Landing, Studio, UI primitives
-│   │   ├── data/             # Curated corpus, pearls, module data
+│   │   ├── data/studio/      # Studio modules (modules/pg/NN-slug.ts), registry, types
+│   │   ├── data/content/     # Pearls, visual atlas, AI demo content
 │   │   ├── api/              # API client hooks
 │   │   ├── store/            # Zustand stores (theme, recall, studio)
 │   │   ├── hooks/            # PWA install, environment, theme
@@ -242,3 +243,5 @@ MIT License — see [LICENSE](LICENSE) for details.
 ---
 
 *Conceptual OBGYN — layered glass, a living aurora, two portals, three utilities — zero noise.*
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for a navigation guide and how to add modules or backend features.

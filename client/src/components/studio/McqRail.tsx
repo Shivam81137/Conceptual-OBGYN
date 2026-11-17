@@ -4,8 +4,8 @@ import { navigate } from '@/lib/router';
 import { useAppStore } from '@/store/useAppStore';
 import { useStudioStore } from '@/store/useStudioStore';
 import { cn } from '@/lib/utils';
-import { studioModuleKey } from '@/data/revisionStudio';
-import type { StudioMcq, StudioModule, StudioTrackTheme } from '@/data/revisionStudio';
+import { studioModuleKey } from '@/data/studio';
+import type { StudioMcq, StudioModule, StudioTrackTheme } from '@/data/studio';
 
 interface McqRailProps {
   module: StudioModule;

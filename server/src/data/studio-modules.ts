@@ -8,7 +8,7 @@ import type { StudioModuleDto } from '../modules/tracks/tracks.schema.js';
  * module registry the workspace reconciles against once the API is reachable:
  * order, high-yield weightage, durations and content counts.
  *
- * Keep the ids in lockstep with `client/src/data/revisionStudio.ts`.
+ * Keep the ids in lockstep with `client/src/data/studio/registry.ts`.
  */
 
 const UPDATED_AT = '2026-10-16T06:00:00.000Z';

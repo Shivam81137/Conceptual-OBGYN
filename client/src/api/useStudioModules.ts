@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/api/client';
-import { modulesForTrack, type StudioModule } from '@/data/revisionStudio';
+import { modulesForTrack, type StudioModule } from '@/data/studio';
 import { studioModuleListSchema, type StudioModuleDto, type StudioModuleList } from '@/types/studio';
 import { apiEnvelopeSchema, type TrackId } from '@/types/tracks';
 

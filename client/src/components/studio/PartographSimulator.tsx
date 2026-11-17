@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Activity, Gauge, RotateCcw, Stethoscope } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { StudioModule, StudioTrackTheme } from '@/data/revisionStudio';
+import type { StudioModule, StudioTrackTheme } from '@/data/studio';
 
 interface PartographSimulatorProps {
   module: StudioModule;

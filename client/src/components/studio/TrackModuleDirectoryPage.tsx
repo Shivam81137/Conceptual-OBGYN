@@ -36,7 +36,7 @@ import {
   type StudioModule,
   type StudioTabId,
   type StudioTrackTheme,
-} from '@/data/revisionStudio';
+} from '@/data/studio';
 import type { TrackId } from '@/types/tracks';
 
 const TABS: readonly { id: StudioTabId; label: string; short: string; emoji: string }[] = [

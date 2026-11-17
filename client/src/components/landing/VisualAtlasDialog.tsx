@@ -6,7 +6,7 @@ import {
   ATLAS_CATEGORIES,
   ATLAS_DIAGRAMS,
   type AtlasCategory,
-} from '@/data/visualAtlas';
+} from '@/data/content/visualAtlas';
 import { usePrefersReducedMotion } from '@/hooks/useEnvironment';
 import { withFilterTween } from '@/lib/motion';
 import { cn } from '@/lib/utils';

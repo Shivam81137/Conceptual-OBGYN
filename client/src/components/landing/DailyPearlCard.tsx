@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { RotateCw } from 'lucide-react';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { cn } from '@/lib/utils';
-import { CLASSIC_PEARLS, PEARL_BY_ID } from '@/data/classicPearls';
+import { CLASSIC_PEARLS, PEARL_BY_ID } from '@/data/content/classicPearls';
 import {
   initialiseRotation,
   loadRotation,
@@ -16,7 +16,7 @@ import {
  * ---------------------------------------------------------------------------
  * One classical, exam-accurate line per glance.
  *
- * The bank (`data/classicPearls.ts`) is rotated with a persisted shuffle-bag
+ * The bank (`data/content/classicPearls.ts`) is rotated with a persisted shuffle-bag
  * (`lib/pearlRotation.ts`):
  *   · the first pearl of each day is stable across reloads;
  *   · the refresh button always draws an unseen line, right through the whole

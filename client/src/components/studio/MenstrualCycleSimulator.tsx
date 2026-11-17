@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Activity, Pause, Play, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { StudioModule, StudioTrackTheme } from '@/data/revisionStudio';
+import type { StudioModule, StudioTrackTheme } from '@/data/studio';
 
 interface MenstrualCycleSimulatorProps {
   module: StudioModule;

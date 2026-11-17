@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Check, Layers3, RotateCcw, Sparkles, Zap } from 'lucide-react';
 import { useStudioStore } from '@/store/useStudioStore';
 import { cn } from '@/lib/utils';
-import type { FlashcardRating, StudioModule, StudioTrackTheme } from '@/data/revisionStudio';
+import type { FlashcardRating, StudioModule, StudioTrackTheme } from '@/data/studio';
 
 interface FlashcardDeckProps {
   module: StudioModule;

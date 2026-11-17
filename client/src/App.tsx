@@ -4,11 +4,15 @@ import { AuroraGlassCanvas } from '@/components/canvas/AuroraGlassCanvas';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { QuickRecallModal } from '@/components/ui/QuickRecallModal';
 import { OfflineVaultModal } from '@/components/ui/OfflineVaultModal';
+import { AuthDialog } from '@/components/auth/AuthDialog';
+import { HistoryDialog } from '@/components/auth/HistoryDialog';
 import { LandingPage } from '@/components/landing/LandingPage';
 import { TrackModuleDirectoryPage } from '@/components/studio/TrackModuleDirectoryPage';
 import { createQueryClient } from '@/lib/queryClient';
 import { replaceNavigate, usePathname } from '@/lib/router';
 import { useTheme } from '@/hooks/useTheme';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useHistorySync } from '@/hooks/useHistorySync';
 import type { TrackId } from '@/types/tracks';
 
 const ROUTES: Record<string, { trackId: TrackId; title: string }> = {
@@ -31,6 +35,12 @@ export default function App(): JSX.Element {
   const [queryClient] = useState(createQueryClient);
   const pathname = usePathname();
   useTheme();
+  useHistorySync();
+
+  /* Re-validate a stored student session once on startup. */
+  useEffect(() => {
+    void useAuthStore.getState().refresh();
+  }, []);
 
   const legacyTarget = LEGACY_ROUTES[pathname];
   const route = ROUTES[pathname] ?? (legacyTarget ? ROUTES[legacyTarget] : undefined);
@@ -55,6 +65,8 @@ export default function App(): JSX.Element {
           )}
           <QuickRecallModal />
           <OfflineVaultModal />
+          <AuthDialog />
+          <HistoryDialog />
         </QueryClientProvider>
       </ErrorBoundary>
     </>

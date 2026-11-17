@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import type { FlashcardRating } from '@/data/revisionStudio';
+import type { FlashcardRating } from '@/data/studio';
 import type { TrackId } from '@/types/tracks';
 
 /**

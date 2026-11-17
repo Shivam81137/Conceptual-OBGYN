@@ -6,6 +6,8 @@ declare global {
       requestId: string;
       /** High-resolution start timestamp used by the access logger. */
       startedAt: number;
+      /** Set by `requireAuth` on protected routes. */
+      user?: import('../modules/auth/auth.schema.js').PublicUser;
     }
   }
 }

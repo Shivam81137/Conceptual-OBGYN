@@ -42,7 +42,7 @@ import {
   type StudioAttachment,
   type StudioQuery,
   type StudioTrack,
-} from '@/data/obgynAiDemoContent';
+} from '@/data/content/obgynAiDemoContent';
 
 /* ------------------------------------------------------------------ config */
 

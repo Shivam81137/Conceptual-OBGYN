@@ -9,7 +9,7 @@ import type {
   StudioNoteSection,
   StudioNoteTable,
   StudioTrackTheme,
-} from '@/data/revisionStudio';
+} from '@/data/studio';
 
 interface ConceptNotesProps {
   module: StudioModule;

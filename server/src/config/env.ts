@@ -25,6 +25,14 @@ const envSchema = z.object({
   RATE_LIMIT_MAX: z.coerce.number().int().positive().default(180),
   JSON_BODY_LIMIT: z.string().default('256kb'),
 
+  /* Auth — student accounts. The default secret is for local development only. */
+  AUTH_JWT_SECRET: z.string().min(16).default('dev-only-secret-change-me-before-deploying'),
+  AUTH_TOKEN_TTL_HOURS: z.coerce.number().int().positive().max(24 * 90).default(24 * 7),
+  /** Used when MongoDB is unavailable so signup still works in local development. */
+  AUTH_FILE_STORE_PATH: z.string().default('.data/users.json'),
+
+  HISTORY_FILE_STORE_PATH: z.string().default('.data/history.json'),
+
   AI_EMBEDDING_DIMENSIONS: z.coerce.number().int().positive().default(384),
   AI_CHUNK_TOKENS: z.coerce.number().int().positive().default(180),
   AI_SUMMARY_SENTENCES: z.coerce.number().int().positive().max(20).default(6),
@@ -83,6 +91,10 @@ if (!parsed.success) {
 }
 
 const raw = parsed.data;
+
+if (raw.NODE_ENV === 'production' && raw.AUTH_JWT_SECRET.startsWith('dev-only-secret')) {
+  throw new Error('AUTH_JWT_SECRET must be set to a strong random value in production.');
+}
 
 export const env = {
   ...raw,

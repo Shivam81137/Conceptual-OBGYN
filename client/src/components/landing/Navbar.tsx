@@ -1,8 +1,10 @@
 ﻿import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowLeft, Download, Moon, Search, Sun } from 'lucide-react';
+import { ArrowLeft, Download, LogOut, Moon, Search, Sun } from 'lucide-react';
 import { BrandMark } from '@/components/brand/BrandMark';
 import { useAppStore } from '@/store/useAppStore';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useHistoryStore } from '@/store/useHistoryStore';
 import { usePwaInstall } from '@/hooks/usePwaInstall';
 import { usePrefersReducedMotion } from '@/hooks/useEnvironment';
 import { navigate, usePathname } from '@/lib/router';
@@ -28,6 +30,10 @@ export function Navbar(): JSX.Element {
   const pathname = usePathname();
   const { canInstall, promptInstall } = usePwaInstall();
   const reduceMotion = usePrefersReducedMotion();
+  const user = useAuthStore((state) => state.user);
+  const openAuth = useAuthStore((state) => state.openDialog);
+  const signOut = useAuthStore((state) => state.signOut);
+  const openHistory = useHistoryStore((state) => state.setDialogOpen);
   const [noteOpen, setNoteOpen] = useState(false);
   const [hidden, setHidden] = useState(() => pathname.startsWith('/track/'));
   const [elevated, setElevated] = useState(false);
@@ -195,31 +201,64 @@ export function Navbar(): JSX.Element {
                 <Download className="h-4 w-4 sm:hidden" strokeWidth={2} aria-hidden="true" />
                 <span className="hidden sm:inline">Install</span>
               </button>
-            ) : (
-              <button
-                type="button"
-                className="action-quiet hidden h-9 px-3 text-[12.5px] sm:inline-flex"
-                aria-expanded={noteOpen}
-                onClick={() => setNoteOpen((open) => !open)}
-              >
-                Sign in
-              </button>
-            )}
+            ) : null}
 
-            <AnimatePresence>
-              {noteOpen ? (
-                <motion.p
-                  role="status"
-                  initial={{ opacity: 0, y: -6, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -4, scale: 0.97 }}
-                  transition={{ duration: 0.18, ease: 'easeOut' }}
-                  className="glass-card absolute right-0 top-[calc(100%+12px)] w-64 rounded-2xl px-4 py-3 text-left text-xs leading-relaxed text-slate-500 dark:text-slate-400"
+            {user ? (
+              <>
+                <button
+                  type="button"
+                  className="action-quiet h-9 max-w-[9rem] truncate px-3 text-[12.5px]"
+                  aria-expanded={noteOpen}
+                  onClick={() => setNoteOpen((open) => !open)}
                 >
-                  Sign-in arrives with the sync release. Your revision history stays on this device until then.
-                </motion.p>
-              ) : null}
-            </AnimatePresence>
+                  {user.displayName.split(' ')[0]}
+                </button>
+                <AnimatePresence>
+                  {noteOpen ? (
+                    <motion.div
+                      role="status"
+                      initial={{ opacity: 0, y: -6, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -4, scale: 0.97 }}
+                      transition={{ duration: 0.18, ease: 'easeOut' }}
+                      className="glass-card absolute right-0 top-[calc(100%+12px)] w-64 rounded-2xl px-4 py-3 text-left text-xs leading-relaxed text-slate-500 dark:text-slate-400"
+                    >
+                      <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{user.displayName}</p>
+                      <p className="truncate">{user.email}</p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setNoteOpen(false);
+                          openHistory(true);
+                        }}
+                        className="mt-3 block font-medium text-[#4285F4] hover:underline"
+                      >
+                        My study history
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setNoteOpen(false);
+                          signOut();
+                        }}
+                        className="mt-2 inline-flex items-center gap-1.5 font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+                      >
+                        <LogOut className="h-3.5 w-3.5" aria-hidden="true" /> Sign out
+                      </button>
+                    </motion.div>
+                  ) : null}
+                </AnimatePresence>
+              </>
+            ) : (
+              <>
+                <button type="button" className="action-quiet hidden h-9 px-3 text-[12.5px] sm:inline-flex" onClick={() => openAuth('login')}>
+                  Sign in
+                </button>
+                <button type="button" className="action-primary h-9 px-3.5 text-[12.5px]" onClick={() => openAuth('signup')}>
+                  Sign up
+                </button>
+              </>
+            )}
           </div>
         </nav>
       </motion.div>
