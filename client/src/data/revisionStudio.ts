@@ -28,6 +28,17 @@ import { ECV_BREECH_MODULE } from '@/data/module26-ecv-breech';
 import { OBESITY_PREGNANCY_MODULE } from '@/data/module27-obesity-pregnancy';
 import { PREGNANCY_BREAST_CANCER_MODULE } from '@/data/module28-pregnancy-breast-cancer';
 import { BLADDER_PAIN_SYNDROME_MODULE } from '@/data/module29-bladder-pain-syndrome';
+import { CARDIOVASCULAR_DISEASE_PREGNANCY_ESC_2025_MODULE } from '@/data/module30-cardiovascular-disease-pregnancy-esc-2025';
+import { HEART_FAILURE_PREGNANCY_SMFM_MODULE } from '@/data/module31-heart-failure-pregnancy-smfm';
+import { PREGNANCY_HEART_DISEASE_ACOG_MODULE } from '@/data/module32-pregnancy-heart-disease-acog-pb212';
+import { ANEMIA_PREGNANCY_PPH_FIGO_2025_MODULE } from '@/data/module33-anemia-pregnancy-pph-figo-2025';
+import { PRECONCEPTION_CARE_PRETERM_BIRTH_FIGO_2025_MODULE } from '@/data/module34-preconception-care-preterm-birth-figo-2025';
+import { PRECONCEPTION_CARE_CPG_2026_MODULE } from '@/data/module35-preconception-care-cpg-2026';
+import { NORMAL_LABOR_MODULE } from '@/data/module36-normal-labor';
+import { ANTENATAL_FHS_SOGC_441_MODULE } from '@/data/module37-antenatal-fetal-health-surveillance-sogc-441';
+import { ANTENATAL_FETAL_SURVEILLANCE_STATPEARLS_MODULE } from '@/data/module38-antenatal-fetal-surveillance-statpearls';
+import { NORMAL_ABNORMAL_PUBERTY_ENDOTEXT_MODULE } from '@/data/module39-normal-abnormal-puberty-endotext';
+import { PHYSIOLOGY_OF_PUBERTY_STATPEARLS_MODULE } from '@/data/module40-physiology-of-puberty-statpearls';
 
 /**
  * Revision Studio curated corpus.
@@ -377,6 +388,72 @@ export const STUDIO_MODULES: readonly StudioModule[] = [
   /* Source: Handwritten benign gynaecology revision • RCOG GTG 70          */
   /* ====================================================================== */
   BLADDER_PAIN_SYNDROME_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 30. Cardiovascular Disease & Pregnancy: 2025 ESC Guidelines
+  /* Source: 2025 ESC Guidelines (Eur Heart J 2025)
+  /* ====================================================================== */
+  CARDIOVASCULAR_DISEASE_PREGNANCY_ESC_2025_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 31. Heart Failure in Pregnancy: SMFM Consult Series 73          */
+  /* Source: SMFM news summary (Oct 2025)                                */
+  /* ====================================================================== */
+  HEART_FAILURE_PREGNANCY_SMFM_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 32. Pregnancy & Heart Disease: ACOG PB 212 / PQCNC              */
+  /* Source: ACOG Practice Bulletin No. 212 (2019)                       */
+  /* ====================================================================== */
+  PREGNANCY_HEART_DISEASE_ACOG_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 33. Anemia in Pregnancy & PPH Prevention: FIGO 2025
+  /* Source: FIGO good practice recommendations (IJGO 2025)
+  /* ====================================================================== */
+  ANEMIA_PREGNANCY_PPH_FIGO_2025_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 34. Preconception Care & Preterm Birth: FIGO 2025
+  /* Source: FIGO good practice recommendations (IJGO 2025)
+  /* ====================================================================== */
+  PRECONCEPTION_CARE_PRETERM_BIRTH_FIGO_2025_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 35. Preconception Care: SSGO CPG (Arch Gynecol Obstet 2026)     */
+  /* Source: Arch Gynecol Obstet 2026 CPG                                */
+  /* ====================================================================== */
+  PRECONCEPTION_CARE_CPG_2026_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 36. Normal Labor: Physiology, Evaluation & Management           */
+  /* Source: StatPearls NBK544290                                        */
+  /* ====================================================================== */
+  NORMAL_LABOR_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 37. Antenatal Fetal Health Surveillance: SOGC No. 441           */
+  /* Source: SOGC CPG No. 441 (JOGC 2023)                                */
+  /* ====================================================================== */
+  ANTENATAL_FHS_SOGC_441_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 38. Antenatal Fetal Surveillance: StatPearls                    */
+  /* Source: StatPearls NBK537123                                        */
+  /* ====================================================================== */
+  ANTENATAL_FETAL_SURVEILLANCE_STATPEARLS_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 39. Normal & Abnormal Puberty: Endotext                         */
+  /* Source: Endotext NBK279024                                          */
+  /* ====================================================================== */
+  NORMAL_ABNORMAL_PUBERTY_ENDOTEXT_MODULE,
+
+  /* ====================================================================== */
+  /* PG — 40. Physiology of Puberty: StatPearls                           */
+  /* Source: StatPearls NBK534827                                        */
+  /* ====================================================================== */
+  PHYSIOLOGY_OF_PUBERTY_STATPEARLS_MODULE,
 ] as const;
 
 export const modulesForTrack = (track: TrackId): readonly StudioModule[] =>

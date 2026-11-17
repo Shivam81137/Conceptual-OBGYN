@@ -1,0 +1,416 @@
+import type { StudioModule } from '@/data/revisionStudio';
+
+/**
+ * PG · Module 34 - Preconception Care: A Strategy to Prevent Preterm Birth (FIGO 2025)
+ * ---------------------------------------------------------------------------
+ * Source: Ojeda LI et al. "FIGO good practice recommendations on preconception
+ * care: A strategy to prevent preterm birth". Int J Gynecol Obstet
+ * 2025;171:574-587 (DOI 10.1002/ijgo.70495), FIGO Committee for Preterm Birth.
+ *
+ * Offline-first: every note, table, flashcard and MCQ ships in the client bundle.
+ */
+
+export const PRECONCEPTION_CARE_PRETERM_BIRTH_FIGO_2025_MODULE: StudioModule = {
+  id: 'pg-mod-34-preconception-care-preterm-birth-figo-2025',
+  track: 'NEET_PG',
+  title: 'Preconception Care: A Strategy to Prevent Preterm Birth (FIGO 2025)',
+  shortTitle: 'Preconception Care & Preterm Birth',
+  summary:
+    'Complete PG revision module on the FIGO 2025 good practice recommendations on preconception care as a strategy to prevent preterm birth. Features the global burden (1 in 10 babies born preterm; leading cause of under-5 death), the shift to woman-centred and baby-centred care because over 50% of pregnancies are unplanned, preterm birth risk factors by domain (age with U-shaped risk, previous spontaneous preterm birth recurrence about 20%, preeclampsia recurrence 15%, previous caesarean at full dilatation, interpregnancy interval 18-24 months, assisted reproduction with single embryo transfer, uterine anomalies, cervical surgery, endocrine, mental health, nutrition, lifestyle, infections and socio-environmental exposures) and the evidence-based interventions and preconception recommendations that follow, with 15 active-recall flashcards and 10 clinical vignette MCQs.',
+  tagline: 'Preterm birth risk factors by domain; IPI 18-24 months; single embryo transfer cuts PTB 75%.',
+  highYield: true,
+  weightage: 'High Yield',
+  durationMinutes: 40,
+  tags: [
+    'FIGO 2025',
+    'Preconception Care',
+    'Preterm Birth',
+    'Interpregnancy Interval',
+    'Single Embryo Transfer',
+    'Uterine Anomalies',
+    'Cervical Surgery',
+    'Previous Preterm Birth',
+    'Thyroid',
+    'Infections and PTB',
+    'Environmental Chemicals',
+    'Baby-centred Care',
+  ],
+  sourceTag: 'FIGO good practice recommendations: preconception care to prevent preterm birth (IJGO 2025;171:574-587)',
+  updatedAtISO: '2026-11-17T18:30:00.000Z',
+  notes: [
+    {
+      id: 'background-concept',
+      heading: 'Background and the Case for Preconception Care',
+      intro:
+        'Globally, one in 10 babies is born prematurely, rates have not improved over the past decade, and preterm birth is the leading cause of death in children under 5 years (over one in three neonatal deaths). More than half of pregnancies are unplanned, so waiting for a planned pregnancy misses most opportunities.',
+      flow: [
+        'Every woman of reproductive age is part of the mother-baby dyad',
+        'Move from pregnancy-centred to woman-centred care',
+        'Add a baby-centred assessment',
+        'Screen risk factors, promote health, intervene or refer',
+        'Link with the FIGO preconception checklist',
+      ],
+      bullets: [
+        'Burden: 1 in 10 babies preterm; leading cause of under-5 mortality; survival gaps between high- and low-income settings; the "four Cs" (conflict, climate change, COVID-19, cost-of-living) deepen vulnerability.',
+        'Unplanned Pregnancy: over 50% even in high-income countries; higher in low-income settings.',
+        'FIGO Checklist Question: "Are you planning to become pregnant in the next six months?" — may leave unplanning women unprotected.',
+        'Reframing: offer supportive information to everyone of reproductive age on how pre-pregnancy health affects outcomes, including preterm risk.',
+        'Unintended Pregnancy Risks: preterm birth, early infant loss, long-term developmental problems.',
+        'Three Axes of Preconception Care: screening, promotion, intervention/referral — at every health-system contact.',
+        'Quality Improvement: providers are more likely to use evidence-based practice after QI projects; bundles of interventions are suggested.',
+      ],
+      table: {
+        head: ['Concept', 'Key point'],
+        rows: [
+          ['Preterm birth', '1 in 10 births; leading cause of under-5 death'],
+          ['Unplanned pregnancy', '>50% (higher in LMICs)'],
+          ['Approach', 'Woman-centred + baby-centred assessment'],
+          ['Components', 'Screening, promotion, intervention/referral'],
+        ],
+      },
+      pearls: [
+        'Golden Pearl: more than half of pregnancies are unplanned, so preconception care must reach all women of reproductive age.',
+        'Preterm birth accounts for more than one in three neonatal deaths.',
+      ],
+      trap: {
+        title: 'Examiner trap - limiting preconception care to women planning pregnancy',
+        body: 'FIGO advocates offering information and risk assessment to all women of reproductive age regardless of stated plans.',
+      },
+      traps: [{ title: '• Asking only about plans for pregnancy in the next 6 months.' }],
+    },
+    {
+      id: 'obstetric-gynae-risk',
+      heading: 'Age, Obstetric and Gynaecological Risk Factors',
+      intro:
+        'Previous spontaneous preterm birth or mid-trimester loss is the primary risk factor for a subsequent preterm birth. Age follows a U-shaped risk curve.',
+      flow: [
+        'Take obstetric history: preterm birth, PPROM, preeclampsia, CS stage',
+        'Assess interval, ART, uterine and cervical factors',
+        'Counsel and plan surveillance (cervical length)',
+        'Consider progesterone or cerclage when indicated',
+      ],
+      bullets: [
+        'Maternal Age: U-shaped risk, lowest at 30-34 years; adolescents (preeclampsia, PPROM, anaemia, STIs, late ANC; youngest teens highest risk); women ≥50 have ≥3× risk; age >35 → counselling.',
+        'Previous Spontaneous PTB: overall recurrence ~20%; higher if earlier gestation or more preterm deliveries.',
+        'Previous PPROM: OR 20.6 for PPROM and 3.6 for preterm delivery next time.',
+        'Preeclampsia: early preeclampsia leading to preterm delivery recurs in ~15%; main cause of iatrogenic preterm birth (Brazil study); start aspirin early next pregnancy.',
+        'Previous CS at Full Dilatation: RR 2.71 for second-trimester loss or spontaneous PTB (risk rises with dilatation, peaking at full); possible cervical insufficiency.',
+        'Short Interpregnancy Interval: <5 months → PTB <32 wk OR 1.82 and <37 wk OR 1.64 (vs 24-29 months); <12 months aOR 1.16 in Latin America; WHO recommends 18-24 months.',
+        'ART: PTB RR 1.72 (<37 w) and 2.19 (<32 w); fresh transfer > frozen; single embryo transfer reduces PTB by 75% (OR 0.25) vs double embryo transfer; limit ART to when less invasive methods fail and minimise embryo manipulation.',
+        'Uterine Anomalies: PTB ~26.8% overall; up to 60% unicornuate and 34.5% didelphys; 3D ultrasound/MRI; hysteroscopic metroplasty for septate uterus; monitor cervical length, progesterone or cerclage.',
+        'Cervical Surgery: LLETZ RR 1.61, cold knife conization RR 2.59 for PTB <37 w; part of risk is due to dysplasia itself; cone length predicts PTB; radical trachelectomy PTB ~60% (live birth 71.4%); higher intra-amniotic infection with PPROM.',
+        'Counselling after Cervical Surgery: detailed procedure/cone length history, early and mid-pregnancy transvaginal cervical length, consider progesterone or cerclage; MFM referral for significant excision or other risk.',
+      ],
+      table: {
+        head: ['Risk factor', 'Magnitude / key point'],
+        rows: [
+          ['Previous spontaneous PTB', '~20% recurrence'],
+          ['Previous PPROM', 'OR 20.6 (PPROM), 3.6 (PTB)'],
+          ['Early preeclampsia', '15% recurrence'],
+          ['CS at full dilatation', 'RR 2.71 for mid-trimester loss/sPTB'],
+          ['IPI <5 months', 'OR 1.82 (<32 w), 1.64 (<37 w)'],
+          ['ART', 'RR 1.72 (<37 w); SET cuts risk 75%'],
+          ['Unicornuate uterus', 'Up to 60%'],
+          ['Cold knife conization', 'RR 2.59'],
+        ],
+      },
+      pearls: [
+        'Golden Pearl: previous spontaneous preterm birth or mid-trimester loss is the strongest risk factor (~20% recurrence).',
+        'Single embryo transfer reduces PTB by 75% compared with double embryo transfer.',
+        'Recommend 18-24 months between pregnancies (WHO).',
+      ],
+      trap: {
+        title: 'Examiner trap - attributing cervical surgery risk to the procedure alone',
+        body: 'Compared with women with similar dysplasia who were not treated, the increase was not significant; dysplasia itself contributes to PTB risk, and cone length is an independent predictor.',
+      },
+      traps: [
+        { title: '• Recommending a short inter-pregnancy interval for convenience.' },
+        { title: '• Ignoring the stage of labour at a previous caesarean.' },
+      ],
+    },
+    {
+      id: 'medical-mental-nutrition',
+      heading: 'Medical, Mental Health and Nutritional Factors',
+      intro:
+        'Most pre-existing medical conditions raise the risk of spontaneous or indicated preterm birth; preconception assessment allows disease control and use of drugs compatible with pregnancy and lactation.',
+      flow: [
+        'Screen chronic disease, thyroid and glucose',
+        'Screen mental health and eating disorders',
+        'Assess BMI and nutritional status',
+        'Treat iron deficiency; optimise weight',
+        'Interdisciplinary care before conception',
+      ],
+      bullets: [
+        'Chronic Conditions: lupus, rheumatoid arthritis, chronic hypertension, congenital heart disease, kidney or liver disease, cancer.',
+        'Diabetes: preterm birth more frequent with pregestational than gestational diabetes; GDM still raises PTB in singleton and twin pregnancies; preconception care in diabetes may reduce preterm delivery by 15%.',
+        'Thyroid: overt hypo- and hyperthyroidism raise PTB; subclinical hypothyroidism, isolated hypothyroxinaemia and anti-TPO antibodies also; treatment may help TPO-positive or antibody-positive women; universal levothyroxine not yet supported.',
+        'Psychiatric Disorders: schizophrenia, mood, anxiety and stress disorders raise preterm/early-term birth (Swedish cohort 1.5 million births); high trait anxiety aOR 1.7 for late preterm and 1.4 for early term (MoBa); mechanisms: HPA axis, inflammation, placental function.',
+        'Eating Disorders: PTB risk 1.31×; anorexia nervosa strongest association.',
+        'Iron Deficiency/Anaemia: RR 1.56 (1.65 early pregnancy); aOR 2.69 in case-control.',
+        'Underweight (<18.5): spontaneous PTB 10.1%; aRR 1.29 overall; lowest PTB risk at BMI 22.5-25.9.',
+        'Obesity: J-shaped; highest in class IIIb (aOR 2.80); especially extremely preterm (<28 weeks); independent of comorbidities.',
+        'Omega-3: inconclusive — 26 trials (>20,000 women) no PTB reduction; DHA might reduce early PTB.',
+      ],
+      table: {
+        head: ['Factor', 'Evidence'],
+        rows: [
+          ['Preconception diabetes care', '↓ preterm delivery by 15%'],
+          ['Thyroid (overt, subclinical, TPO+)', 'Increased PTB'],
+          ['High trait anxiety', 'aOR 1.7 late preterm; 1.4 early term'],
+          ['Eating disorder', '1.31× PTB'],
+          ['Iron deficiency anaemia', 'RR 1.56'],
+          ['BMI <18.5', 'aRR 1.29'],
+          ['Class IIIb obesity', 'aOR 2.80'],
+        ],
+      },
+      pearls: [
+        'Golden Pearl: lowest PTB risk at BMI 22.5-25.9; underweight and severe obesity both raise it.',
+        'Detect subclinical hypothyroidism and TPO positivity before pregnancy.',
+        'Anaemia and iron deficiency are treatable preterm risk factors.',
+      ],
+      trap: {
+        title: 'Examiner trap - routine omega-3 to prevent preterm birth',
+        body: 'Systematic review of 26 trials and a large RCT showed no reduction in PTB; DHA alone may reduce early PTB but needs further trials.',
+      },
+      traps: [
+        { title: '• Ignoring mental health and eating disorders.' },
+        { title: '• Assuming obesity risk acts only through comorbidities.' },
+      ],
+    },
+    {
+      id: 'lifestyle-infections',
+      heading: 'Lifestyle and Infections',
+      intro:
+        'Tobacco, alcohol and psychoactive substances and a range of infections raise preterm birth risk; many are screenable or vaccine-preventable before pregnancy.',
+      bullets: [
+        'Smoking: heavy smoking (≥10/day) aOR 1.39 for PTB <32 weeks; impairs placental function and oxygenation.',
+        'Alcohol: heavy/binge drinking linked to prematurity and low birth weight; overall PTB effect mixed.',
+        'Cocaine, Opiates, Cannabis: impair placental flow; cocaine/marijuana with tobacco major contributors to PTB and FGR; substance-related mental disorders 1.3× PTB.',
+        'Exercise: any exercise during pregnancy HR 0.82 for PTB (Danish cohort), no dose-response.',
+        'Trichomonas: low birth weight, PTB, PROM; BV co-infection 40-60%; easy to diagnose and treat.',
+        'Ureaplasma: OR 2.76 PTB, 2.71 chorioamnionitis, 2.19 PROM (low-quality evidence).',
+        'HIV: 3-4× PTB risk; protease-inhibitor ART controversial; vaginal progesterone under study.',
+        'Syphilis: congenital syphilis → PTB; screen at preconception visits.',
+        'Hepatitis B: PTB risk +16% (21% if HBsAg+/HBeAg+); vaccinate and screen.',
+        'HPV: persistent types 16/18 linked with PTB, PPROM and neonatal mortality; higher with treated high-grade CIN.',
+        'Toxoplasmosis: seroconversion before 20 weeks OR 4.71 for PTB.',
+        'CMV: birth prevalence ~0.67%; ~20% of IgM-positive seropositive mothers have congenital infection.',
+        'Malaria: perinatal infection raises PTB 2.5×; many asymptomatic/submicroscopic; Chagas may raise PTB; dengue/Zika no PTB difference but dengue linked with maternal death and stillbirth.',
+        'Oral Health: gingivitis, periodontal disease linked to chorioamnionitis and PTB.',
+      ],
+      table: {
+        head: ['Infection / exposure', 'PTB link'],
+        rows: [
+          ['HIV', '3-4× risk'],
+          ['Hepatitis B', '+16% (21% if HBeAg+)'],
+          ['Ureaplasma', 'OR 2.76'],
+          ['Toxoplasma (<20 w)', 'OR 4.71'],
+          ['Malaria', '2.5×'],
+          ['Heavy smoking', 'aOR 1.39 (<32 w)'],
+        ],
+      },
+      pearls: [
+        'Golden Pearl: screen and treat STIs (syphilis, trichomonas), vaccinate (hepatitis B, HPV) and screen CMV/toxoplasma by local prevalence.',
+        'Smoking cessation and substance-use treatment are core preconception interventions.',
+      ],
+      trap: {
+        title: 'Examiner trap - treating asymptomatic malaria as irrelevant',
+        body: 'Many women have asymptomatic or submicroscopic parasitaemia; screening in endemic zones matters because malaria raises PTB 2.5×.',
+      },
+    },
+    {
+      id: 'socio-environmental',
+      heading: 'Socio-economic and Environmental Risks',
+      intro:
+        'Occupation, violence, homelessness and toxic exposures all contribute to preterm birth and should be asked about in every woman of reproductive age.',
+      bullets: [
+        'Occupation: high physical workload, long hours, shift work, whole-body vibration; fatigue, stress, sleep deprivation, circadian disruption.',
+        'Intimate Partner Violence: 2.32× preterm birth (>70,000 women); sexual violence → hospitalisations for hyperemesis and threatened preterm labour.',
+        'Homelessness: extreme PTB (<28 wk) 34.3 vs 10.8 per 1000; aOR 2.76.',
+        'Heavy Metals and EDCs: bisphenol A and phthalates associated with PTB; organophosphate and organochlorine pesticides implicated; lead and PBDE evidence inconsistent.',
+        'Evidence Status: collectively suggests association; providers should enquire about exposure; policymakers should limit exposures.',
+      ],
+      table: {
+        head: ['Exposure', 'Finding'],
+        rows: [
+          ['Intimate partner violence', '2.32× PTB'],
+          ['Homelessness', 'aOR 2.76 for <28 weeks'],
+          ['Bisphenol A / phthalates', 'Associated with PTB'],
+          ['Organophosphate pesticides', 'Implicated (fetal neurotoxicity)'],
+        ],
+      },
+      pearls: [
+        'Golden Pearl: ask all women about violence, housing, workplace and chemical exposure before conception.',
+      ],
+      trap: {
+        title: 'Examiner trap - limiting risk assessment to clinical factors',
+        body: 'Social determinants (violence, homelessness, occupation) independently raise preterm birth risk and need interdisciplinary support.',
+      },
+    },
+    {
+      id: 'recommendations-interventions',
+      heading: 'FIGO Recommendations and Evidence-Based Interventions',
+      intro:
+        'FIGO lists interventions that effectively improve pregnancy outcomes (Table 1) and a structured set of preconception risk assessments to reduce preterm birth.',
+      flow: [
+        'Ask (age, history, conditions, lifestyle, social)',
+        'Counsel on preterm risk',
+        'Intervene (folic acid, immunise, change drugs, cessation, weight)',
+        'Refer interdisciplinary',
+        'Advocate policy',
+      ],
+      bullets: [
+        'Table 1 Pairs: neural tube defects → folic acid; rubella seronegativity → immunisation; diabetes → proper management; hypothyroidism → diagnosis/treatment; HIV → timely treatment; phenylketonuria → low-phenylalanine diet; oral anticoagulants, antiepileptic drugs → change medication/adjust; isotretinoin → contraception during treatment; smoking and alcohol → cessation; obesity → weight loss; nutrition → healthy diet; STIs → prevention/screening/treatment; hepatitis B → immunisation; iron deficiency → screening and iron.',
+        'Age: counsel risks <19 and >35 years; empower adolescents.',
+        'Obstetric: counsel previous PTB (assess cervical length) and preeclampsia; document CS timing/nature; IPI 18-24 months; counsel ART risk; ultrasound of uterine anatomy for all planning pregnancy; review cervical procedures.',
+        'Medical: confirm good management; assess carbohydrate intolerance with family history of diabetes; detect subclinical hypothyroidism, isolated hypothyroxinaemia and TPO antibodies.',
+        'Mental Health: systematic screening for mental and neurodevelopmental disorders and eating disorders.',
+        'Nutrition: counsel BMI <19 and >30; maintain normal weight; detect and treat iron deficiency/anaemia.',
+        'Lifestyle/Work: ask about alcohol, tobacco, substances, workload, shift work, stress and sleep.',
+        'Infections: HPV vaccination and testing; STI screening of women and partners; CMV and toxoplasma serology by prevalence; vector-borne disease detection; oral health.',
+        'Social: ask about domestic/sexual violence and housing.',
+        'Policy: prioritise preterm birth and preconception care; supportive policies; regulate substances; fund research.',
+      ],
+      table: {
+        head: ['Risk factor', 'Intervention'],
+        rows: [
+          ['Neural tube defects', 'Folic acid'],
+          ['Rubella seronegativity / hepatitis B', 'Immunisation'],
+          ['Smoking, alcohol', 'Cessation'],
+          ['Antiepileptics, anticoagulants', 'Change/adjust medication'],
+          ['Isotretinoin', 'Contraception during treatment'],
+          ['Obesity', 'Weight loss'],
+          ['Iron deficiency', 'Screen and supplement'],
+        ],
+      },
+      pearls: [
+        'Golden Pearl: BMI <19 or >30, previous PTB, preeclampsia and cervical surgery all trigger specific preconception counselling.',
+        'Ultrasound assessment of uterine anatomy is advised for women planning pregnancy.',
+        'Offer an interval of 18-24 months between pregnancies.',
+      ],
+      trap: {
+        title: 'Examiner trap - assuming no actionable interventions exist before conception',
+        body: 'Many risk factors have proven preconception interventions: folic acid, immunisation, drug changes, cessation, weight and iron correction.',
+      },
+    },
+    {
+      id: 'last-minute-pearls-and-examiner-traps',
+      heading: 'Last-Minute Examination Pearls & Examiner Traps',
+      intro: 'Fifteen rapid-fire points to lock in before the exam.',
+      pearls: [
+        '1 in 10 babies are born preterm; leading cause of under-5 death.',
+        'Over 50% of pregnancies are unplanned.',
+        'FIGO: woman-centred plus baby-centred preconception assessment.',
+        'Previous spontaneous PTB: ~20% recurrence; assess cervical length.',
+        'Early preeclampsia recurs ~15%.',
+        'CS at full dilatation: RR 2.71 for sPTB/mid-trimester loss.',
+        'IPI 18-24 months (WHO); <6 months worst.',
+        'ART: RR 1.72 for PTB; SET reduces PTB 75%.',
+        'Uterine anomalies: unicornuate up to 60% PTB.',
+        'Cold knife conization RR 2.59; LLETZ RR 1.61.',
+        'Age risk is U-shaped; lowest at 30-34.',
+        'BMI lowest-risk 22.5-25.9.',
+        'Hepatitis B vaccinate and screen; HIV 3-4× PTB.',
+        'IPV 2.32×; homelessness aOR 2.76 for <28 weeks.',
+        'Omega-3 not proven to prevent PTB.',
+      ],
+      traps: [
+        { title: '• Counselling only planning women.' },
+        { title: '• Routine omega-3 for PTB prevention.' },
+        { title: '• Double embryo transfer to improve ART success.' },
+        { title: '• Ignoring social determinants.' },
+      ],
+    },
+  ],
+
+  flashcards: [
+    { id: 'm34-f1', front: 'Burden of preterm birth?', back: '1 in 10 babies; leading cause of death under 5 years (>1/3 of neonatal deaths); rates not improving globally.' },
+    { id: 'm34-f2', front: 'Why reframe the FIGO preconception checklist question?', back: 'Over 50% of pregnancies are unplanned; asking only about plans in the next 6 months leaves many unprotected. Offer information on pre-pregnancy health and preterm risk to all women of reproductive age.' },
+    { id: 'm34-f3', front: 'Strongest risk factor for preterm birth?', back: 'Previous spontaneous preterm birth or mid-trimester loss (~20% recurrence; higher with earlier gestation or more preterm births).' },
+    { id: 'm34-f4', front: 'Effect of previous PPROM?', back: 'OR 20.6 for PPROM and 3.6 for preterm delivery in the next pregnancy.' },
+    { id: 'm34-f5', front: 'Preeclampsia recurrence and action?', back: '~15% for early preeclampsia with preterm delivery; assess risk preconception and start aspirin early next pregnancy.' },
+    { id: 'm34-f6', front: 'Previous caesarean at full dilatation?', back: 'RR 2.71 for second-trimester loss or sPTB; document timing and nature; possible cervical insufficiency.' },
+    { id: 'm34-f7', front: 'Recommended inter-pregnancy interval?', back: '18-24 months (WHO); IPI <5 months gives OR 1.82 for PTB <32 weeks.' },
+    { id: 'm34-f8', front: 'ART and preterm birth?', back: 'PTB RR 1.72 (<37 w), 2.19 (<32 w); fresh > frozen; single embryo transfer reduces PTB by 75% vs double; limit ART, minimise embryo manipulation.' },
+    { id: 'm34-f9', front: 'PTB rates with uterine anomalies?', back: '26.8% overall; up to 60% in unicornuate and 34.5% in didelphys uteri; use 3D USG/MRI, metroplasty for septum, cervical length surveillance.' },
+    { id: 'm34-f10', front: 'Cervical surgery and PTB?', back: 'LLETZ RR 1.61 and cold knife conization RR 2.59; dysplasia itself contributes; cone length predicts; trachelectomy ~60%. Plan cervical length surveillance ± progesterone/cerclage.' },
+    { id: 'm34-f11', front: 'Thyroid and diabetes preconception points?', back: 'Overt and subclinical thyroid disease and TPO antibodies raise PTB; screen before pregnancy. Preconception diabetes care may reduce preterm delivery by 15%.' },
+    { id: 'm34-f12', front: 'BMI and preterm birth?', back: 'Lowest risk at BMI 22.5-25.9; underweight (<18.5) aRR 1.29; obesity J-shaped, class IIIb aOR 2.80, especially <28 weeks.' },
+    { id: 'm34-f13', front: 'Which infections raise PTB risk?', back: 'HIV (3-4×), hepatitis B (+16%), syphilis, trichomonas, Ureaplasma (OR 2.76), toxoplasma before 20 weeks (OR 4.71), malaria (2.5×), HPV 16/18 and periodontal disease.' },
+    { id: 'm34-f14', front: 'Social and environmental risks?', back: 'IPV (2.32×), homelessness (aOR 2.76 for <28 wk), heavy workload/shift work, BPA/phthalates and pesticides; ask all women of reproductive age.' },
+    { id: 'm34-f15', front: 'Name preconception interventions in FIGO Table 1.', back: 'Folic acid (NTD), immunisation (rubella, HBV), diabetes and thyroid management, HIV treatment, low-phenylalanine diet in PKU, change anticoagulants/antiepileptics, contraception during isotretinoin, smoking/alcohol cessation, weight loss, healthy diet, STI treatment, iron.' },
+  ],
+
+  mcqs: [
+    {
+      id: 'm34-q1',
+      stem: 'What is the approximate recurrence risk of preterm birth after a previous spontaneous preterm birth in singleton pregnancy?',
+      options: ['2%', '20%', '60%', '90%'],
+      answerIndex: 1,
+      explanation: 'Overall recurrence is about 20%, higher with earlier gestational age or multiple preterm births.',
+    },
+    {
+      id: 'm34-q2',
+      stem: 'FIGO recommends what interval between pregnancies?',
+      options: ['<6 months', '6-12 months', '18-24 months', '5 years'],
+      answerIndex: 2,
+      explanation: 'WHO/FIGO suggest 18-24 months; short intervals raise preterm birth risk.',
+    },
+    {
+      id: 'm34-q3',
+      stem: 'By how much does single embryo transfer reduce preterm birth compared with double embryo transfer?',
+      options: ['10%', '25%', '75%', '90%'],
+      answerIndex: 2,
+      explanation: 'Meta-analysis of 85 studies: OR 0.25 (75% reduction), mainly due to fewer multiple pregnancies.',
+    },
+    {
+      id: 'm34-q4',
+      stem: 'Which uterine anomaly carries the highest reported preterm birth rate?',
+      options: ['Arcuate uterus', 'Unicornuate uterus', 'Normal uterus', 'Small fibroid'],
+      answerIndex: 1,
+      explanation: 'Up to 60% in unicornuate and 34.5% in didelphys uteri.',
+    },
+    {
+      id: 'm34-q5',
+      stem: 'A woman had a caesarean at full cervical dilatation. What is the associated risk?',
+      options: ['No risk', 'Increased risk of second-trimester loss or spontaneous preterm birth (RR 2.71)', 'Reduced preterm birth', 'Only placenta accreta'],
+      answerIndex: 1,
+      explanation: 'Risk rises with dilatation, peaking at full; cervical insufficiency may contribute.',
+    },
+    {
+      id: 'm34-q6',
+      stem: 'Which BMI range is associated with the lowest preterm birth risk?',
+      options: ['<18.5', '18.5-21', '22.5-25.9', '>35'],
+      answerIndex: 2,
+      explanation: 'Nonlinear relationship; lowest risk at BMI 22.5-25.9.',
+    },
+    {
+      id: 'm34-q7',
+      stem: 'Which statement on omega-3 supplementation and preterm birth is correct?',
+      options: ['It definitely prevents PTB', 'Evidence is inconclusive; DHA might reduce early PTB', 'It causes PTB', 'It is mandatory'],
+      answerIndex: 1,
+      explanation: 'Systematic review of 26 trials found no PTB reduction; DHA may reduce early PTB but requires further trials.',
+    },
+    {
+      id: 'm34-q8',
+      stem: 'Which procedure carries the highest relative risk of preterm birth among cervical excisions listed?',
+      options: ['LLETZ (RR 1.61)', 'Cold knife conization (RR 2.59)', 'Colposcopy only', 'Cryotherapy'],
+      answerIndex: 1,
+      explanation: 'Cold knife conization RR 2.59 versus LLETZ RR 1.61.',
+    },
+    {
+      id: 'm34-q9',
+      stem: 'Which social factor is associated with a 2.32-fold higher preterm birth risk?',
+      options: ['Intimate partner violence', 'Urban residence', 'Parity', 'Left-handedness'],
+      answerIndex: 0,
+      explanation: 'A systematic review of >70,000 women found IPV 2.32× more likely preterm birth.',
+    },
+    {
+      id: 'm34-q10',
+      stem: 'What is the pivotal rationale for FIGO\'s broader approach to preconception care?',
+      options: ['Most pregnancies are planned', 'Over 50% of pregnancies are unplanned', 'Preterm birth is rare', 'Prenatal care starts early enough'],
+      answerIndex: 1,
+      explanation: 'More than half of pregnancies are unplanned, so risk assessment and counselling must cover all women of reproductive age.',
+    },
+  ],
+};
