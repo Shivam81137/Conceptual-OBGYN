@@ -22,25 +22,18 @@ export const createApp = (): Application => {
   app.set('trust proxy', 1);
 
   /* --------------------------------------------------------------- security */
+  /* The API only ever returns JSON, so it can use the strictest policy:
+     nothing may load, nothing may frame it, no referrer leaks. */
   app.use(
     helmet({
-      contentSecurityPolicy: env.isProduction
-        ? {
-            useDefaults: true,
-            directives: {
-              'default-src': ["'self'"],
-              'script-src': ["'self'"],
-              'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-              'font-src': ["'self'", 'https://fonts.gstatic.com', 'data:'],
-              'img-src': ["'self'", 'data:', 'blob:'],
-              'connect-src': ["'self'", ...env.corsOrigins],
-              'object-src': ["'none'"],
-              'frame-ancestors': ["'none'"],
-            },
-          }
-        : false,
+      contentSecurityPolicy: {
+        useDefaults: false,
+        directives: { 'default-src': ["'none'"], 'frame-ancestors': ["'none'"], 'base-uri': ["'none'"], 'form-action': ["'none'"] },
+      },
       crossOriginEmbedderPolicy: false,
       crossOriginResourcePolicy: { policy: 'cross-origin' },
+      referrerPolicy: { policy: 'no-referrer' },
+      strictTransportSecurity: env.isProduction ? { maxAge: 63_072_000, includeSubDomains: true, preload: true } : false,
     }),
   );
 
@@ -60,15 +53,23 @@ export const createApp = (): Application => {
     maxAge: 86_400,
   };
 
+  /* Request id first, so even CORS and body-parser failures are logged and traceable. */
+  app.use(requestContext());
   app.use(cors(corsOptions));
   app.use(compression());
-  app.use(express.json({ limit: env.JSON_BODY_LIMIT }));
-  app.use(express.urlencoded({ extended: false, limit: env.JSON_BODY_LIMIT }));
-  app.use(requestContext());
+  /* Study-history sync carries the whole study state, so it alone gets a larger body. */
+  app.use(`${env.API_PREFIX}/history`, express.json({ limit: env.HISTORY_BODY_LIMIT, strict: true }));
+  app.use(express.json({ limit: env.JSON_BODY_LIMIT, strict: true }));
 
   /* ----------------------------------------------------------------- health */
   app.get('/health', (_req: Request, res: Response) => {
     const database = getDatabaseStatus();
+    res.setHeader('Cache-Control', 'no-store');
+    /* Production health stays minimal: no environment, uptime or database error text. */
+    if (env.isProduction) {
+      res.status(200).json({ success: true, service: 'conceptual-obgyn-api', database: { ready: database.ready } });
+      return;
+    }
     res.status(200).json({
       success: true,
       service: 'conceptual-obgyn-api',

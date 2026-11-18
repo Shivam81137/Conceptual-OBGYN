@@ -164,6 +164,7 @@ export function AuthDialog(): JSX.Element {
                     value={displayName}
                     onChange={(event) => setDisplayName(event.target.value)}
                     autoComplete="name"
+                    maxLength={80}
                     placeholder="Dr. Asha Rao"
                     aria-invalid={errors.displayName ? true : undefined}
                   />
@@ -182,6 +183,7 @@ export function AuthDialog(): JSX.Element {
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   autoComplete="email"
+                  maxLength={254}
                   placeholder="you@example.com"
                   aria-invalid={errors.email ? true : undefined}
                 />
@@ -199,6 +201,7 @@ export function AuthDialog(): JSX.Element {
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                   autoComplete={isSignup ? 'new-password' : 'current-password'}
+                  maxLength={128}
                   placeholder={isSignup ? 'At least 8 characters, with a number' : 'Your password'}
                   aria-invalid={errors.password ? true : undefined}
                 />

@@ -23,7 +23,9 @@ const envSchema = z.object({
     .default('http://localhost:5173,http://localhost:4173,https://*.vercel.app'),
   RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(60_000),
   RATE_LIMIT_MAX: z.coerce.number().int().positive().default(180),
-  JSON_BODY_LIMIT: z.string().default('256kb'),
+  JSON_BODY_LIMIT: z.string().default('100kb'),
+  /** Larger limit only for the study-history sync endpoint. */
+  HISTORY_BODY_LIMIT: z.string().default('1mb'),
 
   /* Auth — student accounts. The default secret is for local development only. */
   AUTH_JWT_SECRET: z.string().min(16).default('dev-only-secret-change-me-before-deploying'),
@@ -92,8 +94,8 @@ if (!parsed.success) {
 
 const raw = parsed.data;
 
-if (raw.NODE_ENV === 'production' && raw.AUTH_JWT_SECRET.startsWith('dev-only-secret')) {
-  throw new Error('AUTH_JWT_SECRET must be set to a strong random value in production.');
+if (raw.NODE_ENV === 'production' && (raw.AUTH_JWT_SECRET.startsWith('dev-only-secret') || raw.AUTH_JWT_SECRET.length < 32)) {
+  throw new Error('AUTH_JWT_SECRET must be a random value of at least 32 characters in production.');
 }
 
 export const env = {

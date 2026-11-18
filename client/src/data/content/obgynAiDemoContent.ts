@@ -71,33 +71,22 @@ export interface StarterPrompt {
   id: string;
   label: string;
   query: string;
+  /** Which composer mode the suggestion belongs to. */
+  mode: AiStudioMode;
   /** Starter prompts that carry a depth badge also switch the studio track. */
   track?: StudioTrack;
 }
 
+/** Suggestions shown under the composer, per mode. Labels are plain text (icons come from the UI). */
 export const STUDIO_STARTER_PROMPTS: readonly StarterPrompt[] = [
-  {
-    id: 'aph-table',
-    label: '🩸 Previa vs Abruptio',
-    query: 'Placenta previa vs abruptio placentae comparison',
-  },
-  {
-    id: 'menstrual-axis',
-    label: '📈 Menstrual Axis',
-    query: 'Explain the menstrual hormonal axis',
-    track: 'NEET_UG',
-  },
-  {
-    id: 'pph-protocol',
-    label: '🚨 PPH Protocol',
-    query: 'Postpartum haemorrhage stepwise management protocol',
-    track: 'NEET_PG',
-  },
-  {
-    id: 'figo-endometrial',
-    label: '🎗️ FIGO Staging',
-    query: 'FIGO endometrial cancer staging summary',
-  },
+  { id: 'aph-table', mode: 'ask', label: 'Previa vs abruptio', query: 'Placenta previa vs abruptio placentae comparison' },
+  { id: 'pph-protocol', mode: 'ask', label: 'PPH management', query: 'Postpartum haemorrhage stepwise management protocol', track: 'NEET_PG' },
+  { id: 'figo-endometrial', mode: 'ask', label: 'FIGO endometrial staging', query: 'FIGO endometrial cancer staging summary' },
+  { id: 'menstrual-axis', mode: 'ask', label: 'Menstrual hormonal axis', query: 'Explain the menstrual hormonal axis', track: 'NEET_UG' },
+  { id: 'fc-pph', mode: 'flashcards', label: 'Postpartum haemorrhage', query: 'Postpartum haemorrhage' },
+  { id: 'fc-figo', mode: 'flashcards', label: 'FIGO staging', query: 'FIGO endometrial cancer staging' },
+  { id: 'fc-axis', mode: 'flashcards', label: 'Menstrual cycle', query: 'Menstrual hormonal axis', track: 'NEET_UG' },
+  { id: 'fc-aph', mode: 'flashcards', label: 'Antepartum haemorrhage', query: 'Placenta previa vs abruptio placentae' },
 ];
 
 /* --------------------------------------------------------------- topic kits */

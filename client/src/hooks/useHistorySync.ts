@@ -22,8 +22,8 @@ const snapshot = (): StudyStatePayload => {
     lastModuleByTrack: studio.lastModuleByTrack,
     savedPearls: recall.pearls.map((pearl) => ({
       ...pearl,
-      text: pearl.text.slice(0, 2000),
-      query: pearl.query.slice(0, 600),
+      text: pearl.text.slice(0, 8000),
+      query: pearl.query.slice(0, 1000),
     })),
   };
 };

@@ -17,17 +17,26 @@ export const cardRatingSchema = z.object({
 
 export const savedPearlSchema = z.object({
   id: z.string().min(1).max(80),
-  text: z.string().min(1).max(2000),
-  query: z.string().max(600),
+  text: z.string().min(1).max(8000),
+  query: z.string().max(1000),
   track: z.enum(TRACK_IDS),
-  sourceTag: z.string().max(200).nullable(),
+  sourceTag: z.string().max(600).nullable(),
   savedAtISO: isoString,
   kind: z.enum(['pearl', 'trap', 'summary', 'ai']).optional(),
   moduleId: z.string().max(120).nullable().optional(),
 });
 
+/** Keys become object/Mongo field names: allow only plain ids and block prototype keys. */
+const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+const safeKey = z
+  .string()
+  .min(1)
+  .max(160)
+  .regex(/^[A-Za-z0-9:_-]+$/, 'Invalid key.')
+  .refine((key) => !FORBIDDEN_KEYS.has(key), 'Invalid key.');
+
 const record = <T extends z.ZodTypeAny>(value: T) =>
-  z.record(z.string().min(1).max(160), value).refine((obj) => Object.keys(obj).length <= MAX_KEYS, 'Too many entries.');
+  z.record(safeKey, value).refine((obj) => Object.keys(obj).length <= MAX_KEYS, 'Too many entries.');
 
 export const studyStateSchema = z.object({
   cardRatings: record(cardRatingSchema),

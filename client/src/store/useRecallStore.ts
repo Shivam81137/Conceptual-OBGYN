@@ -45,7 +45,7 @@ interface RecallState {
   setRevealPearl: (pearl: SavedPearl | null) => void;
 }
 
-const MAX_SAVED_PEARLS = 40;
+const MAX_SAVED_PEARLS = 200;
 const STORAGE_KEY = 'conceptual-obgyn:recall-v1';
 
 export const useRecallStore = create<RecallState>()(

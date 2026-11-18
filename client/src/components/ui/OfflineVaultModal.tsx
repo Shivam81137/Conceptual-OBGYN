@@ -13,6 +13,7 @@ import {
   X,
 } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
+import { useAuthStore } from '@/store/useAuthStore';
 import { useRecallStore, type SavedPearl, type SavedPearlKind } from '@/store/useRecallStore';
 import { navigate } from '@/lib/router';
 import { withFilterTween } from '@/lib/motion';
@@ -77,6 +78,7 @@ const formatSavedAt = (iso: string): string => {
 export function OfflineVaultModal(): JSX.Element {
   const open = useAppStore((state) => state.vaultOpen);
   const setOpen = useAppStore((state) => state.setVaultOpen);
+  const signedIn = useAuthStore((state) => state.user !== null);
   const pearls = useRecallStore((state) => state.pearls);
   const removePearl = useRecallStore((state) => state.removePearl);
   const setRevealPearl = useRecallStore((state) => state.setRevealPearl);
@@ -171,7 +173,7 @@ export function OfflineVaultModal(): JSX.Element {
                     Offline Vault
                   </p>
                   <p className="truncate text-[10.5px] text-slate-500 dark:text-slate-400">
-                    Revision Engine · saved on this device
+                    Revision Engine · {signedIn ? 'synced to your account' : 'saved on this device'}
                   </p>
                 </div>
               </div>

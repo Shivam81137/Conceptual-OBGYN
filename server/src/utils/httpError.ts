@@ -63,6 +63,19 @@ export const toHttpError = (error: unknown): HttpError => {
   if (error instanceof HttpError) return error;
   if (error instanceof z.ZodError) return HttpError.fromZod(error);
 
+  /* body-parser errors carry a 4xx status and a `type`; map them to clean,
+     non-leaky client errors instead of a 500 that echoes parser internals. */
+  const parserError = error as { status?: number; type?: string };
+  if (parserError.type === 'entity.too.large') {
+    return new HttpError('VALIDATION_ERROR', 'The request body is too large.', { status: 413 });
+  }
+  if (parserError.type === 'entity.parse.failed') {
+    return new HttpError('VALIDATION_ERROR', 'The request body is not valid JSON.', { status: 400 });
+  }
+  if (typeof parserError.status === 'number' && parserError.status >= 400 && parserError.status < 500) {
+    return new HttpError('VALIDATION_ERROR', 'The request could not be processed.', { status: parserError.status });
+  }
+
   const message = error instanceof Error ? error.message : 'Unexpected server error.';
   return new HttpError('INTERNAL_ERROR', message, { status: 500 });
 };

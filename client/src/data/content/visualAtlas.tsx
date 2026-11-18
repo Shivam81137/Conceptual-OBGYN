@@ -23,15 +23,15 @@ export interface AtlasDiagram {
 }
 
 /* Palette — vivid enough on both the white glass and dark slate surfaces. */
-const INK = 'currentColor';
-const MUTED = '#94a3b8';
-const TEAL = '#0d9488';
-const SKY = '#0284c7';
-const ROSE = '#e11d48';
-const VIOLET = '#7c3aed';
-const AMBER = '#d97706';
-const EMERALD = '#059669';
-const INDIGO = '#4f46e5';
+export const INK = 'currentColor';
+export const MUTED = '#94a3b8';
+export const TEAL = '#0d9488';
+export const SKY = '#0284c7';
+export const ROSE = '#e11d48';
+export const VIOLET = '#7c3aed';
+export const AMBER = '#d97706';
+export const EMERALD = '#059669';
+export const INDIGO = '#4f46e5';
 
 type Pt = readonly [number, number];
 

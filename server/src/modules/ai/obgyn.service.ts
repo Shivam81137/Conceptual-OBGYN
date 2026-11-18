@@ -179,6 +179,7 @@ export interface ObgynAssistCapabilities {
 
 /* ------------------------------------------------------------------ limits - */
 
+const PDF_PARSE_TIMEOUT_MS = 15_000;
 const DOCUMENT_CHAR_LIMIT = 150_000;
 const GEMINI_DOCUMENT_CHAR_LIMIT = 60_000;
 const MIN_USABLE_DOCUMENT_CHARS = 80;
@@ -666,6 +667,9 @@ export class ObgynAiService {
 
     if (kind === 'text') {
       raw = upload.buffer.toString('utf8');
+    } else if (upload.buffer.subarray(0, 5).toString('latin1') !== '%PDF-') {
+      /* Extension says PDF but the bytes do not — never hand it to the parser. */
+      logger.warn('upload rejected: not a real PDF', { requestId });
     } else {
       try {
         /* Loaded on demand: pdfjs (+ its native canvas dependency) stays cold
@@ -673,7 +677,14 @@ export class ObgynAiService {
         const { PDFParse } = await import('pdf-parse');
         const parser = new PDFParse({ data: upload.buffer });
         try {
-          const result = await parser.getText({ cellSeparator: ' ' });
+          /* A hostile or huge PDF must not tie up the server: cap parse time. */
+          let timer: NodeJS.Timeout | undefined;
+          const result = await Promise.race([
+            parser.getText({ cellSeparator: ' ' }),
+            new Promise<never>((_, reject) => {
+              timer = setTimeout(() => reject(new Error('PDF parsing timed out')), PDF_PARSE_TIMEOUT_MS);
+            }),
+          ]).finally(() => clearTimeout(timer));
           raw = result.text ?? '';
           pages = result.total ?? null;
         } finally {
@@ -682,7 +693,7 @@ export class ObgynAiService {
       } catch (error) {
         logger.warn('pdf text extraction failed', {
           requestId,
-          file: upload.name,
+          file: upload.name.slice(0, 80),
           error: error instanceof Error ? error.message : String(error),
         });
       }

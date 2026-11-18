@@ -84,7 +84,7 @@ const seed = async (): Promise<void> => {
     FlashcardModel.bulkWrite(flashcardOps),
   ]);
 
-  const digest = hashPassword('revision-demo-2026');
+  const digest = await hashPassword('revision-demo-2026');
   await UserModel.updateOne(
     { email: 'demo@conceptualobgyn.app' },
     {

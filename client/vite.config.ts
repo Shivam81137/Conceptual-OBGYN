@@ -126,7 +126,9 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 5173,
       strictPort: false,
-      host: true,
+      /* Loopback only: the dev server must never be reachable from the LAN.
+         Set VITE_DEV_HOST=0.0.0.0 to test on a phone on a trusted network. */
+      host: process.env.VITE_DEV_HOST ?? 'localhost',
       proxy: {
         '/api': {
           target: API_PROXY_TARGET,

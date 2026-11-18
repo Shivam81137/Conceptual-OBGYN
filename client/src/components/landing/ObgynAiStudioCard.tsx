@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
   ArrowUp,
   ArrowUpRight,
+  CornerDownLeft,
   Bookmark,
   BookmarkCheck,
   BookOpen,
@@ -18,7 +19,9 @@ import {
   Paperclip,
   RotateCcw,
   ShieldCheck,
+  Sparkles,
   Stethoscope,
+  WifiOff,
   X,
   Zap,
   type LucideIcon,
@@ -58,31 +61,52 @@ interface ModeConfig {
 const STUDIO_MODES: readonly ModeConfig[] = [
   {
     id: 'ask',
-    label: 'Ask Clinical Doubt',
+    label: 'Ask a doubt',
     mobileLabel: 'Ask',
     icon: MessageCircle,
-    placeholder: 'Ask anything about Partograph, FIGO staging, MgSO4 regimen, or drop a lecture PDF...',
-    submitLabel: 'Ask AI',
+    placeholder: 'Ask a clinical question — e.g. “MgSO4 regimen in eclampsia”',
+    submitLabel: 'Ask',
   },
   {
     id: 'summarize',
-    label: 'Summarize PDF / Notes',
-    mobileLabel: 'Summarize',
+    label: 'Summarise PDF / notes',
+    mobileLabel: 'Summarise',
     icon: FileText,
-    placeholder: 'Drop a lecture PDF or paste your notes — the studio distils the high-yield lines...',
-    submitLabel: 'Summarize',
+    placeholder: 'Attach a lecture PDF or paste your notes to get the high-yield summary',
+    submitLabel: 'Summarise',
   },
   {
     id: 'flashcards',
-    label: 'Generate Rapid Flashcards',
+    label: 'Flashcards',
     mobileLabel: 'Flashcards',
     icon: Zap,
-    placeholder: 'Name a topic — PPH, PCOD, FIGO staging — and get 5 exam-ready Q&A pearls...',
+    placeholder: 'Enter a topic — e.g. “Postpartum haemorrhage” — to get exam-ready flashcards',
     submitLabel: 'Generate',
   },
 ];
 
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+const MAX_QUERY_CHARS = 2000;
+
+const TRACK_OPTIONS: readonly { id: StudioTrack; label: string; hint: string }[] = [
+  { id: 'NEET_UG', label: 'UG', hint: 'MBBS depth' },
+  { id: 'NEET_PG', label: 'PG', hint: 'NEET-PG depth' },
+];
+
+/** Browser connectivity — drives the "Offline · curated vault" status. */
+function useOnline(): boolean {
+  const [online, setOnline] = useState(() => (typeof navigator === 'undefined' ? true : navigator.onLine));
+  useEffect(() => {
+    const update = (): void => setOnline(navigator.onLine);
+    window.addEventListener('online', update);
+    window.addEventListener('offline', update);
+    return () => {
+      window.removeEventListener('online', update);
+      window.removeEventListener('offline', update);
+    };
+  }, []);
+  return online;
+}
 
 const ATTACHMENT_BADGES: Record<AttachmentKind, { label: string; className: string }> = {
   pdf: { label: 'PDF', className: 'bg-gradient-to-br from-rose-500 to-red-600' },
@@ -128,7 +152,7 @@ const ENGINE_BADGES: Record<ObgynAssistEngine, { label: string; className: strin
 /** What the drawer is currently showing. */
 type StudioResult =
   | { source: 'api'; payload: ObgynAssistPayload }
-  | { source: 'local'; answer: StudioAnswer }
+  | { source: 'local'; answer: StudioAnswer; /** Why the live engine was not used (shown to the student). */ fallbackReason?: string }
   | { source: 'recall'; pearl: SavedPearl };
 
 /* ---------------------------------------------------------------- helpers */
@@ -425,6 +449,19 @@ function ThinkingPanel(): JSX.Element {
 /* ----------------------------------------------------------- answer panel */
 
 /** The signature emerald/indigo glass banner wrapping the 🎯 pearl. */
+/** Renders `**bold**` spans from model output without pulling in a markdown parser. */
+function renderInlineBold(text: string): ReactNode[] {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((part, index) =>
+    part.startsWith('**') && part.endsWith('**') && part.length > 4 ? (
+      <strong key={index} className="font-semibold text-slate-900 dark:text-white">
+        {part.slice(2, -2)}
+      </strong>
+    ) : (
+      part
+    ),
+  );
+}
+
 function PearlBanner({ text, label = 'High-Yield Exam Pearl' }: { text: string; label?: string }): JSX.Element {
   return (
     <div
@@ -443,7 +480,9 @@ function PearlBanner({ text, label = 'High-Yield Exam Pearl' }: { text: string; 
           <p className="font-mono text-[9.5px] font-semibold uppercase tracking-[0.16em] text-emerald-700 dark:text-emerald-300">
             {label}
           </p>
-          <p className="mt-1 text-[13.5px] font-medium leading-relaxed text-slate-800 sm:text-[13px] dark:text-slate-100">{text}</p>
+          <p className="mt-1 text-[13.5px] font-medium leading-relaxed text-slate-800 sm:text-[13px] dark:text-slate-100">
+            {renderInlineBold(text)}
+          </p>
         </div>
       </div>
     </div>
@@ -769,6 +808,7 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
   const aiPrefill = useAppStore((state) => state.aiPrefill);
   const consumeAiPrefill = useAppStore((state) => state.consumeAiPrefill);
   const reduceMotion = usePrefersReducedMotion();
+  const online = useOnline();
 
   const [mode, setMode] = useState<AiStudioMode>('ask');
   const [track, setTrack] = useState<StudioTrack>(spotlightTrack ?? 'NEET_UG');
@@ -796,6 +836,7 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
   const isThinking = phase === 'thinking';
   const canSubmit = (query.trim().length >= 3 || attachment !== null) && !isThinking;
   const activeMode = STUDIO_MODES.find((entry) => entry.id === mode) ?? STUDIO_MODES[0];
+  const starterPrompts = STUDIO_STARTER_PROMPTS.filter((prompt) => prompt.mode === (mode === 'summarize' ? 'ask' : mode));
   const auraActive = composerFocused || isDragging || isThinking;
 
   /* The portal spotlight steers the studio's clinical depth (portal → AI only);
@@ -877,10 +918,20 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
           signal,
         });
         outcome = { source: 'api', payload };
-      } catch {
+      } catch (error) {
         if (runId !== runIdRef.current) return;
-        /* Quiet degradation: the on-device vault answers instead. */
-        outcome = { source: 'local', answer: resolveStudioAnswer(request) };
+        /* Degrade to the on-device vault, but tell the student it is not a live answer. */
+        const offline = typeof navigator !== 'undefined' && !navigator.onLine;
+        const status = (error as { status?: number }).status;
+        outcome = {
+          source: 'local',
+          answer: resolveStudioAnswer(request),
+          fallbackReason: offline
+            ? 'You are offline — showing a curated answer from the on-device vault.'
+            : status === 429
+              ? 'The live AI is busy (rate limit) — showing a curated answer. Try again in a minute.'
+              : 'The live AI is unavailable right now — showing a curated answer from the on-device vault.',
+        };
       }
     } else {
       outcome = { source: 'local', answer: resolveStudioAnswer(request) };
@@ -1077,19 +1128,60 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
       {/* ─── Animated gradient hairline that wraps the glass card ─────────────── */}
       <div className="relative rounded-[26px] bg-gradient-to-r from-blue-500/20 via-teal-400/20 to-indigo-500/20 p-[1.5px] sm:rounded-[34px]">
         <div className="relative rounded-[24px] border border-white/80 bg-white/65 p-4 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.07),inset_0_1px_1px_rgba(255,255,255,0.95)] backdrop-blur-2xl backdrop-saturate-[190%] transition-all duration-500 sm:rounded-[32px] sm:p-5 md:p-6 dark:border-white/10 dark:bg-[#0F1423]/70 dark:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.45),inset_0_1px_1px_rgba(255,255,255,0.06)]">
-          {/* ─── Header row ─────────────────────────────────────────────────────── */}
-          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex min-w-0 items-center gap-2">
-              <h2 className="truncate text-base font-semibold tracking-tight text-slate-900 sm:text-lg dark:text-white">
-                Clinical AI &amp; PDF Recall
-              </h2>
-              <span className="shrink-0 rounded-full bg-teal-500/10 px-2 py-0.5 text-[10px] font-medium text-teal-700 sm:px-2.5 sm:text-[11px] dark:bg-teal-500/20 dark:text-teal-300">
-                AI Studio
+          {/* ─── Header ─────────────────────────────────────────────────────────── */}
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex min-w-0 items-start gap-3">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-teal-500 to-blue-600 text-white shadow-sm" aria-hidden="true">
+                <Sparkles className="h-5 w-5" strokeWidth={1.8} />
               </span>
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-base font-semibold tracking-tight text-slate-900 sm:text-lg dark:text-white">Clinical AI Studio</h2>
+                  <span
+                    className={cn(
+                      'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold',
+                      online
+                        ? 'bg-emerald-500/10 text-emerald-700 dark:bg-emerald-400/15 dark:text-emerald-300'
+                        : 'bg-amber-500/10 text-amber-700 dark:bg-amber-400/15 dark:text-amber-300',
+                    )}
+                  >
+                    {online ? (
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                    ) : (
+                      <WifiOff className="h-3 w-3" aria-hidden="true" />
+                    )}
+                    {online ? 'Online' : 'Offline · curated vault'}
+                  </span>
+                </div>
+                <p className="mt-0.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+                  Ask clinical questions, summarise lecture PDFs or generate flashcards — answers include an exam pearl and references.
+                </p>
+              </div>
+            </div>
+
+            <div role="radiogroup" aria-label="Answer depth" className="flex shrink-0 items-center gap-1 self-start rounded-full border border-slate-200/80 bg-white/70 p-1 dark:border-white/10 dark:bg-white/[0.06]">
+              {TRACK_OPTIONS.map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={track === option.id}
+                  title={option.hint}
+                  onClick={() => setTrack(option.id)}
+                  className={cn(
+                    'h-7 rounded-full px-3 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/40',
+                    track === option.id
+                      ? 'bg-slate-900 text-white shadow-sm dark:bg-white dark:text-slate-900'
+                      : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white',
+                  )}
+                >
+                  {option.label}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* ─── Omnibox composer ───────────────────────────────────────────────── */}
+          {/* ─── Composer ───────────────────────────────────────────────────────── */}
           <form
             noValidate
             onSubmit={(event) => {
@@ -1099,13 +1191,39 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
             onFocus={() => setComposerFocused(true)}
             onBlur={handleComposerBlur}
             className={cn(
-              'relative rounded-2xl bg-white/90 backdrop-blur-xl border border-slate-200/80 shadow-[0_4px_24px_-4px_rgba(15,23,42,0.05),inset_0_1px_0_rgba(255,255,255,1)] focus-within:border-teal-500/50 focus-within:shadow-[0_8px_30px_-4px_rgba(13,148,136,0.12)] transition-all duration-300 px-3.5 py-3 sm:px-4',
+              'relative rounded-2xl border border-slate-200/80 bg-white/90 px-3.5 pb-3 pt-2.5 shadow-[0_4px_24px_-4px_rgba(15,23,42,0.05),inset_0_1px_0_rgba(255,255,255,1)] backdrop-blur-xl transition-all duration-300 focus-within:border-teal-500/50 focus-within:shadow-[0_8px_30px_-4px_rgba(13,148,136,0.12)] sm:px-4',
               'dark:border-white/10 dark:bg-[#0F1423]/90',
               summarizeHint && !attachment && 'border-teal-500 shadow-[0_8px_30px_-4px_rgba(13,148,136,0.12)]',
             )}
           >
+            {/* Mode switch — what the studio should do with the input */}
+            <div role="tablist" aria-label="Assistant mode" className="flex w-full gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {STUDIO_MODES.map((entry) => {
+                const isActive = mode === entry.id;
+                const Icon = entry.icon;
+                return (
+                  <button
+                    key={entry.id}
+                    role="tab"
+                    type="button"
+                    aria-selected={isActive}
+                    onClick={() => selectMode(entry.id)}
+                    className={cn(
+                      'inline-flex h-8 shrink-0 touch-manipulation items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/40',
+                      isActive
+                        ? 'bg-teal-500/10 text-teal-800 dark:bg-teal-400/15 dark:text-teal-200'
+                        : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white',
+                    )}
+                  >
+                    <Icon className="h-3.5 w-3.5" strokeWidth={1.9} aria-hidden="true" />
+                    <span className="sm:hidden">{entry.mobileLabel}</span>
+                    <span className="hidden sm:inline">{entry.label}</span>
+                  </button>
+                );
+              })}
+            </div>
 
-            {/* Attachment preview chip · Google Drive-style frosted pill */}
+            {/* Attachment preview chip */}
             <AnimatePresence initial={false}>
               {attachment && attachmentBadge ? (
                 <motion.div
@@ -1116,20 +1234,11 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
                   transition={{ duration: 0.18, ease: 'easeOut' }}
                   className="mt-2.5 flex w-fit max-w-full items-center gap-2.5 rounded-xl border border-slate-200/80 bg-white/75 px-2.5 py-1.5 shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-white/[0.06]"
                 >
-                  <span
-                    className={cn(
-                      'grid h-6 w-7 shrink-0 place-items-center rounded-md font-mono text-[8px] font-bold tracking-wide text-white',
-                      attachmentBadge.className,
-                    )}
-                  >
+                  <span className={cn('grid h-6 w-7 shrink-0 place-items-center rounded-md font-mono text-[8px] font-bold tracking-wide text-white', attachmentBadge.className)}>
                     {attachmentBadge.label}
                   </span>
-                  <span className="min-w-0 flex-1 truncate text-xs font-medium text-slate-700 dark:text-slate-200">
-                    {attachment.name}
-                  </span>
-                  <span className="shrink-0 font-mono text-[10px] tabular-nums text-slate-400 dark:text-slate-500">
-                    {formatBytes(attachment.sizeBytes)}
-                  </span>
+                  <span className="min-w-0 flex-1 truncate text-xs font-medium text-slate-700 dark:text-slate-200">{attachment.name}</span>
+                  <span className="shrink-0 font-mono text-[10px] tabular-nums text-slate-400 dark:text-slate-500">{formatBytes(attachment.sizeBytes)}</span>
                   <button
                     type="button"
                     aria-label={`Remove ${attachment.name}`}
@@ -1146,82 +1255,49 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
               ) : null}
             </AnimatePresence>
 
-            {/* Auto-expanding question input */}
+            {/* Auto-expanding input */}
             <textarea
               ref={textareaRef}
               value={query}
-              rows={1}
+              rows={2}
+              maxLength={MAX_QUERY_CHARS}
               onChange={(event) => setQuery(event.target.value)}
               onKeyDown={handleComposerKeyDown}
               placeholder={activeMode.placeholder}
               aria-label={activeMode.label}
-              className="mt-2.5 max-h-[152px] w-full resize-none bg-transparent px-1 text-base leading-relaxed text-slate-800 outline-none placeholder:text-slate-400 sm:text-sm dark:text-slate-100 dark:placeholder:text-slate-500"
+              className="mt-2 max-h-[152px] min-h-[52px] w-full resize-none bg-transparent px-1 text-base leading-relaxed text-slate-800 outline-none placeholder:text-slate-400 sm:text-sm dark:text-slate-100 dark:placeholder:text-slate-500"
             />
 
-            {/* Action rail · mobile: [Attach][Submit] over a full-width mode switch */}
-            <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3 dark:border-white/5 sm:flex-nowrap sm:justify-between">
+            {/* Action rail */}
+            <div className="mt-2 flex items-center gap-2 border-t border-slate-100 pt-2.5 dark:border-white/5">
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="order-1 inline-flex h-10 shrink-0 touch-manipulation items-center justify-center gap-1.5 rounded-full bg-slate-100/80 px-3 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-200/70 hover:text-slate-900 sm:h-9 dark:bg-white/10 dark:text-slate-300 dark:hover:bg-white/15 dark:hover:text-white"
+                title="Attach a PDF or .txt (max 10 MB)"
+                className="inline-flex h-9 shrink-0 touch-manipulation items-center justify-center gap-1.5 rounded-full px-3 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/40 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
               >
                 <Paperclip className="h-4 w-4 sm:h-3.5 sm:w-3.5" strokeWidth={1.8} aria-hidden="true" />
                 <span>Attach</span>
               </button>
 
-              <div className="order-3 w-full sm:order-2 sm:flex sm:w-auto sm:items-center sm:gap-1.5">
-                <div className="hidden h-4 w-px bg-slate-200 sm:block dark:bg-white/10" aria-hidden="true" />
-
-                <div
-                  role="tablist"
-                  aria-label="Assistant mode"
-                  className="grid grid-cols-3 gap-1 rounded-xl bg-slate-100/80 p-1 sm:flex sm:items-center sm:gap-1 sm:rounded-none sm:bg-transparent sm:p-0 dark:bg-white/[0.07] sm:dark:bg-transparent"
-                >
-                  {STUDIO_MODES.map((entry) => {
-                    const isActive = mode === entry.id;
-                    return (
-                      <button
-                        key={entry.id}
-                        role="tab"
-                        type="button"
-                        aria-selected={isActive}
-                        onClick={() => selectMode(entry.id)}
-                        className={cn(
-                          'flex h-9 touch-manipulation items-center justify-center rounded-lg px-2 text-[11.5px] font-medium transition-all duration-150 sm:h-auto sm:rounded-full sm:px-3 sm:py-1 sm:text-xs',
-                          isActive
-                            ? 'bg-slate-900 text-white shadow-sm dark:bg-white dark:text-slate-900'
-                            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white',
-                        )}
-                      >
-                        <span className="truncate whitespace-nowrap">
-                          {entry.id === 'ask' ? (
-                            'Ask'
-                          ) : entry.id === 'summarize' ? (
-                            <>
-                              <span className="sm:hidden">Summarize</span>
-                              <span className="hidden sm:inline">Summarize PDF</span>
-                            </>
-                          ) : (
-                            'Flashcards'
-                          )}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+              <span className="ml-auto hidden items-center gap-1 text-[10.5px] text-slate-400 md:inline-flex dark:text-slate-500">
+                <CornerDownLeft className="h-3 w-3" aria-hidden="true" /> Enter to send · Shift + Enter for a new line
+              </span>
+              {query.length > MAX_QUERY_CHARS * 0.8 ? (
+                <span className="font-mono text-[10px] tabular-nums text-slate-400">{query.length}/{MAX_QUERY_CHARS}</span>
+              ) : null}
 
               <button
                 type="submit"
                 disabled={!canSubmit}
-                className="order-2 ml-auto inline-flex h-10 flex-1 touch-manipulation items-center justify-center gap-1.5 rounded-full bg-slate-900 px-4 text-xs font-medium text-white shadow-sm transition-all duration-200 hover:bg-teal-600 disabled:cursor-not-allowed disabled:opacity-40 sm:order-3 sm:ml-0 sm:h-9 sm:flex-none dark:bg-white dark:text-slate-900 dark:hover:bg-teal-500 dark:hover:text-white"
+                className="ml-auto inline-flex h-9 shrink-0 touch-manipulation items-center justify-center gap-1.5 rounded-full bg-slate-900 px-4 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-teal-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/50 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none md:ml-2 dark:bg-white dark:text-slate-900 dark:hover:bg-teal-500 dark:hover:text-white dark:disabled:bg-white/15 dark:disabled:text-slate-500"
               >
                 {isThinking ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" strokeWidth={2} aria-hidden="true" />
                 ) : (
                   <ArrowUp className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
                 )}
-                <span>{activeMode.submitLabel}</span>
+                <span>{isThinking ? 'Working…' : activeMode.submitLabel}</span>
               </button>
             </div>
 
@@ -1240,20 +1316,37 @@ export function ObgynAiStudioCard({ className }: { className?: string }): JSX.El
             onChange={handleFileInput}
           />
 
-          {/* ─── Single-row minimalist suggestion chips · swipeable rail ──────────── */}
-          <div className="-mx-1 mt-3 flex snap-x snap-mandatory items-center gap-2 overflow-x-auto px-1 pb-1 no-scrollbar">
-            {STUDIO_STARTER_PROMPTS.map((prompt) => (
-              <button
-                key={prompt.id}
-                type="button"
-                onClick={() => runStudio(prompt.query, { track: prompt.track, useAttachment: false })}
-                className="inline-flex h-9 shrink-0 touch-manipulation snap-start items-center gap-1.5 whitespace-nowrap rounded-full border border-slate-200/70 bg-white/50 px-3 text-[11.5px] font-medium text-slate-500 transition-all hover:bg-white/90 hover:text-slate-900 sm:text-xs dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
-              >
-                <span>{prompt.label}</span>
-                <ArrowUpRight className="h-3 w-3 opacity-60" strokeWidth={2} aria-hidden="true" />
-              </button>
-            ))}
-          </div>
+          {/* ─── Suggestions (per mode) ─────────────────────────────────────────── */}
+          {mode === 'summarize' && !attachment ? (
+            <p className="mt-3 flex items-center gap-1.5 text-[11.5px] text-slate-500 dark:text-slate-400">
+              <FileUp className="h-3.5 w-3.5 text-teal-600 dark:text-teal-300" aria-hidden="true" />
+              Drag a PDF or .txt anywhere onto this card, or use Attach (max 10 MB).
+            </p>
+          ) : (
+            <div className="-mx-1 mt-3 flex snap-x items-center gap-2 overflow-x-auto px-1 pb-1 no-scrollbar">
+              <span className="shrink-0 text-[11px] font-medium text-slate-400 dark:text-slate-500">Try</span>
+              {starterPrompts.map((prompt) => (
+                <button
+                  key={prompt.id}
+                  type="button"
+                  onClick={() => runStudio(prompt.query, { track: prompt.track, useAttachment: false, mode: prompt.mode })}
+                  className="inline-flex h-8 shrink-0 touch-manipulation snap-start items-center gap-1.5 whitespace-nowrap rounded-full border border-slate-200/70 bg-white/60 px-3 text-[11.5px] font-medium text-slate-600 transition-all hover:border-teal-500/30 hover:bg-white hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/40 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
+                >
+                  {mode === 'flashcards' ? (
+                    <Zap className="h-3 w-3 text-amber-500" strokeWidth={2} aria-hidden="true" />
+                  ) : (
+                    <Stethoscope className="h-3 w-3 text-teal-600 dark:text-teal-300" strokeWidth={2} aria-hidden="true" />
+                  )}
+                  <span>{prompt.label}</span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          <p className="mt-2 flex items-center gap-1.5 text-[10.5px] text-slate-400 dark:text-slate-500">
+            <ShieldCheck className="h-3 w-3" aria-hidden="true" />
+            For exam revision. AI can make mistakes — verify against current guidelines before clinical use.
+          </p>
 
           {/* ─── Expandable glass response drawer ──────────────────────────────── */}
           <AnimatePresence initial={false}>

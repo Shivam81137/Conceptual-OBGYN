@@ -1,9 +1,13 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { GlassCard } from '@/components/ui/GlassCard';
-import { VisualAtlasDialog } from '@/components/landing/VisualAtlasDialog';
-import { ATLAS_DIAGRAMS } from '@/data/content/visualAtlas';
+import { ATLAS_PLATE_COUNT, plateOfTheDay } from '@/data/content/atlasMeta';
 import { cn } from '@/lib/utils';
+
+/** The heavy SVG plates load only when the atlas is first opened. */
+const VisualAtlasDialog = lazy(() =>
+  import('@/components/landing/VisualAtlasDialog').then((module) => ({ default: module.VisualAtlasDialog })),
+);
 
 interface AtlasThumb {
   label: string;
@@ -62,15 +66,22 @@ const THUMBS: readonly AtlasThumb[] = [
  */
 export function VisualAtlasCard({ className }: { className?: string }): JSX.Element {
   const [open, setOpen] = useState(false);
+  const [everOpened, setEverOpened] = useState(false);
+  const today = plateOfTheDay();
+
+  const openAtlas = (): void => {
+    setEverOpened(true);
+    setOpen(true);
+  };
 
   return (
     <>
       <GlassCard className={cn('flex h-40 flex-col', className)}>
         <button
           type="button"
-          onClick={() => setOpen(true)}
+          onClick={openAtlas}
           aria-haspopup="dialog"
-          aria-label={`Open the visual atlas — ${ATLAS_DIAGRAMS.length} high-yield OBGYN schematics`}
+          aria-label={`Open the visual atlas — ${ATLAS_PLATE_COUNT} high-yield OBGYN schematics`}
           className="flex h-full w-full flex-col rounded-3xl p-5 text-left transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#00897B]/50"
         >
           <div className="flex items-center justify-between gap-2">
@@ -79,7 +90,7 @@ export function VisualAtlasCard({ className }: { className?: string }): JSX.Elem
               VISUAL ATLAS
             </span>
             <span className="inline-flex shrink-0 items-center rounded-full border border-[#00897B]/20 bg-[#00897B]/10 px-2 py-0.5 font-mono text-[9px] tracking-[0.12em] text-[#00796B] dark:border-[#80CBC4]/20 dark:text-[#80CBC4]">
-              {ATLAS_DIAGRAMS.length} Schematics
+              {ATLAS_PLATE_COUNT} Schematics
             </span>
           </div>
 
@@ -100,8 +111,9 @@ export function VisualAtlasCard({ className }: { className?: string }): JSX.Elem
           </div>
 
           <div className="flex items-center justify-between gap-2">
-            <span className="truncate text-xs font-medium text-slate-500 dark:text-slate-400">
-              High-Yield Medical Schematics
+            <span className="min-w-0 truncate text-xs font-medium text-slate-500 dark:text-slate-400">
+              <span className="font-mono text-[9px] tracking-[0.12em] text-[#00796B] dark:text-[#80CBC4]">TODAY</span>{' '}
+              {today.title}
             </span>
             <span className="inline-flex shrink-0 items-center gap-0.5 text-[10px] font-semibold text-[#00796B] dark:text-[#80CBC4]">
               Open
@@ -111,7 +123,11 @@ export function VisualAtlasCard({ className }: { className?: string }): JSX.Elem
         </button>
       </GlassCard>
 
-      <VisualAtlasDialog open={open} onClose={() => setOpen(false)} />
+      {everOpened ? (
+        <Suspense fallback={null}>
+          <VisualAtlasDialog open={open} onClose={() => setOpen(false)} focusPlateId={today.id} />
+        </Suspense>
+      ) : null}
     </>
   );
 }

@@ -13,6 +13,9 @@ type ObgynAiTargets = ValidationTargets & { body: typeof obgynAssistRequestSchem
 const envelope = <TData>(requestId: string, data: TData): SuccessEnvelope<TData> => ({ success: true, requestId, data });
 
 const ACCEPTED_UPLOAD_RE = /\.(pdf|txt)$/i;
+
+/** Filenames are user input: strip control/markup characters and cap the length before echoing. */
+const safeName = (name: string): string => name.replace(/[^\w .()-]/g, '_').slice(0, 80);
 const MEGABYTE = 1024 * 1024;
 
 /**
@@ -27,7 +30,7 @@ const upload = multer({
       callback(null, true);
       return;
     }
-    callback(new HttpError('VALIDATION_ERROR', `Unsupported file "${file.originalname}" — upload a .pdf or .txt file.`, { status: 415 }));
+    callback(new HttpError('VALIDATION_ERROR', `Unsupported file "${safeName(file.originalname)}" — upload a .pdf or .txt file.`, { status: 415 }));
   },
 });
 

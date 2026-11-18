@@ -48,7 +48,7 @@ const MARKDOWN_COMPONENTS: Components = {
     <a
       href={href}
       target="_blank"
-      rel="noreferrer"
+      rel="noopener noreferrer nofollow"
       className="text-[#1A73E8] underline-offset-2 hover:underline dark:text-[#8AB4F8]"
     >
       {children}

@@ -1,6 +1,7 @@
 import { ArrowRight, ArrowUpRight, Bookmark } from 'lucide-react';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { useAppStore } from '@/store/useAppStore';
+import { useAuthStore } from '@/store/useAuthStore';
 import { useRecallStore, type SavedPearlKind } from '@/store/useRecallStore';
 import { cn } from '@/lib/utils';
 
@@ -22,6 +23,7 @@ const KIND_LABEL: Record<SavedPearlKind, string> = {
 export function RevisionEngineCard({ className }: { className?: string }): JSX.Element {
   const pearls = useRecallStore((state) => state.pearls);
   const setVaultOpen = useAppStore((state) => state.setVaultOpen);
+  const signedIn = useAuthStore((state) => state.user !== null);
   const latest = pearls[0] ?? null;
   const count = pearls.length;
 
@@ -37,7 +39,7 @@ export function RevisionEngineCard({ className }: { className?: string }): JSX.E
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#34A853] opacity-75 motion-reduce:animate-none" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-[#34A853]" />
           </span>
-          <span className="font-mono text-[9px] text-[#34A853]">{count > 0 ? 'On device' : 'Ready'}</span>
+          <span className="font-mono text-[9px] text-[#34A853]">{count > 0 ? (signedIn ? 'Synced' : 'On device') : 'Ready'}</span>
         </div>
       </div>
 
@@ -83,7 +85,7 @@ export function RevisionEngineCard({ className }: { className?: string }): JSX.E
 
       <div className="mt-1 flex items-center justify-between border-t border-slate-200/60 pt-2 dark:border-white/10">
         <span className="text-[10.5px] font-medium text-slate-500 dark:text-slate-400">
-          Stored locally · zero-latency recall
+          {signedIn ? 'Synced to your account · works offline' : 'Stored locally · sign up to sync'}
         </span>
         <button
           type="button"
